@@ -1,4 +1,4 @@
-package com.example.erinna.igenem;
+package com.example.erinna.igennem;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.erinna.igenem;
+package com.example.erinna.igennem;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
