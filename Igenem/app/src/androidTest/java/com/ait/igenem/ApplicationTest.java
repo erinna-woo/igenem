@@ -1,4 +1,4 @@
-package com.igenem;
+package com.ait.igenem;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
