@@ -22,6 +22,6 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".CreateDecisionActivity" />
         <activity android:name=".DecisionActivity"></activity>
-    </application>P
+    </application>
 
 </manifest>
