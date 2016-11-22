@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "337780538796",
+    "firebase_url": "https://igenem-64ee8.firebaseio.com",
+    "project_id": "igenem-64ee8",
+    "storage_bucket": "igenem-64ee8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337780538796:android:d4acdb31be34c7d8",
+        "android_client_info": {
+          "package_name": "com.ait.igenem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337780538796-9v1eqfidd13dpie32i5gojqq6jje489h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ait.igenem",
+            "certificate_hash": "13108E4CB99CAB1ABCFD44FB1B66A3EFDD66B133"
+          }
+        },
+        {
+          "client_id": "337780538796-roi8i2srde7ecf3h7vde0ldop9g66tv7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBI2Ry-WPQXT-pBoLDZuG0TIuHsiYw5bmY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337780538796-roi8i2srde7ecf3h7vde0ldop9g66tv7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
