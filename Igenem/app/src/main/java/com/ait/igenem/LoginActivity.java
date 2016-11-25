@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -40,10 +39,6 @@ public class LoginActivity extends BaseActivity {
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
 
-    //temporary to open the decision activity. delete later
-    @BindView(R.id.btnOpenDecision)
-    Button btnOpenDecision;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +47,6 @@ public class LoginActivity extends BaseActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-        
-        btnOpenDecision.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent openDecision = new Intent();
-                openDecision.setClass(LoginActivity.this, DecisionActivity.class);
-                startActivity(openDecision);
-            }
-        });
     }
 
     @OnClick(R.id.btnRegister)
@@ -111,7 +97,9 @@ public class LoginActivity extends BaseActivity {
                 hideProgressDialog();
                 if (task.isSuccessful()) {
                     // go to home activity
-                    Toast.makeText(LoginActivity.this, "login successful", Toast.LENGTH_SHORT).show();
+                    Intent openDecision = new Intent();
+                    openDecision.setClass(LoginActivity.this, DecisionActivity.class);
+                    startActivity(openDecision);
                 } else {
                     Toast.makeText(LoginActivity.this,
                             task.getException().getMessage(),
