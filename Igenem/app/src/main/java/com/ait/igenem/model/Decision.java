@@ -1,7 +1,5 @@
 package com.ait.igenem.model;
 
-import java.util.List;
-
 /**
  * Created by Erinna on 11/23/16.
  */
@@ -10,12 +8,10 @@ public class Decision {
 
     private String name;
     private String color;
-    private List<Factor> factorList;
 
-    public Decision(String name, String color, List<Factor> factorList) {
+    public Decision(String name, String color) {
         this.name = name;
         this.color = color;
-        this.factorList = factorList;
     }
 
     public String getName() {
@@ -30,13 +26,5 @@ public class Decision {
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public List<Factor> getFactorList() {
-        return factorList;
-    }
-
-    public void setFactorList(List<Factor> factorList) {
-        this.factorList = factorList;
     }
 }
