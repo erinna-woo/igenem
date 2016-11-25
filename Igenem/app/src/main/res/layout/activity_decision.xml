@@ -16,9 +16,16 @@
         android:layout_height="wrap_content"
         android:text="Temp: New Blob" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a temporary place to create blobs" />
+
     <LinearLayout
+        android:id="@+id/createBlobLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#dce2e0"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -29,17 +36,89 @@
             android:hint="NAME" />
 
         <EditText
-            android:id="@+id/etRadius"
+            android:id="@+id/etBlobRadius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="RADIUS"
             android:inputType="number" />
 
-        <CheckBox
-            android:id="@+id/cbProCheckBox"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="IS PRO"/>
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cbProCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IS PRO" />
+
+            <Button
+                android:id="@+id/btnOkNewBlob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a temp place to edit blobs" />
+
+    <LinearLayout
+        android:id="@+id/editBlobLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#c1e1e2"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnPlusPro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+" />
+
+            <Button
+                android:id="@+id/btnMinusCon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnDeleteBlob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DELETE" />
+
+            <Button
+                android:id="@+id/btnOkEditBlob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK" />
+
+            <Button
+                android:id="@+id/btnCancelEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CANCEL" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <ScrollView
