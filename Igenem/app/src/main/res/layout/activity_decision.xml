@@ -10,16 +10,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ait.igenem.DecisionActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MY DECISION NAME" />
+
     <Button
         android:id="@+id/btnNewBlob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Temp: New Blob" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is a temporary place to create blobs" />
 
     <LinearLayout
         android:id="@+id/createBlobLayout"
@@ -57,16 +57,11 @@
                 android:id="@+id/btnOkNewBlob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OK"/>
+                android:text="OK" />
 
         </LinearLayout>
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is a temp place to edit blobs" />
 
     <LinearLayout
         android:id="@+id/editBlobLayout"
@@ -134,5 +129,25 @@
 
         </LinearLayout>
     </ScrollView>
+
+
+    <!--<TextView-->
+    <!--android:id="@+id/tvNetScore"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="NET SCORE: "/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tvPercentPro"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="PRO SCORE: "/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tvPercentCon"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="CON SCORE: "/>-->
+
 
 </LinearLayout>

@@ -19,8 +19,13 @@ public class DecisionActivity extends AppCompatActivity {
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
 
+    //Editing blob
     @BindView(R.id.editBlobLayout)
     LinearLayout editBlobLayout;
+    @BindView(R.id.btnOkEditBlob)
+    Button btnOkEditBlob;
+    @BindView(R.id.btnCancelEdit)
+    Button btnCancelEdit;
 
     //Blob list
     @BindView(R.id.layoutBlobs)
@@ -47,8 +52,25 @@ public class DecisionActivity extends AppCompatActivity {
         //TODO: from button --> double click blob
         setupNewBlobButton();
         setupOkayCreateBlobButton();
+        setupEditBlobListeners();
     }
 
+    private void setupEditBlobListeners() {
+        btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: set diff values
+                editBlobLayout.setVisibility(View.GONE);
+            }
+        });
+        btnCancelEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editBlobLayout.setVisibility(View.GONE);
+            }
+        });
+
+    }
 
     private void setupOkayCreateBlobButton() {
         btnOkNewBlob.setOnClickListener(new View.OnClickListener() {
@@ -59,18 +81,29 @@ public class DecisionActivity extends AppCompatActivity {
                 TextView tvBlobName = (TextView) blobRow.findViewById(R.id.tvBlobName);
                 TextView tvBlobScore = (TextView) blobRow.findViewById(R.id.tvBlobScore);
                 TextView tvProCon = (TextView) blobRow.findViewById(R.id.tvProCon);
-                tvBlobName.setText(etBlobName.getText().toString());
+                tvBlobName.setText("Name: " + etBlobName.getText().toString());
                 if(cbProCheck.isChecked()){
-                    tvBlobScore.setText(etBlobRadius.getText().toString());
+                    tvBlobScore.setText("Score: " + etBlobRadius.getText().toString());
                     tvProCon.setText("PRO");
                 }
                 else{
-                    tvBlobScore.setText("-" + etBlobRadius.getText().toString());
+                    tvBlobScore.setText("Score: -" + etBlobRadius.getText().toString());
                     tvProCon.setText("CON");
                 }
+                showEditBlobLayout(blobRow);
                 //onclick listener?
                 layoutBlobs.addView(blobRow,0);
                 resetCreateBlobLayout();
+            }
+        });
+    }
+
+    private void showEditBlobLayout(View blobRow) {
+        Button btnEditBlob = (Button) blobRow.findViewById(R.id.btnEditBlob);
+        btnEditBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editBlobLayout.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -92,13 +125,3 @@ public class DecisionActivity extends AppCompatActivity {
     }
     //TODO
 }
-
-/*
-
-btnEditBlob.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        editBlobLayout.setVisibility(View.VISIBLE);
-                    }
-                });
-                //SET TEXT*/
