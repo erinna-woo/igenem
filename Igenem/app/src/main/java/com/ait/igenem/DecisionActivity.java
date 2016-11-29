@@ -16,7 +16,7 @@ import com.ait.igenem.model.Blob;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DecisionActivity extends AppCompatActivity {
+public class DecisionActivity extends AppCompatActivity implements PassDataToDetailsActivityInterface{
 
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
@@ -61,7 +61,6 @@ public class DecisionActivity extends AppCompatActivity {
         setupOkayCreateBlobButton();
         setupEditBlobListeners();
         setupRecyclerView();
-        
     }
 
     private void setupRecyclerView() {
@@ -72,7 +71,6 @@ public class DecisionActivity extends AppCompatActivity {
         blobRecyclerAdapter = new BlobRecyclerAdapter();
 
         //callback, touchhelper?
-
         recyclerBlob.setAdapter(blobRecyclerAdapter);
     }
 
@@ -97,29 +95,16 @@ public class DecisionActivity extends AppCompatActivity {
         btnOkNewBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //temp: pro is false;
-                createBlobLayout.setVisibility(View.GONE);
+                // do i need an onclick listener for the cb?
                 Blob newBlob = new Blob(etBlobName.getText().toString(),
-                        false, Integer.parseInt(etBlobRadius.getText().toString()));
+                        cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
                 blobRecyclerAdapter.addBlob(newBlob);
-                //remove scrolling later
+                resetCreateBlobLayout();
                 recyclerBlob.scrollToPosition(0);
-
-                //TODO: edit button on each recycler view blob opens the editting
-
             }
         });
     }
 
-//    private void showEditBlobLayout() {
-//        Button btnEditBlob = (Button) blobRow.findViewById(R.id.btnEditBlob);
-//        btnEditBlob.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                editBlobLayout.setVisibility(View.VISIBLE);
-//            }
-//        });
-//    }
 
     private void resetCreateBlobLayout() {
         createBlobLayout.setVisibility(View.GONE);
@@ -136,5 +121,10 @@ public class DecisionActivity extends AppCompatActivity {
             }
         });
     }
-    //TODO
+
+    @Override
+    public void showEdit(Blob blobToEdit, int position) {
+        editBlobLayout.setVisibility(View.VISIBLE);
+        //TODO: not sure if we need the blob and position
+    }
 }
