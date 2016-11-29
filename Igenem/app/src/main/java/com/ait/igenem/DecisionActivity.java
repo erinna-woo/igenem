@@ -2,14 +2,16 @@ package com.ait.igenem;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.ait.igenem.adapter.BlobRecyclerAdapter;
+import com.ait.igenem.model.Blob;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,10 +29,6 @@ public class DecisionActivity extends AppCompatActivity {
     @BindView(R.id.btnCancelEdit)
     Button btnCancelEdit;
 
-    //Blob list
-    @BindView(R.id.layoutBlobs)
-    LinearLayout layoutBlobs;
-
     //For creating a new blob
     @BindView(R.id.createBlobLayout)
     LinearLayout createBlobLayout;
@@ -43,6 +41,11 @@ public class DecisionActivity extends AppCompatActivity {
     @BindView(R.id.cbProCheckBox)
     CheckBox cbProCheck;
 
+    //Setup RecyclerView
+    @BindView(R.id.recyclerBlob)
+    RecyclerView recyclerBlob;
+    BlobRecyclerAdapter blobRecyclerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +53,27 @@ public class DecisionActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         //TODO: from button --> double click blob
+        setupDecisionUI();
+    }
+
+    private void setupDecisionUI() {
         setupNewBlobButton();
         setupOkayCreateBlobButton();
         setupEditBlobListeners();
+        setupRecyclerView();
+        
+    }
+
+    private void setupRecyclerView() {
+        recyclerBlob.setHasFixedSize(true);
+        final LinearLayoutManager mLayoutManager =
+                new LinearLayoutManager(this);
+        recyclerBlob.setLayoutManager(mLayoutManager);
+        blobRecyclerAdapter = new BlobRecyclerAdapter();
+
+        //callback, touchhelper?
+
+        recyclerBlob.setAdapter(blobRecyclerAdapter);
     }
 
     private void setupEditBlobListeners() {
@@ -76,37 +97,29 @@ public class DecisionActivity extends AppCompatActivity {
         btnOkNewBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                View blobRow = getLayoutInflater().inflate(
-                        R.layout.blob_row, null, false);
-                TextView tvBlobName = (TextView) blobRow.findViewById(R.id.tvBlobName);
-                TextView tvBlobScore = (TextView) blobRow.findViewById(R.id.tvBlobScore);
-                TextView tvProCon = (TextView) blobRow.findViewById(R.id.tvProCon);
-                tvBlobName.setText("Name: " + etBlobName.getText().toString());
-                if(cbProCheck.isChecked()){
-                    tvBlobScore.setText("Score: " + etBlobRadius.getText().toString());
-                    tvProCon.setText("PRO");
-                }
-                else{
-                    tvBlobScore.setText("Score: -" + etBlobRadius.getText().toString());
-                    tvProCon.setText("CON");
-                }
-                showEditBlobLayout(blobRow);
-                //onclick listener?
-                layoutBlobs.addView(blobRow,0);
-                resetCreateBlobLayout();
+                //temp: pro is false;
+                createBlobLayout.setVisibility(View.GONE);
+                Blob newBlob = new Blob(etBlobName.getText().toString(),
+                        false, Integer.parseInt(etBlobRadius.getText().toString()));
+                blobRecyclerAdapter.addBlob(newBlob);
+                //remove scrolling later
+                recyclerBlob.scrollToPosition(0);
+
+                //TODO: edit button on each recycler view blob opens the editting
+
             }
         });
     }
 
-    private void showEditBlobLayout(View blobRow) {
-        Button btnEditBlob = (Button) blobRow.findViewById(R.id.btnEditBlob);
-        btnEditBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editBlobLayout.setVisibility(View.VISIBLE);
-            }
-        });
-    }
+//    private void showEditBlobLayout() {
+//        Button btnEditBlob = (Button) blobRow.findViewById(R.id.btnEditBlob);
+//        btnEditBlob.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                editBlobLayout.setVisibility(View.VISIBLE);
+//            }
+//        });
+//    }
 
     private void resetCreateBlobLayout() {
         createBlobLayout.setVisibility(View.GONE);
