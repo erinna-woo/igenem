@@ -97,9 +97,10 @@ public class LoginActivity extends BaseActivity {
                 hideProgressDialog();
                 if (task.isSuccessful()) {
                     // go to home activity
-                    Intent openDecision = new Intent();
-                    openDecision.setClass(LoginActivity.this, DecisionActivity.class);
-                    startActivity(openDecision);
+                    Intent openHome = new Intent();
+                    openHome.setClass(LoginActivity.this, HomeActivity.class);
+                    startActivity(openHome);
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this,
                             task.getException().getMessage(),
