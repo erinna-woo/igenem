@@ -11,14 +11,34 @@
     tools:context="com.ait.igenem.ProfileActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="There will be user info and a recyclerView list of the decisions. "/>
-
-    <Button
-        android:id="@+id/btnTempToDecision"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Temp: Go to decisionActivity"/>
+        android:text="There will be user info displayed here."/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Name: EEC CKW"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Decisions in progress: "/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerDecision"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Click on a decision to edit. "/>
 
 </LinearLayout>

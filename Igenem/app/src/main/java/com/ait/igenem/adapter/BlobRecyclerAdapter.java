@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.ait.igenem.PassDataToDetailsActivityInterface;
+import com.ait.igenem.PassDataBlobInterface;
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.R;
 
@@ -22,7 +22,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
     private List<Blob> blobList;
     private Blob currBlob;
-    private PassDataToDetailsActivityInterface passDataToDetailsActivityInterface;
+    private PassDataBlobInterface passDataInterface;
 
 
     public BlobRecyclerAdapter(){
@@ -54,7 +54,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         holder.btnEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                passDataToDetailsActivityInterface.showEdit(blobList.get(position), position);
+                passDataInterface.showEdit(blobList.get(position), position);
             }
         });
     }

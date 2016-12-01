@@ -16,7 +16,7 @@ import com.ait.igenem.model.Blob;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DecisionActivity extends AppCompatActivity implements PassDataToDetailsActivityInterface{
+public class DecisionActivity extends AppCompatActivity implements PassDataBlobInterface {
 
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
@@ -52,7 +52,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataToDet
         setContentView(R.layout.activity_decision);
         ButterKnife.bind(this);
 
-        //TODO: from button --> double click blob
+        //set the title as the decision name
+        this.setTitle(this.getIntent().getSerializableExtra(ProfileActivity.KEY_D_NAME).toString());
         setupDecisionUI();
     }
 
