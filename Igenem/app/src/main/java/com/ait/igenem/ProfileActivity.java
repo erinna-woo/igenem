@@ -1,14 +1,11 @@
 package com.ait.igenem;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Button;
 
-import com.ait.igenem.adapter.BlobRecyclerAdapter;
 import com.ait.igenem.adapter.DecisionRecyclerAdapter;
 import com.ait.igenem.model.Decision;
 
@@ -50,5 +47,10 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         openDecisionActivity.setClass(ProfileActivity.this, DecisionActivity.class);
         openDecisionActivity.putExtra(KEY_D_NAME, decision.getName());
         startActivity(openDecisionActivity);
+    }
+
+    @Override
+    public void showFragmentByTag(String tag) {
+
     }
 }

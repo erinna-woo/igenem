@@ -3,11 +3,10 @@ package com.ait.igenem;
 import com.ait.igenem.model.Decision;
 
 /**
- * Created by Erinna on 12/1/16.
+ * Created by Emily on 12/2/16.
  */
+public interface ShowFragmentInterface {
 
-public interface PassDataDecisionInterface {
     void showDecisionActivity(Decision decision);
     void showFragmentByTag(String tag);
-
 }

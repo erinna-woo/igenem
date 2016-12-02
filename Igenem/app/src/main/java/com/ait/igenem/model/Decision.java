@@ -1,10 +1,12 @@
 package com.ait.igenem.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Erinna on 11/23/16.
  */
 
-public class Decision {
+public class Decision implements Serializable {
 
     private String name;
     private String color;

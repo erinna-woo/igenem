@@ -2,13 +2,9 @@ package com.ait.igenem;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,8 +38,9 @@ public class HomeActivity extends AppCompatActivity {
         btnNewDecision.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HomeActivity.this,
-                        "This will lead to creating a new decision", Toast.LENGTH_SHORT).show();
+                Intent createDecision = new Intent();
+                createDecision.setClass(HomeActivity.this, CreateDecisionActivity.class);
+                startActivity(createDecision);
             }
         });
 
