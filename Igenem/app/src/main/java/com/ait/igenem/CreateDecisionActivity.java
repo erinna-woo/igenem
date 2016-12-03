@@ -10,8 +10,10 @@ import android.widget.Toast;
 import com.ait.igenem.model.Decision;
 import com.ait.igenem.newDecisionFragments.BlobsFragment;
 import com.ait.igenem.newDecisionFragments.InfoFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class CreateDecisionActivity extends AppCompatActivity implements PassDataDecisionInterface {
+public class CreateDecisionActivity extends AppCompatActivity implements CreateDecisionDataInterface {
 
     public static final String KEY_DECISION = "KEY_DECISION";
 
@@ -21,6 +23,12 @@ public class CreateDecisionActivity extends AppCompatActivity implements PassDat
         setContentView(R.layout.activity_create_decision);
         
         showFragmentByTag(InfoFragment.TAG);
+    }
+
+    @Override
+    public void addDecisionToFirebase(Decision decision) {
+        String key = FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
+        FirebaseDatabase.getInstance().getReference().child("decisions").child(key).setValue(decision);
     }
 
     @Override
@@ -51,5 +59,10 @@ public class CreateDecisionActivity extends AppCompatActivity implements PassDat
         transaction.replace(R.id.layoutContainer, fragment, tag);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public String getUserName() {
+        return FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     }
 }

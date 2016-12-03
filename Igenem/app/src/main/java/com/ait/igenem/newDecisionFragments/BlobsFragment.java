@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.ait.igenem.PassDataDecisionInterface;
+import com.ait.igenem.CreateDecisionDataInterface;
 import com.ait.igenem.R;
 
 import butterknife.BindView;
@@ -22,8 +22,7 @@ import butterknife.ButterKnife;
 public class BlobsFragment extends Fragment {
 
     public static final String TAG = "BlobsFragment";
-    private PassDataDecisionInterface passDataDecisionInterface;
-    //private PassDataDecisionInterface passDataDecisionInterface;
+    private CreateDecisionDataInterface createDecisionDataInterface;
 
     @BindView(R.id.btnBlobFragBack)
     Button btnBlobFragBack;
@@ -35,11 +34,11 @@ public class BlobsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof PassDataDecisionInterface) {
-            passDataDecisionInterface = (PassDataDecisionInterface) context;
+        if (context instanceof CreateDecisionDataInterface) {
+            createDecisionDataInterface = (CreateDecisionDataInterface) context;
         } else {
             throw new RuntimeException("this Activity is not implementing the " +
-                    "PassDataDecisionInterface");
+                    "CreateDecisionDataInterface");
         }
     }
 
@@ -52,7 +51,7 @@ public class BlobsFragment extends Fragment {
         btnBlobFragBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                passDataDecisionInterface.showFragmentByTag(InfoFragment.TAG);
+                createDecisionDataInterface.showFragmentByTag(InfoFragment.TAG);
             }
         });
 
@@ -62,7 +61,7 @@ public class BlobsFragment extends Fragment {
                 Toast.makeText(getActivity(), "show DecisionActivity for this newly " +
                         "created Decision", Toast.LENGTH_SHORT).show();
                 //newDecision is actually created in previous fragment...
-                //passDataDecisionInterface.showDecisionActivity(newDecision);
+                //createDecisionDataInterface.showDecisionActivity(newDecision);
             }
         });
 

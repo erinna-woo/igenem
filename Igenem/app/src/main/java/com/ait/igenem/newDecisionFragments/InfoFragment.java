@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.ait.igenem.PassDataDecisionInterface;
+import com.ait.igenem.CreateDecisionDataInterface;
 import com.ait.igenem.R;
 import com.ait.igenem.model.Decision;
 
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class InfoFragment extends Fragment {
 
     public static final String TAG = "InfoFragment";
-    private PassDataDecisionInterface passDataDecisionInterface = null;
+    private CreateDecisionDataInterface createDecisionDataInterface = null;
 
 
     @BindView(R.id.etNewDecisionName)
@@ -39,11 +39,11 @@ public class InfoFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof PassDataDecisionInterface) {
-            passDataDecisionInterface = (PassDataDecisionInterface) context;
+        if (context instanceof CreateDecisionDataInterface) {
+            createDecisionDataInterface = (CreateDecisionDataInterface) context;
         } else {
             throw new RuntimeException("this Activity is not implementing the " +
-                    "PassDataDecisionInterface");
+                    "CreateDecisionDataInterface");
         }
     }
 
@@ -68,10 +68,12 @@ public class InfoFragment extends Fragment {
                 }
                 else {
                     String name = etNewDecisionName.getText().toString();
-                    String color = "#000000";   //this value will be given by user
-                    Decision newDecision = new Decision(name, color);
-                    //add decision to firebase under this user
-                    passDataDecisionInterface.showFragmentByTag(BlobsFragment.TAG);
+                    String color = "#000000";   //this value will be inputted by user
+
+                    Decision newDecision = new Decision(name, color, createDecisionDataInterface.getUserName());
+                    createDecisionDataInterface.addDecisionToFirebase(newDecision);
+
+                    createDecisionDataInterface.showFragmentByTag(BlobsFragment.TAG);
                 }
             }
         });

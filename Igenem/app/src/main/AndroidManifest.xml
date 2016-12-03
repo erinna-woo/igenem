@@ -23,7 +23,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".CreateDecisionActivity" />
-        <activity android:name=".DecisionActivity"></activity>
+        <activity
+            android:name=".DecisionActivity"></activity>
     </application>
 
 </manifest>

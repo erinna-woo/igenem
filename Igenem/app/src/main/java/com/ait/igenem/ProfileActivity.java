@@ -48,9 +48,4 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         openDecisionActivity.putExtra(KEY_D_NAME, decision.getName());
         startActivity(openDecisionActivity);
     }
-
-    @Override
-    public void showFragmentByTag(String tag) {
-
-    }
 }

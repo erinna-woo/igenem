@@ -8,6 +8,5 @@ import com.ait.igenem.model.Decision;
 
 public interface PassDataDecisionInterface {
     void showDecisionActivity(Decision decision);
-    void showFragmentByTag(String tag);
 
 }
