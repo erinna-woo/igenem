@@ -12,4 +12,5 @@ public interface CreateDecisionDataInterface {
     void showNewDecisionActivity(Decision decision);
     Decision getNewDecision();
     String getUserName();
+    String getUserId();
 }

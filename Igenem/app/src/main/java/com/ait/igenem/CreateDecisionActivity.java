@@ -74,4 +74,9 @@ public class CreateDecisionActivity extends AppCompatActivity
     public String getUserName() {
         return FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     }
+
+    @Override
+    public String getUserId() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
 }

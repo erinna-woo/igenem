@@ -70,7 +70,9 @@ public class InfoFragment extends Fragment {
                     String name = etNewDecisionName.getText().toString();
                     String color = "#000000";   //this value will be inputted by user
 
-                    Decision newDecision = new Decision(name, color, createDecisionDataInterface.getUserName());
+                    Decision newDecision = new Decision(name, color,
+                            createDecisionDataInterface.getUserName(),
+                            createDecisionDataInterface.getUserId());
                     createDecisionDataInterface.addDecisionToFirebase(newDecision);
 
                     createDecisionDataInterface.showFragmentByTag(BlobsFragment.TAG);
