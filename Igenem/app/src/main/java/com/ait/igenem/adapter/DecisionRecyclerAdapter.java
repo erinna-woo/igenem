@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.ait.igenem.CreateDecisionDataInterface;
+import com.ait.igenem.PassDataDecisionInterface;
 import com.ait.igenem.R;
 import com.ait.igenem.model.Decision;
 
@@ -21,10 +21,10 @@ import java.util.List;
 public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecyclerAdapter.ViewHolder> {
 
     private List<Decision> decisionList;
-    private CreateDecisionDataInterface createDecisionDataInterface;
+    private PassDataDecisionInterface passDataDecisionInterface;
 
-    public DecisionRecyclerAdapter(CreateDecisionDataInterface createDecisionDataInterface) {
-        this.createDecisionDataInterface = createDecisionDataInterface;
+    public DecisionRecyclerAdapter(PassDataDecisionInterface passDataDecisionInterface) {
+        this.passDataDecisionInterface = passDataDecisionInterface;
         decisionList = new ArrayList<Decision>();
         //temp decision
         decisionList.add(new Decision("Decision 1", "Blue", "annire.woo"));
@@ -44,7 +44,7 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
         holder.layoutDecision.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createDecisionDataInterface.showDecisionActivity(decisionList.get(position));
+                passDataDecisionInterface.showDecisionActivity(decisionList.get(position));
             }
         });
     }
