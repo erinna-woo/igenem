@@ -28,8 +28,8 @@ public class CreateDecisionActivity extends AppCompatActivity
 
     @Override
     public void addDecisionToFirebase(Decision decision) {
-        String key = FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
-        FirebaseDatabase.getInstance().getReference().child("decisions").child(key).setValue(decision);
+        FirebaseDatabase.getInstance().getReference().child("decisions").
+                child(decision.getKey()).setValue(decision);
         newDecision = decision;
     }
 
@@ -78,5 +78,10 @@ public class CreateDecisionActivity extends AppCompatActivity
     @Override
     public String getUserId() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    @Override
+    public String getKey() {
+        return FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
     }
 }

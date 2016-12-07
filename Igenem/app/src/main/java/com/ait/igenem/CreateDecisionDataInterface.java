@@ -13,4 +13,5 @@ public interface CreateDecisionDataInterface {
     Decision getNewDecision();
     String getUserName();
     String getUserId();
+    String getKey();
 }
