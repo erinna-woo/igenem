@@ -8,7 +8,8 @@ import com.ait.igenem.model.Decision;
 public interface CreateDecisionDataInterface {
 
     void addDecisionToFirebase(Decision decision);
-    void showDecisionActivity(Decision decision);
     void showFragmentByTag(String tag);
+    void showNewDecisionActivity(Decision decision);
+    Decision getNewDecision();
     String getUserName();
 }

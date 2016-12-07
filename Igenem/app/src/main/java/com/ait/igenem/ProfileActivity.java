@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 public class ProfileActivity extends AppCompatActivity implements PassDataDecisionInterface{
 
     // user profile
-    public static final String KEY_D_NAME = "KEY_D_NAME";
+    public static final String KEY_D = "KEY_D";
 
     @BindView(R.id.recyclerDecision)
     RecyclerView recyclerDecision;
@@ -45,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
     public void showDecisionActivity(Decision decision) {
         Intent openDecisionActivity = new Intent();
         openDecisionActivity.setClass(ProfileActivity.this, DecisionActivity.class);
-        openDecisionActivity.putExtra(KEY_D_NAME, decision.getName());
+        openDecisionActivity.putExtra(KEY_D, decision);
         startActivity(openDecisionActivity);
     }
 }

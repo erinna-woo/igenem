@@ -61,7 +61,7 @@ public class BlobsFragment extends Fragment {
                 Toast.makeText(getActivity(), "show DecisionActivity for this newly " +
                         "created Decision", Toast.LENGTH_SHORT).show();
                 //newDecision is actually created in previous fragment...
-                //createDecisionDataInterface.showDecisionActivity(newDecision);
+                createDecisionDataInterface.showNewDecisionActivity(createDecisionDataInterface.getNewDecision());
             }
         });
 

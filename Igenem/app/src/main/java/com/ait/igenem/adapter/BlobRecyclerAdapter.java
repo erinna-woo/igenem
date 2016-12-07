@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ait.igenem.PassDataBlobInterface;
@@ -13,6 +14,8 @@ import com.ait.igenem.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by Erinna on 11/25/16.
@@ -46,6 +49,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         else{
             holder.tvBlobScore.setText("Score: -"  + blobList.get(position).getRadius());
             holder.tvProCon.setText("CON");
+            holder
         }
         setEditButtonListener(holder, position);
     }
@@ -76,13 +80,19 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         private TextView tvBlobScore;
         private TextView tvProCon;
         private Button btnEditBlob;
+        private LinearLayout poop;
+
+        //it's emily's job to delete this:
 
         public ViewHolder(View itemView) {
+
             super(itemView);
+            ButterKnife.bind(this,itemView);
             tvBlobName = (TextView) itemView.findViewById(R.id.tvBlobName);
             tvBlobScore = (TextView) itemView.findViewById(R.id.tvBlobScore);
             tvProCon = (TextView) itemView.findViewById(R.id.tvProCon);
             btnEditBlob = (Button) itemView.findViewById(R.id.btnEditBlob);
+//            poop = itemView.findViewById(R.i
 
         }
     }

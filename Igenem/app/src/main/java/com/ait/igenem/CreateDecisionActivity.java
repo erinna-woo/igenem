@@ -13,9 +13,10 @@ import com.ait.igenem.newDecisionFragments.InfoFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class CreateDecisionActivity extends AppCompatActivity implements CreateDecisionDataInterface {
+public class CreateDecisionActivity extends AppCompatActivity
+        implements CreateDecisionDataInterface{
 
-    public static final String KEY_DECISION = "KEY_DECISION";
+    private Decision newDecision;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +30,23 @@ public class CreateDecisionActivity extends AppCompatActivity implements CreateD
     public void addDecisionToFirebase(Decision decision) {
         String key = FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
         FirebaseDatabase.getInstance().getReference().child("decisions").child(key).setValue(decision);
+        newDecision = decision;
     }
 
     @Override
-    public void showDecisionActivity(Decision decision) {
+    public void showNewDecisionActivity(Decision decision) {
         Intent showDecision = new Intent();
         showDecision.setClass(CreateDecisionActivity.this, DecisionActivity.class);
-        showDecision.putExtra(KEY_DECISION, decision);
+        showDecision.putExtra(ProfileActivity.KEY_D, decision);
         startActivity(showDecision);
+        finish();
     }
+
+    @Override
+    public Decision getNewDecision() {
+        return newDecision;
+    }
+
 
     @Override
     public void showFragmentByTag(String tag) {
