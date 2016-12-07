@@ -1,5 +1,6 @@
 package com.ait.igenem.adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.ait.igenem.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -45,11 +47,11 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         if(blobList.get(position).isPro()){
             holder.tvBlobScore.setText("Score: " + blobList.get(position).getRadius());
             holder.tvProCon.setText("PRO");
+            holder.layoutBlobRow.setBackgroundColor(Color.rgb(173, 244, 203));
         }
         else{
             holder.tvBlobScore.setText("Score: -"  + blobList.get(position).getRadius());
             holder.tvProCon.setText("CON");
-            holder
         }
         setEditButtonListener(holder, position);
     }
@@ -76,24 +78,26 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvBlobName;
-        private TextView tvBlobScore;
-        private TextView tvProCon;
-        private Button btnEditBlob;
-        private LinearLayout poop;
+        @BindView(R.id.tvBlobName)
+        TextView tvBlobName;
+
+        @BindView(R.id.tvBlobScore)
+        TextView tvBlobScore;
+
+        @BindView(R.id.tvProCon)
+        TextView tvProCon;
+
+        @BindView(R.id.btnEditBlob)
+        Button btnEditBlob;
 
         //it's emily's job to delete this:
+        @BindView(R.id.layoutBlobRow)
+        LinearLayout layoutBlobRow;
 
         public ViewHolder(View itemView) {
 
             super(itemView);
             ButterKnife.bind(this,itemView);
-            tvBlobName = (TextView) itemView.findViewById(R.id.tvBlobName);
-            tvBlobScore = (TextView) itemView.findViewById(R.id.tvBlobScore);
-            tvProCon = (TextView) itemView.findViewById(R.id.tvProCon);
-            btnEditBlob = (Button) itemView.findViewById(R.id.btnEditBlob);
-//            poop = itemView.findViewById(R.i
-
         }
     }
 }

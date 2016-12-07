@@ -14,6 +14,9 @@ import com.ait.igenem.model.Decision;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Erinna on 12/1/16.
  */
@@ -56,15 +59,15 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvDecisionName;
-        private LinearLayout layoutDecision;
+        @BindView(R.id.tvDecisionName)
+        TextView tvDecisionName;
+
+        @BindView(R.id.layoutDecision)
+        LinearLayout layoutDecision;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            tvDecisionName = (TextView) itemView.findViewById(R.id.tvDecisionName);
-            layoutDecision = (LinearLayout) itemView.findViewById(R.id.layoutDecision);
-
+            ButterKnife.bind(this, itemView);
         }
     }
 
