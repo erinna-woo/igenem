@@ -1,7 +1,7 @@
 package com.ait.igenem;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.ait.igenem.adapter.BlobRecyclerAdapter;
 import com.ait.igenem.model.Blob;
+import com.ait.igenem.model.Decision;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +54,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         ButterKnife.bind(this);
 
         //set the title as the decision name
-        this.setTitle(this.getIntent().getSerializableExtra(ProfileActivity.KEY_D_NAME).toString());
+        Decision decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
+        this.setTitle(decision.getName());
         setupDecisionUI();
     }
 
