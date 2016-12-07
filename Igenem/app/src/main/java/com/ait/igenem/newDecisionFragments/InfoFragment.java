@@ -72,7 +72,8 @@ public class InfoFragment extends Fragment {
 
                     Decision newDecision = new Decision(name, color,
                             createDecisionDataInterface.getUserName(),
-                            createDecisionDataInterface.getUserId());
+                            createDecisionDataInterface.getUserId(),
+                            createDecisionDataInterface.getKey());
                     createDecisionDataInterface.addDecisionToFirebase(newDecision);
 
                     createDecisionDataInterface.showFragmentByTag(BlobsFragment.TAG);

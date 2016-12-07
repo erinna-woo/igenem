@@ -1,7 +1,7 @@
 package com.ait.igenem;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.ait.igenem.adapter.BlobRecyclerAdapter;
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +48,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
     RecyclerView recyclerBlob;
     BlobRecyclerAdapter blobRecyclerAdapter;
 
+    private Decision decision;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +57,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         ButterKnife.bind(this);
 
         //set the title as the decision name
-        Decision decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
+        decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
         this.setTitle(decision.getName());
         setupDecisionUI();
     }
@@ -101,6 +104,13 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
                 // do i need an onclick listener for the cb?
                 Blob newBlob = new Blob(etBlobName.getText().toString(),
                         cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
+
+                // add newBlob to Firebase
+                String key = FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(decision.getKey()).child("blobs").push().getKey();
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(decision.getKey()).child("blobs").child(key).setValue(newBlob);
+
                 blobRecyclerAdapter.addBlob(newBlob);
                 resetCreateBlobLayout();
                 recyclerBlob.scrollToPosition(0);
