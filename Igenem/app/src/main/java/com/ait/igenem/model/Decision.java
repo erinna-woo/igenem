@@ -14,6 +14,8 @@ public class Decision implements Serializable {
     private String ownerId;
     private String key;
 
+    public Decision() {}
+
     public Decision(String name, String color, String owner, String ownerId, String key) {
         this.name = name;
         this.color = color;

@@ -34,6 +34,12 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
         decisionList.add(new Decision("Decision 2", "Blue", "annire.woo", "1", "1"));
     }
 
+    public void addDecision(Decision newDecision) {
+        decisionList.add(0, newDecision);
+        notifyItemInserted(0);
+    }
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rowView = LayoutInflater.from(parent.getContext()).inflate(
