@@ -100,6 +100,7 @@ public class LoginActivity extends BaseActivity {
                     Intent openHome = new Intent();
                     openHome.setClass(LoginActivity.this, HomeActivity.class);
                     startActivity(openHome);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
                     finish();
                 } else {
                     Toast.makeText(LoginActivity.this,

@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">Igenem</string>
     <string name="title_activity_home">HomeActivity</string>
+
     <string name="hint_email">email</string>
     <string name="hint_password">password</string>
     <string name="btn_text_login">login</string>
     <string name="btn_text_register">register</string>
+    <string name="tv_home_greeting">Let\'s make a decision!</string>
+
+    <integer name="anim_length">500</integer>
 </resources>

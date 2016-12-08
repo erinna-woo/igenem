@@ -14,14 +14,19 @@
 
     <Button
         android:id="@+id/btnProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Go to profile"/>
+        style="@style/CircleButton"
+        android:background="@drawable/profile" />
+
+    <TextView
+        style="@style/CenterText"
+        android:text="@string/tv_home_greeting"/>
+
+    <Space
+        style="@style/PushDownSpace" /> 
 
     <Button
         android:id="@+id/btnNewDecision"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Make a new decision"/>
+        style="@style/CircleButton"
+        android:background="@drawable/plus"/>
 
 </LinearLayout>

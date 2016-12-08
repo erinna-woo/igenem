@@ -42,6 +42,12 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         getDecisions();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        decisionRecyclerAdapter.clearDecisions();
+    }
+
     private void getDecisions() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -83,5 +89,9 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         startActivity(openDecisionActivity);
     }
 
-
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+    }
 }

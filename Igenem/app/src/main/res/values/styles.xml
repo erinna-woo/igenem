@@ -12,13 +12,15 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     
-    <style name="LoginScreen" parent="AppTheme.NoActionBar">
+    <style name="LoginActivity" parent="AppTheme.NoActionBar">
         <item name="android:background">@color/colorTurq</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="BasicActivity" parent="AppTheme.NoActionBar">
+        <item name="android:background">@color/colorCloud</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 
     <style name="LoginButton">
@@ -36,7 +38,7 @@
         <item name="android:background">@drawable/login_edit_text</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textColorHint">@color/colorGray</item>
+        <item name="android:textColorHint">@color/colorLightGray</item>
     </style>
 
     <style name="LoginTitle">
@@ -46,6 +48,22 @@
         <item name="android:textSize">55sp</item>
         <item name="android:layout_marginTop">65dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="CircleButton">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">70dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="CenterText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_marginTop">90dp</item>
+        <item name="android:layout_gravity">center</item>
+
     </style>
 
     <style name="PushDownSpace">

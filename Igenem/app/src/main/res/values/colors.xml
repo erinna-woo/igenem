@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#607d8b</color>
+    <color name="colorGray">#607d8b</color>
+
     <color name="colorPrimaryDark">#455a64</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorLoginBackground">#ffa280</color>
-    <color name="colorCloud">#eceff1</color>
-    <color name="colorGray">#b0bec5</color>
+    <color name="colorDarkGray">#455a64</color>
+
+    <color name="colorAccent">#1abc9c</color>
     <color name="colorTurq">#1abc9c</color>
+
+    <color name="colorSalmon">#ffa280</color>
+    <color name="colorCloud">#eceff1</color>
+    <color name="colorLightGray">#b0bec5</color>
 </resources>

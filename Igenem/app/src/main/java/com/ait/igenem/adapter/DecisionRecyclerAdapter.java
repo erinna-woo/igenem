@@ -39,6 +39,11 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
         notifyItemInserted(0);
     }
 
+    public void clearDecisions() {
+        decisionList.clear();
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

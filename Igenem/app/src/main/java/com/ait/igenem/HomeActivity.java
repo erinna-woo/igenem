@@ -32,6 +32,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent openProfile = new Intent();
                 openProfile.setClass(HomeActivity.this, ProfileActivity.class);
                 startActivity(openProfile);
+                overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
             }
         });
 
@@ -41,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent createDecision = new Intent();
                 createDecision.setClass(HomeActivity.this, CreateDecisionActivity.class);
                 startActivity(createDecision);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
             }
         });
 
