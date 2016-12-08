@@ -18,11 +18,11 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     
     <style name="LoginScreen" parent="AppTheme.NoActionBar">
-        <item name="android:background">@color/colorLoginBackground</item>
+        <item name="android:background">@color/colorTurq</item>
     </style>
 
     <style name="LoginButton">
-        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@drawable/login_button</item>
         <item name="android:textColor">@color/colorCloud</item>
@@ -31,7 +31,7 @@
     </style>
 
     <style name="LoginEditText">
-        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@drawable/login_edit_text</item>
         <item name="android:textColor">@color/colorPrimary</item>
@@ -43,8 +43,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
-        <item name="android:textSize">45sp</item>
-        <item name="android:layout_marginTop">60dp</item>
+        <item name="android:textSize">55sp</item>
+        <item name="android:layout_marginTop">65dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 

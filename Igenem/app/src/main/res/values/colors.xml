@@ -6,4 +6,5 @@
     <color name="colorLoginBackground">#ffa280</color>
     <color name="colorCloud">#eceff1</color>
     <color name="colorGray">#b0bec5</color>
+    <color name="colorTurq">#1abc9c</color>
 </resources>

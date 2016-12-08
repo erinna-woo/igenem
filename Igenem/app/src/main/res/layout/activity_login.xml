@@ -40,6 +40,6 @@
         android:id="@+id/btnRegister"
         style="@style/LoginButton"
         android:text="@string/btn_text_register"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="8dp"/>
 
 </LinearLayout>
