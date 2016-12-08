@@ -30,8 +30,6 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
         this.passDataDecisionInterface = passDataDecisionInterface;
         decisionList = new ArrayList<Decision>();
         //temp decision
-        decisionList.add(new Decision("Decision 1", "Blue", "annire.woo", "1", "1"));
-        decisionList.add(new Decision("Decision 2", "Blue", "annire.woo", "1", "1"));
     }
 
     public void addDecision(Decision newDecision) {
