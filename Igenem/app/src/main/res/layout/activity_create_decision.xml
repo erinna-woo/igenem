@@ -10,17 +10,10 @@
     android:orientation="vertical"
     tools:context="com.ait.igenem.CreateDecisionActivity">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/etNewDecisionName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="enter new decision name" />
-
-    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:id="@+id/tvCreateDecisionTitle"
+        style="@style/CenterText"
+        android:text="@string/tv_new_decision"/>
 
     <!--something to pick color-->
 

@@ -31,6 +31,7 @@
 
         <activity
             android:name=".CreateDecisionActivity"
+            android:theme="@style/BasicActivity"
             android:screenOrientation="portrait"/>
 
         <activity

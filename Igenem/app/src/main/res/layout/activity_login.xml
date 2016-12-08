@@ -20,13 +20,13 @@
 
     <EditText
         android:id="@+id/etEmail"
-        style="@style/LoginEditText"
+        style="@style/RoundedEditText"
         android:hint="@string/hint_email"
         android:text="cklusendorf@gmail.com"/>
 
     <EditText
         android:id="@+id/etPassword"
-        style="@style/LoginEditText"
+        style="@style/RoundedEditText"
         android:layout_marginTop="18dp"
         android:inputType="textPassword"
         android:hint="@string/hint_password"
