@@ -10,11 +10,30 @@
     android:orientation="vertical"
     tools:context="com.ait.igenem.CreateDecisionActivity">
 
-    <!--container for fragments-->
-    <FrameLayout
-        android:id="@+id/layoutContainer"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"></FrameLayout>
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etNewDecisionName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="enter new decision name" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <!--something to pick color-->
+
+    <Button
+        android:id="@+id/btnInfoFragCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CANCEL" />
+
+    <Button
+        android:id="@+id/btnInfoFragNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NEXT" />
 
 </LinearLayout>

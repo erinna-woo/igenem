@@ -27,7 +27,7 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
     @BindView(R.id.recyclerDecision)
     RecyclerView recyclerDecision;
     DecisionRecyclerAdapter decisionRecyclerAdapter;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
