@@ -30,8 +30,9 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     private PassDataBlobInterface passDataInterface;
 
 
-    public BlobRecyclerAdapter(){
+    public BlobRecyclerAdapter(PassDataBlobInterface passDataInterface){
         blobList = new ArrayList<Blob>();
+        this.passDataInterface = passDataInterface;
     }
 
     @Override
@@ -52,6 +53,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         else{
             holder.tvBlobScore.setText("Score: -"  + blobList.get(position).getRadius());
             holder.tvProCon.setText("CON");
+            holder.layoutBlobRow.setBackgroundColor(Color.rgb(244, 173, 173));
         }
         setEditButtonListener(holder, position);
     }
@@ -74,6 +76,32 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         blobList.add(0, newBlob);
         //save in sugar ORM??
         notifyItemInserted(0);
+        //scroll to position 0?
+    }
+
+    public Blob getBlob(int position) {
+        return blobList.get(position);
+    }
+
+    public void updateBlob(Blob updateBlob) {
+        int index = blobList.indexOf(updateBlob);
+        if (index != -1) {
+            blobList.set(index, updateBlob);
+            notifyItemChanged(index);
+        }
+    }
+
+    public void removeBlob(Blob removeBlob) {
+        int index = blobList.indexOf(removeBlob);
+        if (index != -1) {
+            blobList.remove(index);
+            notifyItemRemoved(index);
+        }
+    }
+
+    public void clearBlobs() {
+        blobList.clear();
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
