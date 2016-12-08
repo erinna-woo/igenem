@@ -30,6 +30,7 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
         btnBlobFragBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
             }
         });
 
@@ -45,9 +46,16 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
                 showDecision.setClass(CreateDecisionBlobsActivity.this, DecisionActivity.class);
                 showDecision.putExtra(ProfileActivity.KEY_D, newDecision);
                 startActivity(showDecision);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
                 showDecision.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 finish();
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
 }

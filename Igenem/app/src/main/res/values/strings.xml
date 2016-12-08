@@ -2,12 +2,19 @@
     <string name="app_name">Igenem</string>
     <string name="title_activity_home">HomeActivity</string>
 
+    <string name="tv_home_greeting">Let\'s make a decision!</string>
+    <string name="tv_new_decision">New Decision</string>
+
+    <string name="hint_enter_title">enter title</string>
     <string name="hint_email">email</string>
     <string name="hint_password">password</string>
+
     <string name="btn_text_login">login</string>
     <string name="btn_text_register">register</string>
-    <string name="tv_home_greeting">Let\'s make a decision!</string>
-    <string name="tv_new_decision">new decision</string>
+    <string name="btn_text_cancel">cancel</string>
+    <string name="btn_text_next">next</string>
+    <string name="btn_text_back">back</string>
+    <string name="btn_text_save">save</string>
 
     <integer name="anim_length">500</integer>
 </resources>

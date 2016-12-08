@@ -22,7 +22,7 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/BasicActivity"
+            android:theme="@style/BasicActivityCloud"
             android:screenOrientation="portrait" />
 
         <activity
@@ -31,14 +31,16 @@
 
         <activity
             android:name=".CreateDecisionActivity"
-            android:theme="@style/BasicActivity"
+            android:theme="@style/BasicActivityTurq"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name=".DecisionActivity"
+            android:theme="@style/BasicActivityTurq"
             android:screenOrientation="portrait"/>
 
         <activity android:name=".CreateDecisionBlobsActivity"
+            android:theme="@style/BasicActivityTurq"
             android:screenOrientation="portrait" />
 
     </application>

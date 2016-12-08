@@ -38,6 +38,7 @@ public class CreateDecisionActivity extends AppCompatActivity {
         btnInfoFragCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
             }
         });
 
@@ -58,6 +59,7 @@ public class CreateDecisionActivity extends AppCompatActivity {
                     addBlobs.setClass(CreateDecisionActivity.this, CreateDecisionBlobsActivity.class);
                     addBlobs.putExtra(KEY_NEW_DECISION, newDecision);
                     startActivity(addBlobs);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
                 }
             }
         });
@@ -79,5 +81,11 @@ public class CreateDecisionActivity extends AppCompatActivity {
 
     public String getKey() {
         return FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
 }

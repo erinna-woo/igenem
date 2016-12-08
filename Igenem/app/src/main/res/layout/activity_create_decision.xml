@@ -13,20 +13,37 @@
     <TextView
         android:id="@+id/tvCreateDecisionTitle"
         style="@style/CenterText"
-        android:text="@string/tv_new_decision"/>
+        android:text="@string/tv_new_decision"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etNewDecisionName"
+        style="@style/RoundedEditText"
+        android:hint="@string/hint_enter_title" />
 
     <!--something to pick color-->
 
-    <Button
-        android:id="@+id/btnInfoFragCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CANCEL" />
+    <Space
+        style="@style/PushDownSpace"/>
 
-    <Button
-        android:id="@+id/btnInfoFragNext"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NEXT" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnInfoFragCancel"
+            style="@style/RoundedButton"
+            android:text="@string/btn_text_cancel"
+            android:layout_marginBottom="2dp"/>
+
+        <Button
+            android:id="@+id/btnInfoFragNext"
+            style="@style/RoundedButton"
+            android:text="@string/btn_text_next"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="2dp"/>
+    </RelativeLayout>
 
 </LinearLayout>
