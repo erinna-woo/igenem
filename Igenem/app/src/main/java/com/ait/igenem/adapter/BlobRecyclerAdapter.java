@@ -23,15 +23,19 @@ import butterknife.ButterKnife;
  * Created by Erinna on 11/25/16.
  */
 
-public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapter.ViewHolder>{
+public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapter.ViewHolder> {
 
     private List<Blob> blobList;
+    private List<String> blobKeys;
     private Blob currBlob;
     private PassDataBlobInterface passDataInterface;
 
 
-    public BlobRecyclerAdapter(PassDataBlobInterface passDataInterface){
+    public BlobRecyclerAdapter(PassDataBlobInterface passDataInterface) {
+
+        // EACH BLOB SHOULD HAVE SAME INDEX IN blobList and blobKeys
         blobList = new ArrayList<Blob>();
+        blobKeys = new ArrayList<String>();
         this.passDataInterface = passDataInterface;
     }
 
@@ -45,20 +49,19 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.tvBlobName.setText("Name: " + blobList.get(position).getName());
-        if(blobList.get(position).isPro()){
+        if (blobList.get(position).isPro()) {
             holder.tvBlobScore.setText("Score: " + blobList.get(position).getRadius());
             holder.tvProCon.setText("PRO");
             holder.layoutBlobRow.setBackgroundColor(Color.rgb(173, 244, 203));
-        }
-        else{
-            holder.tvBlobScore.setText("Score: -"  + blobList.get(position).getRadius());
+        } else {
+            holder.tvBlobScore.setText("Score: -" + blobList.get(position).getRadius());
             holder.tvProCon.setText("CON");
             holder.layoutBlobRow.setBackgroundColor(Color.rgb(244, 173, 173));
         }
         setEditButtonListener(holder, position);
     }
 
-    public void setEditButtonListener(ViewHolder holder, final int position){
+    public void setEditButtonListener(ViewHolder holder, final int position) {
         holder.btnEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,39 +75,51 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         return blobList.size();
     }
 
-    public void addBlob(Blob newBlob) {
-        blobList.add(0, newBlob);
+    public void addBlob(Blob newBlob, String key) {
+        blobList.add(newBlob);
+        blobKeys.add(key);
         //save in sugar ORM??
-        notifyItemInserted(0);
-        //scroll to position 0?
+        notifyDataSetChanged();
     }
 
     public Blob getBlob(int position) {
         return blobList.get(position);
     }
 
-    public void updateBlob(Blob updateBlob) {
-        int index = blobList.indexOf(updateBlob);
+    public String getBlobKey(int position) {
+        return blobKeys.get(position);
+    }
+
+    public void updateBlob(Blob updateBlob, String key) {
+        int index = blobKeys.indexOf(key);
         if (index != -1) {
             blobList.set(index, updateBlob);
             notifyItemChanged(index);
         }
     }
 
-    public void removeBlob(Blob removeBlob) {
-        int index = blobList.indexOf(removeBlob);
+    public void removeBlobByPos(int position) {
+        blobList.remove(position);
+        blobKeys.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void removeBlobByKey(String key) {
+        int index = blobKeys.indexOf(key);
         if (index != -1) {
             blobList.remove(index);
+            blobKeys.remove(index);
             notifyItemRemoved(index);
         }
     }
 
     public void clearBlobs() {
         blobList.clear();
+        blobKeys.clear();
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tvBlobName)
         TextView tvBlobName;
@@ -125,7 +140,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         public ViewHolder(View itemView) {
 
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

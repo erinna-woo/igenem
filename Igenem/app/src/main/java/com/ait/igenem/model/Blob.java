@@ -8,17 +8,15 @@ public class Blob {
     private String name;
     private boolean isPro;
     private int radius;
-    private String key;
 
     public Blob(){
 
     }
 
-    public Blob(String name, boolean isPro, int radius, String key) {
+    public Blob(String name, boolean isPro, int radius) {
         this.name = name;
         this.isPro = isPro;
         this.radius = radius;
-        this.key = key;
     }
 
     public String getName() {
@@ -45,11 +43,11 @@ public class Blob {
         this.radius = radius;
     }
 
-    public String getKey() {
-        return key;
+    public void increaseRadius() {
+        this.radius++;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void decreaseRadius() {
+        this.radius--;
     }
 }
