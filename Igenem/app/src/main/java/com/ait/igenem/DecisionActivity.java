@@ -52,13 +52,13 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
     //For creating a new blob
     @BindView(R.id.createBlobLayout)
     LinearLayout createBlobLayout;
-    @BindView(R.id.btnOkNewBlob)
+    @BindView(R.id.btnDOkNewBlob)
     Button btnOkNewBlob;
-    @BindView(R.id.etBlobName)
+    @BindView(R.id.etDBlobName)
     EditText etBlobName;
-    @BindView(R.id.etBlobRadius)
+    @BindView(R.id.etDBlobRadius)
     EditText etBlobRadius;
-    @BindView(R.id.cbProCheckBox)
+    @BindView(R.id.cbDProCheckBox)
     CheckBox cbProCheck;
 
     //deleting decision
