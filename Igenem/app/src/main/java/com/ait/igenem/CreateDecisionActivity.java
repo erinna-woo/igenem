@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ait.igenem.model.Decision;
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -33,6 +36,9 @@ public class CreateDecisionActivity extends AppCompatActivity {
 
     @BindView(R.id.btnNext)
     Button btnNext;
+
+    @BindView(R.id.color_picker_view)
+    ColorPickerView colorPickerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +72,14 @@ public class CreateDecisionActivity extends AppCompatActivity {
                     etNewDecisionName.setError(getString(R.string.enterDecisionName));
                 } else {
                     String name = etNewDecisionName.getText().toString();
-                    String color = "#000000";   //This value will be inputted by user
+                    int colorInt = colorPickerView.getSelectedColor();
+                    String colorHex = Integer.toHexString(colorInt);
+                    colorHex = colorHex.substring(colorHex.length() - 6);
+                    colorHex = "#" + colorHex;
 
-                    //TODO: error if they don't select a color?
+                    //TODO: error if they don't select a color? White is default tho.
                     Decision newDecision =
-                            new Decision(name, color, getUserName(), getUserId());
+                            new Decision(name, colorHex, getUserName(), getUserId());
                     String key = FirebaseDatabase.getInstance().getReference().child("decisions").
                             push().getKey();
                     FirebaseDatabase.getInstance().getReference().child("decisions").

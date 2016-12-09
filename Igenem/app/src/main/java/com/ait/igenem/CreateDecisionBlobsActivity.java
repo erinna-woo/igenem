@@ -43,7 +43,6 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
 
                 showDecisionActivity(newDecision, key);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
-                finish();
             }
         });
     }
