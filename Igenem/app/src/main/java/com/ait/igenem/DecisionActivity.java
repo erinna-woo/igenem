@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -40,6 +39,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
     Button btnPlusPro;
     @BindView(R.id.btnMinusCon)
     Button btnMinusCon;
+    @BindView(R.id.btnDeleteBlob)
+    Button btnDeleteBlob;
 
     //For creating a new blob
     @BindView(R.id.createBlobLayout)
@@ -80,25 +81,19 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Blob newBlob = dataSnapshot.getValue(Blob.class);
-                blobRecyclerAdapter.addBlob(newBlob);
+                blobRecyclerAdapter.addBlob(newBlob, dataSnapshot.getKey());
                 recyclerBlob.scrollToPosition(0);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                //FIX THIS, IT DOESN'T WORK
-                Log.i("UPDATING", "childChanged");
                 Blob changedBlob = dataSnapshot.getValue(Blob.class);
-                blobRecyclerAdapter.updateBlob(changedBlob);
+                blobRecyclerAdapter.updateBlob(changedBlob, dataSnapshot.getKey());
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                //FIX THIS, IT DOESN'T WORK EITHER
-                Blob removeBlob = dataSnapshot.getValue(Blob.class);
-                blobRecyclerAdapter.removeBlob(removeBlob);
+                blobRecyclerAdapter.removeBlobByKey(dataSnapshot.getKey());
             }
 
             @Override
@@ -154,18 +149,16 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
             public void onClick(View view) {
                 // do i need an onclick listener for the cb?
 
-
                 // add newBlob to Firebase
                 String key = FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decision.getKey()).child("blobs").push().getKey();
 
                 Blob newBlob = new Blob(etBlobName.getText().toString(),
-                        cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()),key);
+                        cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
 
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decision.getKey()).child("blobs").child(key).setValue(newBlob);
 
-                //blobRecyclerAdapter.addBlob(newBlob);
                 resetCreateBlobLayout();
                 recyclerBlob.scrollToPosition(0);
             }
@@ -208,25 +201,46 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
                 decreaseRadius(positionToEdit);
             }
         });
+
+        btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(decision.getKey()).child("blobs").child(key).removeValue();
+                editBlobLayout.setVisibility(View.GONE);
+            }
+        });
+
+        btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
+                Blob blob = blobRecyclerAdapter.getBlob(positionToEdit);
+                updateBlobFirebase(blob, key);
+                editBlobLayout.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+    private void updateBlobFirebase(Blob updating, String key) {
+        FirebaseDatabase.getInstance().getReference().child("decisions").
+                child(decision.getKey()).child("blobs").child(key).setValue(updating);
     }
 
     public void increaseRadius(int positionToEdit) {
+        String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
         Blob updating = blobRecyclerAdapter.getBlob(positionToEdit);
-        updating.setRadius(updating.getRadius()+2);
-        updateBlobFirebase(updating);
-    }
-
-    private void updateBlobFirebase(Blob updating) {
-        //update in Firebase
-        Log.i("UPDATING", String.valueOf(updating.getRadius()));
-        FirebaseDatabase.getInstance().getReference().child("decisions").
-                child(decision.getKey()).child("blobs").child(updating.getKey()).setValue(updating);
+        updating.increaseRadius();
+        blobRecyclerAdapter.updateBlob(updating, key);
     }
 
     public void decreaseRadius(int positionToEdit) {
+        String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
         Blob updating = blobRecyclerAdapter.getBlob(positionToEdit);
-        updating.setRadius(updating.getRadius()-2);
-        updateBlobFirebase(updating);
+        updating.decreaseRadius();
+        blobRecyclerAdapter.updateBlob(updating, key);
     }
 
 
