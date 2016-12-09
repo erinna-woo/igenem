@@ -26,7 +26,7 @@
         android:id="@+id/btnDeleteDecision"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DELETE DECISION"/>
+        android:text="DELETE DECISION" />
 
     <LinearLayout
         android:id="@+id/createBlobLayout"
@@ -132,37 +132,24 @@
     </android.support.v7.widget.RecyclerView>
 
     <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1">-->
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/layoutBlobs"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical">-->
+    <!--<LinearLayout-->
+    <!--android:id="@+id/layoutBlobs"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
 
-        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
     <!--</ScrollView>-->
 
-
-    <!--<TextView-->
-    <!--android:id="@+id/tvNetScore"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="NET SCORE: "/>-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tvPercentPro"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="PRO SCORE: "/>-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/tvPercentCon"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="CON SCORE: "/>-->
+    <TextView
+        android:id="@+id/tvPercentPro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"/>
 
 
 </LinearLayout>

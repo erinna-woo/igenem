@@ -57,7 +57,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
             holder.tvProCon.setText("PRO");
             holder.layoutBlobRow.setBackgroundColor(Color.rgb(173, 244, 203));
         } else {
-            holder.tvBlobScore.setText("Score: -" + blobList.get(holder.getAdapterPosition()).getRadius());
+            holder.tvBlobScore.setText("Score: " + blobList.get(holder.getAdapterPosition()).getRadius());
             holder.tvProCon.setText("CON");
             holder.layoutBlobRow.setBackgroundColor(Color.rgb(244, 173, 173));
         }

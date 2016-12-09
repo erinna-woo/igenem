@@ -1,10 +1,12 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,8 +23,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+//TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
 
 public class DecisionActivity extends AppCompatActivity implements PassDataBlobInterface {
 
@@ -30,6 +35,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
     Button btnNewBlob;
     @BindView(R.id.tvDecisionName)
     TextView tvDecisionName;
+    @BindView(R.id.tvPercentPro)
+    TextView tvPercentPro;
 
     //Editing blob
     @BindView(R.id.editBlobLayout)
@@ -84,7 +91,9 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
 
         setupDecisionUI();
         setupFirebaseListener();
+
     }
+
 
     @Override
     public void onBackPressed() {
@@ -139,6 +148,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
 
     private void setupDecisionUI() {
         tvDecisionName.setText(decision.getName());
+        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         setupNewBlobButton();
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
@@ -208,15 +218,29 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
                 } else {
                     Blob newBlob = new Blob(etBlobName.getText().toString(),
                             cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
-
                     FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(decisionKey).child("blobs").child(key).setValue(newBlob);
+
+                    updateDecisionScore();
 
                     resetCreateBlobLayout();
                     recyclerBlob.scrollToPosition(0);
                 }
             }
         });
+    }
+
+    private void updateDecisionScore() {
+        decision.updateScore(Integer.parseInt(etBlobRadius.getText().toString()),cbProCheck.isChecked());
+        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        updateScoreFirebase();
+    }
+
+    private void updateScoreFirebase() {
+        FirebaseDatabase.getInstance().getReference().child("decisions").
+                child(decisionKey).child("proScore").setValue(decision.getProScore());
+        FirebaseDatabase.getInstance().getReference().child("decisions").
+                child(decisionKey).child("totalScore").setValue(decision.getTotalScore());
     }
 
     private void resetCreateBlobLayout() {
@@ -256,6 +280,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
                 String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
                 Blob blob = blobRecyclerAdapter.getBlob(positionToEdit);
                 updateBlobFirebase(blob, key);
+                updateScoreFirebase();
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
@@ -300,6 +325,9 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
         Blob updating = blobRecyclerAdapter.getBlob(positionToEdit);
         updating.increaseRadius();
+        decision.increase(updating.isPro());
+        //this could be excessive and maybe combined into a field cry ugh
+        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         blobRecyclerAdapter.updateBlob(updating, key);
     }
 
@@ -307,6 +335,9 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
         Blob updating = blobRecyclerAdapter.getBlob(positionToEdit);
         updating.decreaseRadius();
+        decision.decrease(updating.isPro());
+        //this could be excessive and maybe combined into a field cry ugh
+        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         blobRecyclerAdapter.updateBlob(updating, key);
     }
 
