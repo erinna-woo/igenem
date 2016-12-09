@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,9 +11,7 @@ import android.widget.TextView;
 
 import com.ait.igenem.model.Decision;
 import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,10 +77,6 @@ public class CreateDecisionActivity extends AppCompatActivity {
                     //TODO: error if they don't select a color? White is default tho.
                     Decision newDecision =
                             new Decision(name, colorHex, getUserName(), getUserId());
-                    String key = FirebaseDatabase.getInstance().getReference().child("decisions").
-                            push().getKey();
-                    FirebaseDatabase.getInstance().getReference().child("decisions").
-                            child(key).setValue(newDecision);
 
                     openCreateDecisionBlobsActivity(newDecision);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
