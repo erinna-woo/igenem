@@ -85,18 +85,17 @@ public class CreateDecisionActivity extends AppCompatActivity {
                     FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(key).setValue(newDecision);
 
-                    openCreateDecisionBlobsActivity(newDecision, key);
+                    openCreateDecisionBlobsActivity(newDecision);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
                 }
             }
         });
     }
 
-    private void openCreateDecisionBlobsActivity(Decision newDecision, String key) {
+    private void openCreateDecisionBlobsActivity(Decision newDecision) {
         Intent addBlobs = new Intent();
         addBlobs.setClass(CreateDecisionActivity.this, CreateDecisionBlobsActivity.class);
         addBlobs.putExtra(KEY_NEW_DECISION, newDecision);
-        addBlobs.putExtra(KEY_DECISION_KEY, key);
         startActivity(addBlobs);
     }
 

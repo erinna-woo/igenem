@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.ait.igenem.model.Decision;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +39,11 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Decision newDecision = (Decision) getIntent().getSerializableExtra(
                         CreateDecisionActivity.KEY_NEW_DECISION);
-                String key = getIntent().getStringExtra(CreateDecisionActivity.KEY_DECISION_KEY);
+
+                String key = FirebaseDatabase.getInstance().getReference().child("decisions").
+                        push().getKey();
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(key).setValue(newDecision);
 
                 showDecisionActivity(newDecision, key);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
