@@ -50,6 +50,15 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         decisionRecyclerAdapter.clearDecisions();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent goHome = new Intent();
+        goHome.setClass(ProfileActivity.this, HomeActivity.class);
+        goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(goHome);
+    }
+
     private void getDecisions() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
