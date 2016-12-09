@@ -3,27 +3,33 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#b2ebf2"
-    android:padding="15dp">
+    android:background="#f4adad"
+    android:id="@+id/layoutDBlobRow">
 
     <!--THIS IS TEMPORARY. should be deleted later!!-->
 
     <TextView
-        android:id="@+id/tvBlobName"
+        android:id="@+id/tvDBlobName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
         android:text="NAME"/>
 
-    <CheckBox
-        android:id="@+id/cbProCon"
+    <TextView
+        android:id="@+id/tvDBlobScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="isPro"/>
+        android:text="SCORE"/>
 
-    <SeekBar
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvDProCon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/sbRadius"/>
+        android:text="PRO/CON"/>
+
+    <Button
+        android:id="@+id/btnDEditBlob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EDIT"/>
 
 </LinearLayout>
