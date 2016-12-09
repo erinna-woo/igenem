@@ -76,10 +76,10 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     }
 
     public void addBlob(Blob newBlob, String key) {
-        blobList.add(newBlob);
-        blobKeys.add(key);
+        blobList.add(0, newBlob);
+        blobKeys.add(0, key);
         //save in sugar ORM??
-        notifyDataSetChanged();
+        notifyItemInserted(0);
     }
 
     public Blob getBlob(int position) {

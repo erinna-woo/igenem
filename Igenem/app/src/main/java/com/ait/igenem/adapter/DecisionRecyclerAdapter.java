@@ -35,9 +35,9 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
     }
 
     public void addDecision(Decision newDecision, String key) {
-        decisionList.add(newDecision);
-        decisionKeys.add(key);
-        notifyDataSetChanged();
+        decisionList.add(0, newDecision);
+        decisionKeys.add(0, key);
+        notifyItemInserted(0);
     }
 
     public void clearDecisions() {
