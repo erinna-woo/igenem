@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 public class ProfileActivity extends AppCompatActivity implements PassDataDecisionInterface{
 
-    // user profile
+    // User profile
     public static final String KEY_D = "KEY_D";
     public static final String KEY_D_KEY = "KEY_D_KEY";
     public static final String KEY_PREVIOUS = "KEY_PREVIOUS";
@@ -66,7 +66,6 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
                 addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("DATA", "numChildren: "+dataSnapshot.getChildrenCount());
                 for (DataSnapshot childSnap : dataSnapshot.getChildren()) {
                     Decision decision = childSnap.getValue(Decision.class);
                     decisionRecyclerAdapter.addDecision(decision, childSnap.getKey());
@@ -88,7 +87,6 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         recyclerDecision.setLayoutManager(mLayoutManager);
         decisionRecyclerAdapter = new DecisionRecyclerAdapter((PassDataDecisionInterface)this);
 
-        //call back? touch helper?
         recyclerDecision.setAdapter(decisionRecyclerAdapter);
     }
 

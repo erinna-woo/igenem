@@ -34,11 +34,11 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.etPassword)
     EditText etPassword;
-    
-    @BindView(R.id.btnLogin) 
+
+    @BindView(R.id.btnLogin)
     Button btnLogin;
-    
-    @BindView(R.id.btnRegister) 
+
+    @BindView(R.id.btnRegister)
     Button btnRegister;
 
     DatabaseReference databaseReference;
@@ -87,9 +87,11 @@ public class LoginActivity extends BaseActivity {
                             User user = new User(usernameFromEmail(fbUser.getEmail()), fbUser.getEmail());
                             databaseReference.child("users").child(fbUser.getUid()).setValue(user);
 
-                            Toast.makeText(LoginActivity.this, "User created", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, R.string.userCreated,
+                                    Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(LoginActivity.this, "error creating user " + task.getException().getLocalizedMessage(),
+                            Toast.makeText(LoginActivity.this, getString(R.string.errorCreatingUser)
+                                            + task.getException().getLocalizedMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -113,7 +115,8 @@ public class LoginActivity extends BaseActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 hideProgressDialog();
                 if (task.isSuccessful()) {
-                    // go to home activity
+
+                    // Go to home activity
                     Intent openHome = new Intent();
                     openHome.setClass(LoginActivity.this, HomeActivity.class);
                     startActivity(openHome);
@@ -139,12 +142,12 @@ public class LoginActivity extends BaseActivity {
 
     private boolean isFormValid() {
         if (TextUtils.isEmpty(etEmail.getText().toString())) {
-            etEmail.setError("required");
+            etEmail.setError(getString(R.string.emailReq));
             return false;
         }
 
         if (TextUtils.isEmpty(etPassword.getText().toString())) {
-            etPassword.setError("required");
+            etPassword.setError(getString(R.string.PWReq));
             return false;
         }
 

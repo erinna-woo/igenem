@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ait.igenem.CreateDecisionActivity;
+import com.ait.igenem.DecisionActivity;
 import com.ait.igenem.PassDataBlobInterface;
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.R;
@@ -28,15 +30,15 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     private List<Blob> blobList;
     private List<String> blobKeys;
     private Blob currBlob;
-    private PassDataBlobInterface passDataInterface;
+    private PassDataBlobInterface passDataBlobInterface;
 
 
-    public BlobRecyclerAdapter(PassDataBlobInterface passDataInterface) {
+    public BlobRecyclerAdapter(PassDataBlobInterface passDataBlobInterface) {
 
         // EACH BLOB SHOULD HAVE SAME INDEX IN blobList and blobKeys
         blobList = new ArrayList<Blob>();
         blobKeys = new ArrayList<String>();
-        this.passDataInterface = passDataInterface;
+        this.passDataBlobInterface = passDataBlobInterface;
     }
 
     @Override
@@ -68,7 +70,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
             public void onClick(View view) {
                 int index = blobKeys.indexOf(key);
                 if (index != -1) {
-                    passDataInterface.showEdit(blobList.get(index), index);
+                    passDataBlobInterface.showEdit(blobList.get(index), index);
                 }
             }
         });
@@ -82,7 +84,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     public void addBlob(Blob newBlob, String key) {
         blobList.add(0, newBlob);
         blobKeys.add(0, key);
-        //save in sugar ORM??
         notifyItemInserted(0);
     }
 

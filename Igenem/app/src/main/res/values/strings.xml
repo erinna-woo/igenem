@@ -15,6 +15,13 @@
     <string name="btn_text_next">next</string>
     <string name="btn_text_back">back</string>
     <string name="btn_text_save">save</string>
+    <string name="userCreated">User created</string>
+    <string name="errorCreatingUser">"Error creating user: "</string>
+    <string name="emailReq">Email is required.</string>
+    <string name="PWReq">Password is required.</string>
+    <string name="enterBlobName">Please enter a name for this blob.</string>
+    <string name="enterBlobRadius">Please enter a radius for this blob.</string>
+    <string name="enterDecisionName">Please enter a decision name</string>
 
     <integer name="anim_length">500</integer>
 </resources>
