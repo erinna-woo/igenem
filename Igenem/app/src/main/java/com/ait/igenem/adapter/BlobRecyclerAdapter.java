@@ -48,24 +48,28 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tvBlobName.setText("Name: " + blobList.get(position).getName());
+        holder.key = blobKeys.get(holder.getAdapterPosition());
+        holder.tvBlobName.setText("Name: " + blobList.get(holder.getAdapterPosition()).getName());
         if (blobList.get(position).isPro()) {
-            holder.tvBlobScore.setText("Score: " + blobList.get(position).getRadius());
+            holder.tvBlobScore.setText("Score: " + blobList.get(holder.getAdapterPosition()).getRadius());
             holder.tvProCon.setText("PRO");
             holder.layoutBlobRow.setBackgroundColor(Color.rgb(173, 244, 203));
         } else {
-            holder.tvBlobScore.setText("Score: -" + blobList.get(position).getRadius());
+            holder.tvBlobScore.setText("Score: -" + blobList.get(holder.getAdapterPosition()).getRadius());
             holder.tvProCon.setText("CON");
             holder.layoutBlobRow.setBackgroundColor(Color.rgb(244, 173, 173));
         }
-        setEditButtonListener(holder, position);
+        setupEditBlobListener(holder, holder.key);
     }
 
-    public void setEditButtonListener(ViewHolder holder, final int position) {
+    private void setupEditBlobListener(final ViewHolder holder, final String key) {
         holder.btnEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                passDataInterface.showEdit(blobList.get(position), position);
+                int index = blobKeys.indexOf(key);
+                if (index != -1) {
+                    passDataInterface.showEdit(blobList.get(index), index);
+                }
             }
         });
     }
@@ -137,10 +141,13 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         @BindView(R.id.layoutBlobRow)
         LinearLayout layoutBlobRow;
 
+        String key;
+
         public ViewHolder(View itemView) {
 
             super(itemView);
             ButterKnife.bind(this, itemView);
+            key = "";
         }
     }
 }

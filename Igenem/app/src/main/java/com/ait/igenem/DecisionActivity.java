@@ -233,6 +233,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         editBlobLayout.setVisibility(View.VISIBLE);
         //TODO: not sure if we need the blob and position
         //idk if this really goes here but i'm too lazy to do it in a better way
+//        Log.i("EDITING", String.valueOf(position));
         final int positionToEdit = position;
         btnPlusPro.setOnClickListener(new View.OnClickListener() {
             @Override
