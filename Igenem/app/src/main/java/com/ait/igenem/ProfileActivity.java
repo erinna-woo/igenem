@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 
 import com.ait.igenem.adapter.DecisionRecyclerAdapter;
+import com.ait.igenem.adapter.DecisionTouchHelperCallback;
 import com.ait.igenem.model.Decision;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -87,6 +89,9 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         recyclerDecision.setLayoutManager(mLayoutManager);
         decisionRecyclerAdapter = new DecisionRecyclerAdapter((PassDataDecisionInterface)this);
 
+        ItemTouchHelper.Callback callback = new DecisionTouchHelperCallback(decisionRecyclerAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerDecision);
         recyclerDecision.setAdapter(decisionRecyclerAdapter);
     }
 

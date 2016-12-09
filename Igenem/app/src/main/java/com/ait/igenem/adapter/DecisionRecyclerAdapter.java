@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.ait.igenem.PassDataDecisionInterface;
 import com.ait.igenem.R;
 import com.ait.igenem.model.Decision;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,8 @@ import butterknife.ButterKnife;
  * Created by Erinna on 12/1/16.
  */
 
-public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecyclerAdapter.ViewHolder> {
+public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecyclerAdapter.ViewHolder>
+        implements DecisionTouchHelperAdapter {
 
     private List<Decision> decisionList;
     private List<String> decisionKeys;
@@ -82,6 +84,13 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
     @Override
     public int getItemCount() {
         return decisionList.size();
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        FirebaseDatabase.getInstance().getReference().child("decisions").
+                child(decisionKeys.get(position)).removeValue();
+        removeDecisionByPos(position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
