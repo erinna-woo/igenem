@@ -21,6 +21,12 @@
         android:layout_height="wrap_content"
         android:text="Temp: New Blob" />
 
+    <Button
+        android:id="@+id/btnDeleteDecision"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DELETE DECISION"/>
+
     <LinearLayout
         android:id="@+id/createBlobLayout"
         android:layout_width="match_parent"
@@ -112,7 +118,6 @@
                 android:layout_height="wrap_content"
                 android:text="CANCEL" />
         </LinearLayout>
-
 
     </LinearLayout>
 

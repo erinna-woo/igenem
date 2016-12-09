@@ -7,6 +7,6 @@ import com.ait.igenem.model.Decision;
  */
 
 public interface PassDataDecisionInterface {
-    void showDecisionActivity(Decision decision);
+    void showDecisionActivity(Decision decision, String key);
 
 }

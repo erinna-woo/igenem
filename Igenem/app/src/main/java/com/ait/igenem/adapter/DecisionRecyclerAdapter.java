@@ -24,22 +24,41 @@ import butterknife.ButterKnife;
 public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecyclerAdapter.ViewHolder> {
 
     private List<Decision> decisionList;
+    private List<String> decisionKeys;
     private PassDataDecisionInterface passDataDecisionInterface;
 
     public DecisionRecyclerAdapter(PassDataDecisionInterface passDataDecisionInterface) {
         this.passDataDecisionInterface = passDataDecisionInterface;
-        decisionList = new ArrayList<Decision>();
+        decisionList = new ArrayList<>();
+        decisionKeys = new ArrayList<>();
         //temp decision
     }
 
-    public void addDecision(Decision newDecision) {
-        decisionList.add(0, newDecision);
-        notifyItemInserted(0);
+    public void addDecision(Decision newDecision, String key) {
+        decisionList.add(newDecision);
+        decisionKeys.add(key);
+        notifyDataSetChanged();
     }
 
     public void clearDecisions() {
         decisionList.clear();
+        decisionKeys.clear();
         notifyDataSetChanged();
+    }
+
+    public void removeDecisionByPos(int position) {
+        decisionList.remove(position);
+        decisionKeys.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void removeDecisionByKey (String key) {
+        int index = decisionKeys.indexOf(key);
+        if (index != -1) {
+            decisionList.remove(index);
+            decisionKeys.remove(index);
+            notifyItemRemoved(index);
+        }
     }
 
 
@@ -56,7 +75,8 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
         holder.layoutDecision.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                passDataDecisionInterface.showDecisionActivity(decisionList.get(position));
+                passDataDecisionInterface.showDecisionActivity(
+                        decisionList.get(position), decisionKeys.get(position));
             }
         });
     }
@@ -66,7 +86,7 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
         return decisionList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tvDecisionName)
         TextView tvDecisionName;

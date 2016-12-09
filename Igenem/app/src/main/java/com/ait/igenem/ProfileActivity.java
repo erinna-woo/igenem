@@ -23,6 +23,8 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
 
     // user profile
     public static final String KEY_D = "KEY_D";
+    public static final String KEY_D_KEY = "KEY_D_KEY";
+    public static final String KEY_PREVIOUS = "KEY_PREVIOUS";
 
     @BindView(R.id.recyclerDecision)
     RecyclerView recyclerDecision;
@@ -58,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
                 Log.i("DATA", "numChildren: "+dataSnapshot.getChildrenCount());
                 for (DataSnapshot childSnap : dataSnapshot.getChildren()) {
                     Decision decision = childSnap.getValue(Decision.class);
-                    decisionRecyclerAdapter.addDecision(decision);
+                    decisionRecyclerAdapter.addDecision(decision, childSnap.getKey());
                     Log.i("DATA", decision.getName());
                 }
             }
@@ -82,10 +84,12 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
     }
 
     @Override
-    public void showDecisionActivity(Decision decision) {
+    public void showDecisionActivity(Decision decision, String key) {
         Intent openDecisionActivity = new Intent();
         openDecisionActivity.setClass(ProfileActivity.this, DecisionActivity.class);
         openDecisionActivity.putExtra(KEY_D, decision);
+        openDecisionActivity.putExtra(KEY_D_KEY, key);
+        openDecisionActivity.putExtra(KEY_PREVIOUS, "ProfileActivity");
         startActivity(openDecisionActivity);
     }
 

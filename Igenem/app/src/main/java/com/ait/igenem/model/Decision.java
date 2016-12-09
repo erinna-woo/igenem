@@ -12,16 +12,14 @@ public class Decision implements Serializable {
     private String color;
     private String owner;
     private String ownerId;
-    private String key;
 
     public Decision() {}
 
-    public Decision(String name, String color, String owner, String ownerId, String key) {
+    public Decision(String name, String color, String owner, String ownerId) {
         this.name = name;
         this.color = color;
         this.owner = owner;
         this.ownerId = ownerId;
-        this.key = key;
     }
 
     public String getName() {
@@ -54,13 +52,5 @@ public class Decision implements Serializable {
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 }
