@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 public class CreateDecisionActivity extends AppCompatActivity {
 
     public static final String KEY_NEW_DECISION = "KEY_NEW_DECISION";
+    public static final String KEY_DECISION_KEY = "KEY_DECISION_KEY";
     private Decision newDecision;
 
     @BindView(R.id.tvCreateDecisionTitle)
@@ -59,12 +60,16 @@ public class CreateDecisionActivity extends AppCompatActivity {
                     String color = "#000000";   //this value will be inputted by user
 
                     Decision newDecision =
-                            new Decision(name, color, getUserName(), getUserId(), getKey());
-                    addDecisionToFirebase(newDecision);
+                            new Decision(name, color, getUserName(), getUserId());
+                    String key = FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
+                    FirebaseDatabase.getInstance().getReference().child("decisions").
+                            child(key).setValue(newDecision);
+                    //addDecisionToFirebase(newDecision);
 
                     Intent addBlobs = new Intent();
                     addBlobs.setClass(CreateDecisionActivity.this, CreateDecisionBlobsActivity.class);
                     addBlobs.putExtra(KEY_NEW_DECISION, newDecision);
+                    addBlobs.putExtra(KEY_DECISION_KEY, key);
                     startActivity(addBlobs);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
                 }
@@ -82,8 +87,9 @@ public class CreateDecisionActivity extends AppCompatActivity {
     }
 
     public void addDecisionToFirebase(Decision decision) {
+        String key = FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
         FirebaseDatabase.getInstance().getReference().child("decisions").
-                child(decision.getKey()).setValue(decision);
+                child(key).setValue(decision);
         newDecision = decision;
     }
 
@@ -93,10 +99,6 @@ public class CreateDecisionActivity extends AppCompatActivity {
 
     public String getUserId() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
-
-    public String getKey() {
-        return FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
     }
 
     @Override

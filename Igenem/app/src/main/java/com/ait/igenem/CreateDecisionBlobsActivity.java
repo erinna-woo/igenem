@@ -42,13 +42,15 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
                         "created Decision", Toast.LENGTH_SHORT).show();
                 Decision newDecision = (Decision) getIntent().getSerializableExtra(
                         CreateDecisionActivity.KEY_NEW_DECISION);
+                String key = getIntent().getStringExtra(CreateDecisionActivity.KEY_DECISION_KEY);
 
                 Intent showDecision = new Intent();
                 showDecision.setClass(CreateDecisionBlobsActivity.this, DecisionActivity.class);
                 showDecision.putExtra(ProfileActivity.KEY_D, newDecision);
+                showDecision.putExtra(ProfileActivity.KEY_D_KEY, key);
+                showDecision.putExtra(ProfileActivity.KEY_PREVIOUS, "CreateDecision");
                 startActivity(showDecision);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
-                showDecision.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 finish();
             }
         });
