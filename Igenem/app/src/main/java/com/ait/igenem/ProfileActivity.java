@@ -70,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
                 for (DataSnapshot childSnap : dataSnapshot.getChildren()) {
                     Decision decision = childSnap.getValue(Decision.class);
                     decisionRecyclerAdapter.addDecision(decision, childSnap.getKey());
-                    Log.i("DATA", decision.getName());
+                    recyclerDecision.scrollToPosition(0);
                 }
             }
 
