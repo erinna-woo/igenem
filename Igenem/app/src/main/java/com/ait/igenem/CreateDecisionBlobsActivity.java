@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import com.ait.igenem.adapter.BlobRecyclerAdapter;
+import com.ait.igenem.adapter.DynamicBlobRecyclerAdapter;
 import com.ait.igenem.model.Decision;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -21,6 +25,14 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
     @BindView(R.id.btnBlobActivitySave)
     Button btnBlobActivitySave;
 
+    @BindView(R.id.btnNewBlob)
+    Button btnNewBlob;
+
+    //Setup RecyclerView
+    @BindView(R.id.recyclerBlob)
+    RecyclerView recyclerBlob;
+    BlobRecyclerAdapter blobRecyclerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +40,36 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        setupUI();
+    }
+
+    private void setupUI() {
         setFont();
         setupBackBtnListener();
         setupSaveBtnListener();
+        setupNewBlobListener();
+        setupRecyclerView();
+    }
+
+    private void setupNewBlobListener() {
+        btnNewBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                blobRecyclerAdapter.showBlob();
+                recyclerBlob.scrollToPosition(0);
+            }
+        });
+    }
+
+    private void setupRecyclerView() {
+        recyclerBlob.setHasFixedSize(true);
+        final LinearLayoutManager mLayoutManager =
+                new LinearLayoutManager(this);
+        recyclerBlob.setLayoutManager(mLayoutManager);
+        blobRecyclerAdapter = new BlobRecyclerAdapter();
+
+        //callback, touchhelper?
+        recyclerBlob.setAdapter(blobRecyclerAdapter);
     }
 
     private void setupSaveBtnListener() {
@@ -45,6 +84,7 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(key).setValue(newDecision);
 
+                Toast.makeText(CreateDecisionBlobsActivity.this, "Save Everything on firebase", Toast.LENGTH_SHORT).show();
                 showDecisionActivity(newDecision, key);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
             }
