@@ -1,11 +1,13 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ait.igenem.model.Decision;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,14 +21,17 @@ public class CreateDecisionActivity extends AppCompatActivity {
     public static final String KEY_NEW_DECISION = "KEY_NEW_DECISION";
     private Decision newDecision;
 
+    @BindView(R.id.tvCreateDecisionTitle)
+    TextView tvCreateDecisionTitle;
+
     @BindView(R.id.etNewDecisionName)
     EditText etNewDecisionName;
 
-    @BindView(R.id.btnInfoFragCancel)
-    Button btnInfoFragCancel;
+    @BindView(R.id.btnInfoActivityCancel)
+    Button btnInfoActivityCancel;
 
-    @BindView(R.id.btnInfoFragNext)
-    Button btnInfoFragNext;
+    @BindView(R.id.btnInfoActivityNext)
+    Button btnInfoActivityNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +40,16 @@ public class CreateDecisionActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        btnInfoFragCancel.setOnClickListener(new View.OnClickListener() {
+        setFont();
+
+        btnInfoActivityCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
 
-        btnInfoFragNext.setOnClickListener(new View.OnClickListener() {
+        btnInfoActivityNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (etNewDecisionName.getText().toString().equals("")) {
@@ -63,6 +70,15 @@ public class CreateDecisionActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setFont() {
+        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
+
+        tvCreateDecisionTitle.setTypeface(font);
+        etNewDecisionName.setTypeface(font);
+        btnInfoActivityCancel.setTypeface(font);
+        btnInfoActivityNext.setTypeface(font);
     }
 
     public void addDecisionToFirebase(Decision decision) {

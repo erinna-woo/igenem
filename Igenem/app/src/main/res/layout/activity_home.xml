@@ -18,6 +18,7 @@
         android:background="@drawable/profile" />
 
     <TextView
+        android:id="@+id/tvHomeGreeting"
         style="@style/CenterText"
         android:layout_marginTop="90dp"
         android:text="@string/tv_home_greeting"/>

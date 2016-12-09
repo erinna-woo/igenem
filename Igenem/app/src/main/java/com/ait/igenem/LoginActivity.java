@@ -1,11 +1,13 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ait.igenem.model.User;
@@ -23,6 +25,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
+
+    @BindView(R.id.tvLoginTitle)
+    TextView tvLoginTitle;
 
     @BindView(R.id.etEmail)
     EditText etEmail;
@@ -45,8 +50,20 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        setFont();
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    private void setFont() {
+        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
+
+        tvLoginTitle.setTypeface(font);
+        etEmail.setTypeface(font);
+        etPassword.setTypeface(font);
+        btnLogin.setTypeface(font);
+        btnRegister.setTypeface(font);
     }
 
     @OnClick(R.id.btnRegister)

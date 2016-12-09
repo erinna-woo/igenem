@@ -19,13 +19,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnBlobFragBack"
+            android:id="@+id/btnBlobActivityBack"
             style="@style/RoundedButton"
             android:text="@string/btn_text_back"
             android:layout_marginBottom="2dp"/>
 
         <Button
-            android:id="@+id/btnBlobFragSave"
+            android:id="@+id/btnBlobActivitySave"
             style="@style/RoundedButton"
             android:text="@string/btn_text_save"
             android:layout_alignParentEnd="true"

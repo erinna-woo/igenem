@@ -1,6 +1,7 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,11 +15,11 @@ import butterknife.ButterKnife;
 
 public class CreateDecisionBlobsActivity extends AppCompatActivity {
 
-    @BindView(R.id.btnBlobFragBack)
-    Button btnBlobFragBack;
+    @BindView(R.id.btnBlobActivityBack)
+    Button btnBlobActivityBack;
 
-    @BindView(R.id.btnBlobFragSave)
-    Button btnBlobFragSave;
+    @BindView(R.id.btnBlobActivitySave)
+    Button btnBlobActivitySave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +28,14 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        btnBlobFragBack.setOnClickListener(new View.OnClickListener() {
+        btnBlobActivityBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
 
-        btnBlobFragSave.setOnClickListener(new View.OnClickListener() {
+        btnBlobActivitySave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(CreateDecisionBlobsActivity.this, "show DecisionActivity for this newly " +
@@ -51,6 +52,13 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void setFont() {
+        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
+
+        btnBlobActivityBack.setTypeface(font);
+        btnBlobActivitySave.setTypeface(font);
     }
 
     @Override
