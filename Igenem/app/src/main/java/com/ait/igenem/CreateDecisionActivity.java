@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.ait.igenem.model.Decision;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,23 +70,18 @@ public class CreateDecisionActivity extends AppCompatActivity {
                     //TODO: error if they don't select a color?
                     Decision newDecision =
                             new Decision(name, color, getUserName(), getUserId());
-                    String key = FirebaseDatabase.getInstance().getReference().child("decisions").
-                            push().getKey();
-                    FirebaseDatabase.getInstance().getReference().child("decisions").
-                            child(key).setValue(newDecision);
 
-                    openCreateDecisionBlobsActivity(newDecision, key);
+                    openCreateDecisionBlobsActivity(newDecision);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
                 }
             }
         });
     }
 
-    private void openCreateDecisionBlobsActivity(Decision newDecision, String key) {
+    private void openCreateDecisionBlobsActivity(Decision newDecision) {
         Intent addBlobs = new Intent();
         addBlobs.setClass(CreateDecisionActivity.this, CreateDecisionBlobsActivity.class);
         addBlobs.putExtra(KEY_NEW_DECISION, newDecision);
-        addBlobs.putExtra(KEY_DECISION_KEY, key);
         startActivity(addBlobs);
     }
 
