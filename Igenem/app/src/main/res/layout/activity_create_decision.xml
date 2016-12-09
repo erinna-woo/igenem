@@ -33,13 +33,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnInfoActivityCancel"
+            android:id="@+id/btnCancel"
             style="@style/RoundedButton"
             android:text="@string/btn_text_cancel"
             android:layout_marginBottom="2dp"/>
 
         <Button
-            android:id="@+id/btnInfoActivityNext"
+            android:id="@+id/btnNext"
             style="@style/RoundedButton"
             android:text="@string/btn_text_next"
             android:layout_alignParentEnd="true"

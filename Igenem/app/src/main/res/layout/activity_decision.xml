@@ -11,6 +11,7 @@
     tools:context="com.ait.igenem.DecisionActivity">
 
     <TextView
+        android:id="@+id/tvDecisionName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="MY DECISION NAME" />
@@ -83,13 +84,13 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnPlusPro"
+                android:id="@+id/btnPlus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+" />
 
             <Button
-                android:id="@+id/btnMinusCon"
+                android:id="@+id/btnMinus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-" />

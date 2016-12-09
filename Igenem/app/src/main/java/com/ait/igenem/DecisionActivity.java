@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.ait.igenem.adapter.BlobRecyclerAdapter;
 import com.ait.igenem.model.Blob;
@@ -27,6 +28,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
 
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
+    @BindView(R.id.tvDecisionName)
+    TextView tvDecisionName;
 
     //Editing blob
     @BindView(R.id.editBlobLayout)
@@ -36,10 +39,10 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
     @BindView(R.id.btnCancelEdit)
     Button btnCancelEdit;
 
-    @BindView(R.id.btnPlusPro)
-    Button btnPlusPro;
-    @BindView(R.id.btnMinusCon)
-    Button btnMinusCon;
+    @BindView(R.id.btnPlus)
+    Button btnPlus;
+    @BindView(R.id.btnMinus)
+    Button btnMinus;
     @BindView(R.id.btnDeleteBlob)
     Button btnDeleteBlob;
 
@@ -76,10 +79,9 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
 
         previousActivity = getIntent().getStringExtra(ProfileActivity.KEY_PREVIOUS);
 
-        //set the title as the decision name
         decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
         decisionKey = this.getIntent().getStringExtra(ProfileActivity.KEY_D_KEY);
-        this.setTitle(decision.getName());
+
         setupDecisionUI();
         setupFirebaseListener();
     }
@@ -91,11 +93,10 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
             Intent goProfileIntent = new Intent();
             goProfileIntent.setClass(DecisionActivity.this, ProfileActivity.class);
             startActivity(goProfileIntent);
-        }
-        else if (previousActivity.equals("CreateDecision")) {
+        } else if (previousActivity.equals("CreateDecision")) {
             Intent goHomeIntent = new Intent();
             goHomeIntent.setClass(DecisionActivity.this, HomeActivity.class);
-            //clear entire back stack so when you click back from home, exit
+            //Clear entire back stack so when you click back from HomeActivity, the app exits.
             goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(goHomeIntent);
         }
@@ -106,37 +107,38 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         ref.child("decisions").child(decisionKey).child("blobs").orderByKey().
                 addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Blob newBlob = dataSnapshot.getValue(Blob.class);
-                blobRecyclerAdapter.addBlob(newBlob, dataSnapshot.getKey());
-                recyclerBlob.scrollToPosition(0);
-            }
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Blob newBlob = dataSnapshot.getValue(Blob.class);
+                        blobRecyclerAdapter.addBlob(newBlob, dataSnapshot.getKey());
+                        recyclerBlob.scrollToPosition(0);
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Blob changedBlob = dataSnapshot.getValue(Blob.class);
-                blobRecyclerAdapter.updateBlob(changedBlob, dataSnapshot.getKey());
-            }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        Blob changedBlob = dataSnapshot.getValue(Blob.class);
+                        blobRecyclerAdapter.updateBlob(changedBlob, dataSnapshot.getKey());
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                blobRecyclerAdapter.removeBlobByKey(dataSnapshot.getKey());
-            }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        blobRecyclerAdapter.removeBlobByKey(dataSnapshot.getKey());
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void setupDecisionUI() {
+        tvDecisionName.setText(decision.getName());
         setupNewBlobButton();
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
@@ -152,7 +154,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).removeValue();
 
-                //go back to profile page
+                //Go back to profile page
                 Intent showProfileIntent = new Intent();
                 showProfileIntent.setClass(DecisionActivity.this, ProfileActivity.class);
                 startActivity(showProfileIntent);
@@ -176,7 +178,6 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: set diff values
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
@@ -193,24 +194,30 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         btnOkNewBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // do i need an onclick listener for the cb?
 
-                // add newBlob to Firebase
+                // Add newBlob to Firebase, obtain key.
                 String key = FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).child("blobs").push().getKey();
 
-                Blob newBlob = new Blob(etBlobName.getText().toString(),
-                        cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
+                if (etBlobName.getText().toString().equals("")) {
+                    etBlobName.setError(getString(R.string.enterBlobName));
+                }
+                //TODO: delete later. won't be setting a radius.
+                if (etBlobRadius.getText().toString().equals("")) {
+                    etBlobRadius.setError(getString(R.string.enterBlobRadius));
+                } else {
+                    Blob newBlob = new Blob(etBlobName.getText().toString(),
+                            cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
 
-                FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(decisionKey).child("blobs").child(key).setValue(newBlob);
+                    FirebaseDatabase.getInstance().getReference().child("decisions").
+                            child(decisionKey).child("blobs").child(key).setValue(newBlob);
 
-                resetCreateBlobLayout();
-                recyclerBlob.scrollToPosition(0);
+                    resetCreateBlobLayout();
+                    recyclerBlob.scrollToPosition(0);
+                }
             }
         });
     }
-
 
     private void resetCreateBlobLayout() {
         createBlobLayout.setVisibility(View.GONE);
@@ -223,6 +230,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         btnNewBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                editBlobLayout.setVisibility(View.GONE);
                 createBlobLayout.setVisibility(View.VISIBLE);
             }
         });
@@ -230,34 +238,17 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
 
     @Override
     public void showEdit(Blob blobToEdit, int position) {
+        createBlobLayout.setVisibility(View.GONE);
         editBlobLayout.setVisibility(View.VISIBLE);
         //TODO: not sure if we need the blob and position
-        //idk if this really goes here but i'm too lazy to do it in a better way
         final int positionToEdit = position;
-        btnPlusPro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                increaseRadius(positionToEdit);
-            }
-        });
+        setupPlusListener(positionToEdit);
+        setupMinusListener(positionToEdit);
+        setupDeleteListener(positionToEdit);
+        setupOkEditListener(positionToEdit);
+    }
 
-        btnMinusCon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                decreaseRadius(positionToEdit);
-            }
-        });
-
-        btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
-                FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(decisionKey).child("blobs").child(key).removeValue();
-                editBlobLayout.setVisibility(View.GONE);
-            }
-        });
-
+    private void setupOkEditListener(final int positionToEdit) {
         btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -267,7 +258,36 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
+    }
 
+    private void setupDeleteListener(final int positionToEdit) {
+        btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String key = blobRecyclerAdapter.getBlobKey(positionToEdit);
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(decisionKey).child("blobs").child(key).removeValue();
+                editBlobLayout.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void setupMinusListener(final int positionToEdit) {
+        btnMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                decreaseRadius(positionToEdit);
+            }
+        });
+    }
+
+    private void setupPlusListener(final int positionToEdit) {
+        btnPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                increaseRadius(positionToEdit);
+            }
+        });
     }
 
     private void updateBlobFirebase(Blob updating, String key) {
@@ -288,6 +308,5 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         updating.decreaseRadius();
         blobRecyclerAdapter.updateBlob(updating, key);
     }
-
 
 }

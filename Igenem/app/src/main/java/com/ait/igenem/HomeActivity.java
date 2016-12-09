@@ -13,11 +13,6 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
-    // Hello Peter, let's make a decision
-    // profile button
-    // new decision button
-    //TODO: why is this a nav bar activity?
-
     @BindView(R.id.tvHomeGreeting)
     TextView tvHomeGreeting;
 

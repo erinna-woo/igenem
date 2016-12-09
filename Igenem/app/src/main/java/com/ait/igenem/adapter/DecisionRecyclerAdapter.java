@@ -31,7 +31,6 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
         this.passDataDecisionInterface = passDataDecisionInterface;
         decisionList = new ArrayList<>();
         decisionKeys = new ArrayList<>();
-        //temp decision
     }
 
     public void addDecision(Decision newDecision, String key) {
@@ -52,7 +51,7 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
         notifyItemRemoved(position);
     }
 
-    public void removeDecisionByKey (String key) {
+    public void removeDecisionByKey(String key) {
         int index = decisionKeys.indexOf(key);
         if (index != -1) {
             decisionList.remove(index);
@@ -60,7 +59,6 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
             notifyItemRemoved(index);
         }
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

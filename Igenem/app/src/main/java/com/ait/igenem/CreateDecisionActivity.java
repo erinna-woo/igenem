@@ -28,11 +28,11 @@ public class CreateDecisionActivity extends AppCompatActivity {
     @BindView(R.id.etNewDecisionName)
     EditText etNewDecisionName;
 
-    @BindView(R.id.btnInfoActivityCancel)
-    Button btnInfoActivityCancel;
+    @BindView(R.id.btnCancel)
+    Button btnCancel;
 
-    @BindView(R.id.btnInfoActivityNext)
-    Button btnInfoActivityNext;
+    @BindView(R.id.btnNext)
+    Button btnNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,41 +40,55 @@ public class CreateDecisionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_decision);
 
         ButterKnife.bind(this);
+        setupUI();
+    }
 
+    private void setupUI() {
         setFont();
+        setupCancelBtnListener();
+        setupNextListener();
+    }
 
-        btnInfoActivityCancel.setOnClickListener(new View.OnClickListener() {
+    private void setupCancelBtnListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+    }
 
-        btnInfoActivityNext.setOnClickListener(new View.OnClickListener() {
+    private void setupNextListener() {
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (etNewDecisionName.getText().toString().equals("")) {
-                    etNewDecisionName.setError("Please enter a decision name");
+                    etNewDecisionName.setError(getString(R.string.enterDecisionName));
                 } else {
                     String name = etNewDecisionName.getText().toString();
-                    String color = "#000000";   //this value will be inputted by user
+                    String color = "#000000";   //This value will be inputted by user
 
+                    //TODO: error if they don't select a color?
                     Decision newDecision =
                             new Decision(name, color, getUserName(), getUserId());
-                    String key = FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
+                    String key = FirebaseDatabase.getInstance().getReference().child("decisions").
+                            push().getKey();
                     FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(key).setValue(newDecision);
-                    //addDecisionToFirebase(newDecision);
 
-                    Intent addBlobs = new Intent();
-                    addBlobs.setClass(CreateDecisionActivity.this, CreateDecisionBlobsActivity.class);
-                    addBlobs.putExtra(KEY_NEW_DECISION, newDecision);
-                    addBlobs.putExtra(KEY_DECISION_KEY, key);
-                    startActivity(addBlobs);
+                    openCreateDecisionBlobsActivity(newDecision, key);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
                 }
             }
         });
+    }
+
+    private void openCreateDecisionBlobsActivity(Decision newDecision, String key) {
+        Intent addBlobs = new Intent();
+        addBlobs.setClass(CreateDecisionActivity.this, CreateDecisionBlobsActivity.class);
+        addBlobs.putExtra(KEY_NEW_DECISION, newDecision);
+        addBlobs.putExtra(KEY_DECISION_KEY, key);
+        startActivity(addBlobs);
     }
 
     private void setFont() {
@@ -82,15 +96,8 @@ public class CreateDecisionActivity extends AppCompatActivity {
 
         tvCreateDecisionTitle.setTypeface(font);
         etNewDecisionName.setTypeface(font);
-        btnInfoActivityCancel.setTypeface(font);
-        btnInfoActivityNext.setTypeface(font);
-    }
-
-    public void addDecisionToFirebase(Decision decision) {
-        String key = FirebaseDatabase.getInstance().getReference().child("decisions").push().getKey();
-        FirebaseDatabase.getInstance().getReference().child("decisions").
-                child(key).setValue(decision);
-        newDecision = decision;
+        btnCancel.setTypeface(font);
+        btnNext.setTypeface(font);
     }
 
     public String getUserName() {
