@@ -1,8 +1,10 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -52,8 +54,27 @@ public class LoginActivity extends BaseActivity {
 
         setFont();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.getBoolean("firstTime", false)) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTime", true);
+            editor.commit();
+        }
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.keepSynced(true);
         firebaseAuth = FirebaseAuth.getInstance();
+
+        //if user already logged in, go directly to home
+        if (firebaseAuth.getCurrentUser() != null) {
+            Intent goHomeIntent = new Intent();
+            goHomeIntent.setClass(LoginActivity.this, HomeActivity.class);
+            goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(goHomeIntent);
+        }
     }
 
     private void setFont() {
