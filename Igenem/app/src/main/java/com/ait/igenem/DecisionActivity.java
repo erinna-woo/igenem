@@ -89,19 +89,21 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
         decisionKey = this.getIntent().getStringExtra(ProfileActivity.KEY_D_KEY);
 
-        //String decisionColor = decision.getColor();
-        int decisionColor = decision.getColor();
-        Float percentColor = decision.getPercentPro();
-
-        //int intColor = Integer.parseInt(decisionColor, 16);
-        float[] hsv = new float[3];
-        Color.colorToHSV(decisionColor, hsv);
-        hsv[1] = hsv[1] * percentColor;
-        linearLayoutDecision.setBackgroundColor(Color.HSVToColor(hsv));
+        updateBackgroundColor();
 
         setupDecisionUI();
         setupFirebaseListener();
 
+    }
+
+    private void updateBackgroundColor() {
+        int decisionColor = decision.getColor();
+        Float percentColor = decision.getPercentPro();
+        float[] hsv = new float[3];
+        Color.colorToHSV(decisionColor, hsv);
+        hsv[1] = hsv[1] * percentColor;
+        linearLayoutDecision.setBackgroundColor(Color.HSVToColor(hsv));
+        recyclerDynamicBlob.setBackgroundColor(Color.HSVToColor(hsv));
     }
 
 
@@ -215,10 +217,6 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
             @Override
             public void onClick(View view) {
 
-                // Add newBlob to Firebase, obtain key.
-                String key = FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(decisionKey).child("blobs").push().getKey();
-
                 if (etBlobName.getText().toString().equals("")) {
                     etBlobName.setError(getString(R.string.enterBlobName));
                 }
@@ -226,12 +224,17 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 if (etBlobRadius.getText().toString().equals("")) {
                     etBlobRadius.setError(getString(R.string.enterBlobRadius));
                 } else {
+                    // Add newBlob to Firebase, obtain key.
+                    String key = FirebaseDatabase.getInstance().getReference().child("decisions").
+                            child(decisionKey).child("blobs").push().getKey();
+
                     Blob newBlob = new Blob(etBlobName.getText().toString(),
                             cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
                     FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(decisionKey).child("blobs").child(key).setValue(newBlob);
 
                     updateDecisionScoreNewBlob();
+                    updateBackgroundColor();
 
                     resetCreateBlobLayout();
                     recyclerDynamicBlob.scrollToPosition(0);
@@ -291,6 +294,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 Blob blob = dynamicBlobRecyclerAdapter.getBlob(positionToEdit);
                 updateBlobFirebase(blob, key);
                 updateScoreFirebase();
+                updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
@@ -304,6 +308,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).child("blobs").child(key).removeValue();
                 updateDecisionScoreDeleteBlob(positionToEdit);
+                updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
