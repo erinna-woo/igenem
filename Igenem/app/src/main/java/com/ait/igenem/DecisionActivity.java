@@ -1,10 +1,12 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,6 +28,9 @@ import butterknife.ButterKnife;
 //TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
 
 public class DecisionActivity extends AppCompatActivity implements PassDataBlobInterface {
+
+    @BindView(R.id.linearLayoutDecision)
+    LinearLayout linearLayoutDecision;
 
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
@@ -84,6 +89,16 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
 
         decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
         decisionKey = this.getIntent().getStringExtra(ProfileActivity.KEY_D_KEY);
+
+        String decisionColor = decision.getColor();
+        int brightness = (int) decision.getPercentPro();
+        int rColor = Integer.parseInt(decisionColor.substring(0, 2), 16) * brightness;
+        int gColor = Integer.parseInt(decisionColor.substring(2, 4), 16) * brightness;
+        int bColor = Integer.parseInt(decisionColor.substring(4, 6), 16) * brightness;
+
+        Log.i("COLOR", String.valueOf(rColor)+", "+String.valueOf(gColor)+", "+String.valueOf(bColor));
+
+        linearLayoutDecision.setBackgroundColor(Color.rgb(rColor, gColor, bColor));
 
         setupDecisionUI();
         setupFirebaseListener();

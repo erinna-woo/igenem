@@ -72,7 +72,6 @@ public class CreateDecisionActivity extends AppCompatActivity {
                     int colorInt = colorPickerView.getSelectedColor();
                     String colorHex = Integer.toHexString(colorInt);
                     colorHex = colorHex.substring(colorHex.length() - 6);
-                    colorHex = "#" + colorHex;
 
                     //TODO: error if they don't select a color? White is default tho.
                     Decision newDecision =
