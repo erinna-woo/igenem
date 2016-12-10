@@ -4,6 +4,10 @@
 
     <string name="tv_home_greeting">Let\'s make a decision!</string>
     <string name="tv_new_decision">New Decision</string>
+    <string name="tv_email_sent">Email sent.</string>
+    <string name="tv_email_send_failed">"Email failed to send: "</string>
+    <string name="tv_percent_pro">% For</string>
+    <string name="tv_percent_con">% Against</string>
 
     <string name="hint_enter_title">enter title</string>
     <string name="hint_email">email</string>
@@ -30,8 +34,6 @@
     <string name="enterBlobRadius">Please enter a valid radius for this blob.</string>
     <string name="enterDecisionName">Please enter a decision name</string>
     <string name="exception_not_implementing">This Activity is not implementing onAddCityAnswerInterface</string>
-    <string name="tv_email_sent">Email sent.</string>
-    <string name="tv_email_send_failed">"Email failed to send: "</string>
     <string name="reset_pw_dialog">Reset</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
