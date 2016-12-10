@@ -2,6 +2,7 @@ package com.ait.igenem.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -18,27 +19,21 @@ public class TouchCreateBlobView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
+        //return super.onTouchEvent(event);
 
-    /*
-    private class GrowBlobThread extends Thread {
-        public void run() {
-            while (enabled) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //tvData.append("#");
-                    }
-                });
+        int x = (int) event.getX();
+        int y = (int) event.getY();
 
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                Log.i("TAG", "touched down: (" + x + ", " + y + ")");
+
+                break;
+            case MotionEvent.ACTION_UP:
+                Log.i("TAG", "touched up");
+                break;
         }
+
+        return true;
     }
-    */
 }
