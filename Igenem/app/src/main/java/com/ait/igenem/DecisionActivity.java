@@ -178,8 +178,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Blob newBlob = dataSnapshot.getValue(Blob.class);
                         addBlob(newBlob, dataSnapshot.getKey());
-                        setBlobXPos(newBlob);
-                        setBlobYPos(newBlob);
+                        setBlobPos(newBlob);
                         drawAllBlobs();
                         Log.d("DOWEHAVEIT", "onChildAdded: " + newBlob.getName());
                     }
@@ -207,14 +206,46 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 });
     }
 
-    private void setBlobYPos(Blob newBlob) {
-        newBlob.setPosy((int)(Math.random()* (createBlobView.getHeight()-newBlob.getRadius()))
-                +newBlob.getRadius());
+    private void setBlobPos(Blob newBlob) {
+        int posx = getBlobXPos(newBlob.getRadius());
+        int posy = getBlobYPos(newBlob.getRadius());
+
+        int diffx;
+        int diffy;
+        int sumr;
+
+        for(int i = 0; i < dynamicBlobList.size(); i++){
+            Blob currblob = dynamicBlobList.get(i);
+
+            diffx = Math.abs(currblob.getPosx() - posx);
+            diffy = Math.abs(currblob.getPosy() - posy);
+            sumr = currblob.getRadius() + newBlob.getRadius();
+
+            while(diffx <= sumr ){
+                posx = getBlobXPos(newBlob.getRadius());
+                diffx = Math.abs(currblob.getPosx() - posx);
+            }
+            //will exit when diffx > sumr
+            while(diffy <= sumr ){
+                posy = getBlobYPos(newBlob.getRadius());
+                diffy= Math.abs(currblob.getPosy() - posy);
+            }
+            //will exit when diffy > sumr
+        }
+        newBlob.setPosx(posx);
+        newBlob.setPosy(posy);
+
+
     }
 
-    private void setBlobXPos(Blob newBlob) {
-        newBlob.setPosx((int)(Math.random()* (createBlobView.getWidth()-newBlob.getRadius()))
-                +newBlob.getRadius());
+    private int getBlobYPos(int r) {
+        return (int)(Math.random()* (createBlobView.getHeight()-r))
+                +r;
+    }
+
+    private int getBlobXPos(int r) {
+        return (int)(Math.random()* (createBlobView.getWidth()-r))
+                +r;
     }
 
     private void drawAllBlobs(){

@@ -127,7 +127,7 @@
     <com.ait.igenem.view.TouchCreateBlobView
         android:id="@+id/createBlobView"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="400dp"
         android:background="@color/colorCloud">
 
     </com.ait.igenem.view.TouchCreateBlobView>

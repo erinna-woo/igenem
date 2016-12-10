@@ -76,15 +76,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
                 }
             }
         });
-//        holder.swProCon.setOn(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                currBlob = blobList.get(holder.getAdapterPosition());
-//                currBlob.setPro(!(currBlob.isPro()));
-//                //notifyItemChanged(holder.getAdapterPosition());
-//
-//            }
-//        });
     }
 
     private void setupRadiusListener(final ViewHolder holder) {

@@ -25,7 +25,8 @@ import static android.R.attr.enabled;
 
 public class TouchCreateBlobView extends View {
 
-    private Paint paintBlob;
+    private Paint paintBlobPro;
+    private Paint paintBlobCon;
     private Paint paintText;
 
     private Blob currBlob;
@@ -35,10 +36,13 @@ public class TouchCreateBlobView extends View {
 
     public TouchCreateBlobView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        paintBlob = new Paint();
-        //set to use color
-        paintBlob.setColor(Color.GRAY);
-        paintBlob.setStyle(Paint.Style.FILL);
+        paintBlobPro = new Paint();
+        paintBlobPro.setColor(Color.WHITE);
+        paintBlobPro.setStyle(Paint.Style.FILL);
+
+        paintBlobCon = new Paint();
+        paintBlobCon.setColor(Color.BLACK);
+        paintBlobCon.setStyle(Paint.Style.FILL);
 
         paintText = new Paint();
         paintText.setColor(Color.RED);
@@ -50,13 +54,20 @@ public class TouchCreateBlobView extends View {
         //currDecision = passDataDynamicBlobInterface.getDecision();
         super.onDraw(canvas);
         blobList = (List<Blob>) getTag(R.string.blob);
-//        posX = (int) getTag(R.string.pos_x);
-//        posY = (int) getTag(R.string.pos_y);
+
         if(blobList != null) {
             for (int i = 0; i < blobList.size(); i++) {
                 currBlob = blobList.get(i);
-                canvas.drawCircle(currBlob.getPosx(), currBlob.getPosx(), currBlob.getRadius(), paintBlob);
-                canvas.drawText(currBlob.getName(), currBlob.getPosx(), currBlob.getPosx(), paintText);
+                if(currBlob.isPro()){
+                    canvas.drawCircle(currBlob.getPosx(), currBlob.getPosy(),
+                            currBlob.getRadius(), paintBlobPro);
+                }
+                else if(!currBlob.isPro()){
+                    canvas.drawCircle(currBlob.getPosx(), currBlob.getPosy(),
+                            currBlob.getRadius(), paintBlobCon);
+
+                }
+                canvas.drawText(currBlob.getName(), currBlob.getPosx(), currBlob.getPosy(), paintText);
             }
         }
 
