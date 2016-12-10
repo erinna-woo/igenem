@@ -26,7 +26,7 @@
     <string name="emailReq">Email is required.</string>
     <string name="PWReq">Password is required.</string>
     <string name="enterBlobName">Please enter a name for this blob.</string>
-    <string name="enterBlobRadius">Please enter a radius for this blob.</string>
+    <string name="enterBlobRadius">Please enter a valid radius for this blob.</string>
     <string name="enterDecisionName">Please enter a decision name</string>
     <string name="exception_not_implementing">This Activity is not implementing onAddCityAnswerInterface</string>
     <string name="tv_email_sent">Email sent.</string>
@@ -35,6 +35,9 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="alert_dialog_title">Forgot your password?</string>
+    <string name="blob">blob</string>
+    <string name="pos_x">posX</string>
+    <string name="pos_y">posY</string>
 
     <integer name="anim_length">500</integer>
 </resources>

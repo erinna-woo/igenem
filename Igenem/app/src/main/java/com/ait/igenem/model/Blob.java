@@ -8,6 +8,8 @@ public class Blob {
     private String name;
     private boolean isPro;
     private int radius;
+    private int posx;
+    private int posy;
 
     public Blob(){
 
@@ -17,6 +19,22 @@ public class Blob {
         this.name = name;
         this.isPro = isPro;
         this.radius = radius;
+    }
+
+    public int getPosx() {
+        return posx;
+    }
+
+    public void setPosx(int posx) {
+        this.posx = posx;
+    }
+
+    public int getPosy() {
+        return posy;
+    }
+
+    public void setPosy(int posy) {
+        this.posy = posy;
     }
 
     public String getName() {
