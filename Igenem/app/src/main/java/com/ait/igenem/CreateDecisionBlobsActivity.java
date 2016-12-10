@@ -75,8 +75,7 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
                 new LinearLayoutManager(this);
         recyclerBlob.setLayoutManager(mLayoutManager);
         blobRecyclerAdapter = new BlobRecyclerAdapter(this);
-        //recyclerBlob.setItemViewCacheSize(100);
-        //callback, touchhelper?
+        recyclerBlob.setItemViewCacheSize(100);
         recyclerBlob.setAdapter(blobRecyclerAdapter);
     }
 
