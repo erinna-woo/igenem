@@ -6,14 +6,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.ait.igenem.model.Blob;
@@ -64,13 +63,13 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     @BindView(R.id.createBlobLayout)
     LinearLayout createBlobLayout;
     @BindView(R.id.btnDOkNewBlob)
-    Button btnOkNewBlob;
+    Button btnDOkNewBlob;
     @BindView(R.id.etDBlobName)
-    EditText etBlobName;
-    @BindView(R.id.etDBlobRadius)
-    EditText etBlobRadius;
-    @BindView(R.id.cbDProCheckBox)
-    CheckBox cbProCheck;
+    EditText etDBlobName;
+    @BindView(R.id.swDProCon)
+    Switch swDProCon;
+    @BindView(R.id.sbDRadius)
+    SeekBar sbDRadius;
 
     //deleting decision
     @BindView(R.id.btnDeleteDecision)
@@ -222,24 +221,24 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         int diffy;
         int sumr;
 
-        for(int i = 0; i < dynamicBlobList.size(); i++){
-            Blob currblob = dynamicBlobList.get(i);
-
-            diffx = Math.abs(currblob.getPosx() - posx);
-            diffy = Math.abs(currblob.getPosy() - posy);
-            sumr = currblob.getRadius() + newBlob.getRadius();
-
-            while(diffx <= sumr ){
-                posx = getBlobXPos(newBlob.getRadius());
-                diffx = Math.abs(currblob.getPosx() - posx);
-            }
-            //will exit when diffx > sumr
-            while(diffy <= sumr ){
-                posy = getBlobYPos(newBlob.getRadius());
-                diffy= Math.abs(currblob.getPosy() - posy);
-            }
-            //will exit when diffy > sumr
-        }
+//        for(int i = 0; i < dynamicBlobList.size(); i++){
+//            Blob currblob = dynamicBlobList.get(i);
+//
+//            diffx = Math.abs(currblob.getPosx() - posx);
+//            diffy = Math.abs(currblob.getPosy() - posy);
+//            sumr = currblob.getRadius() + newBlob.getRadius();
+//
+//            while(diffx <= sumr ){
+//                posx = getBlobXPos(newBlob.getRadius());
+//                diffx = Math.abs(currblob.getPosx() - posx);
+//            }
+//            //will exit when diffx > sumr
+//            while(diffy <= sumr ){
+//                posy = getBlobYPos(newBlob.getRadius());
+//                diffy= Math.abs(currblob.getPosy() - posy);
+//            }
+//            //will exit when diffy > sumr
+//        }
         newBlob.setPosx(posx);
         newBlob.setPosy(posy);
 
@@ -311,24 +310,20 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     }
 
     private void setupOkayCreateBlobButton() {
-        btnOkNewBlob.setOnClickListener(new View.OnClickListener() {
+        btnDOkNewBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (etBlobName.getText().toString().equals("")) {
-                    etBlobName.setError(getString(R.string.enterBlobName));
+                if (etDBlobName.getText().toString().equals("")) {
+                    etDBlobName.setError(getString(R.string.enterBlobName));
                 }
-                //TODO: delete later. won't be setting a radius.
-                if (etBlobRadius.getText().toString().equals("") ||
-                        Integer.valueOf(etBlobRadius.getText().toString()) > 100) {
-                    etBlobRadius.setError(getString(R.string.enterBlobRadius));
-                } else {
+
                     // Add newBlob to Firebase, obtain key.
                     String key = FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(decisionKey).child("blobs").push().getKey();
 
-                    Blob newBlob = new Blob(etBlobName.getText().toString(),
-                            cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
+                    Blob newBlob = new Blob(etDBlobName.getText().toString(),
+                            (!swDProCon.isChecked()), sbDRadius.getProgress());
                     FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(decisionKey).child("blobs").child(key).setValue(newBlob);
 
@@ -336,13 +331,13 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                     updateBackgroundColor();
 
                     resetCreateBlobLayout();
-                }
+
             }
         });
     }
 
     private void updateDecisionScoreNewBlob() {
-        decision.updateScoreNewBlob(Integer.parseInt(etBlobRadius.getText().toString()),cbProCheck.isChecked());
+        decision.updateScoreNewBlob(sbDRadius.getProgress(),(!swDProCon.isChecked()));
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         updateScoreFirebase();
     }
@@ -356,9 +351,9 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 
     private void resetCreateBlobLayout() {
         createBlobLayout.setVisibility(View.GONE);
-        etBlobName.setText("");
-        etBlobRadius.setText("");
-        cbProCheck.setChecked(false);
+        etDBlobName.setText("");
+        sbDRadius.setProgress(0);
+        swDProCon.setChecked(false);
     }
 
     private void setupNewBlobButton() {
