@@ -70,12 +70,10 @@ public class CreateDecisionActivity extends AppCompatActivity {
                 } else {
                     String name = etNewDecisionName.getText().toString();
                     int colorInt = colorPickerView.getSelectedColor();
-                    String colorHex = Integer.toHexString(colorInt);
-                    colorHex = colorHex.substring(colorHex.length() - 6);
 
                     //TODO: error if they don't select a color? White is default tho.
                     Decision newDecision =
-                            new Decision(name, colorHex, getUserName(), getUserId());
+                            new Decision(name, colorInt, getUserName(), getUserId());
 
                     openCreateDecisionBlobsActivity(newDecision);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);

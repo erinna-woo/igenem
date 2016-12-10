@@ -1,7 +1,5 @@
 package com.ait.igenem.model;
 
-import android.util.Log;
-
 import java.io.Serializable;
 
 /**
@@ -11,7 +9,7 @@ import java.io.Serializable;
 public class Decision implements Serializable {
 
     private String name;
-    private String color;
+    private int color;
     private String owner;
     private String ownerId;
     private int totalScore;
@@ -19,7 +17,7 @@ public class Decision implements Serializable {
 
     public Decision() {}
 
-    public Decision(String name, String color, String owner, String ownerId) {
+    public Decision(String name, int color, String owner, String ownerId) {
         this.name = name;
         this.color = color;
         this.owner = owner;
@@ -36,11 +34,11 @@ public class Decision implements Serializable {
         this.name = name;
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(int color) {
         this.color = color;
     }
 
@@ -67,12 +65,12 @@ public class Decision implements Serializable {
         }
     }
 
-    public double getPercentPro() {
+    public float getPercentPro() {
         if(this.totalScore == 0){
-            return 0.0;
+            return 0;
         }
         else {
-            return (double) this.proScore / this.totalScore;
+            return (float) this.proScore / this.totalScore;
         }
     }
     public int getTotalScore() {
