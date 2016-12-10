@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.ait.igenem.adapter.BlobRecyclerAdapter;
-import com.ait.igenem.adapter.DynamicBlobRecyclerAdapter;
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
 import com.google.firebase.database.FirebaseDatabase;
@@ -91,11 +90,13 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
 
                 List<Blob> saveBlobs = blobRecyclerAdapter.getBlobList();
                 String blobKey;
-                for (Blob b : saveBlobs) {
-                    if (b == null || !b.getName().equals("")) {
-                        blobKey = FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").push().getKey();
-                        FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").child(blobKey).setValue(b);
-                        newDecision.updateScoreNewBlob(b.getRadius(), b.isPro());
+                if(saveBlobs != null) {
+                    for (Blob b : saveBlobs) {
+                        if (b == null || !b.getName().equals("")) {
+                            blobKey = FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").push().getKey();
+                            FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").child(blobKey).setValue(b);
+                            newDecision.updateScoreNewBlob(b.getRadius(), b.isPro());
+                        }
                     }
                 }
 

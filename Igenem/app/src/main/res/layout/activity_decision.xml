@@ -123,21 +123,15 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerDynamicBlob"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical">
-
-    </android.support.v7.widget.RecyclerView>
 
     <com.ait.igenem.view.TouchCreateBlobView
-        android:id="@+id/CreateBlobView"
+        android:id="@+id/createBlobView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="600dp"
         android:background="@color/colorCloud">
+
     </com.ait.igenem.view.TouchCreateBlobView>
+
 
     <!--<ScrollView-->
     <!--android:layout_width="match_parent"-->
@@ -153,13 +147,10 @@
     <!--</LinearLayout>-->
     <!--</ScrollView>-->
 
-
-
     <TextView
         android:id="@+id/tvPercentPro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="22sp"/>
-
 
 </LinearLayout>
