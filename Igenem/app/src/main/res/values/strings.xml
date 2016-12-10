@@ -11,6 +11,7 @@
 
     <string name="btn_text_login">login</string>
     <string name="btn_text_register">register</string>
+    <string name="btn_text_forgotpw">forgot pw?</string>
     <string name="btn_text_cancel">cancel</string>
     <string name="btn_text_next">next</string>
     <string name="btn_text_back">back</string>
@@ -25,6 +26,13 @@
     <string name="enterBlobName">Please enter a name for this blob.</string>
     <string name="enterBlobRadius">Please enter a radius for this blob.</string>
     <string name="enterDecisionName">Please enter a decision name</string>
+    <string name="exception_not_implementing">This Activity is not implementing onAddCityAnswerInterface</string>
+    <string name="tv_email_sent">Email sent.</string>
+    <string name="tv_email_send_failed">"Email failed to send: "</string>
+    <string name="reset_pw_dialog">Reset</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="alert_dialog_title">Forgot your password?</string>
 
     <integer name="anim_length">500</integer>
 </resources>
