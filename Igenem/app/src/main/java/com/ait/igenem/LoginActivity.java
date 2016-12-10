@@ -7,16 +7,22 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ait.igenem.fragment.ResetPasswordDialogFragment;
 import com.ait.igenem.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
@@ -26,7 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity
+        implements ResetPasswordDialogFragment.PassDataResetPasswordDialogInterface {
 
     @BindView(R.id.tvLoginTitle)
     TextView tvLoginTitle;
@@ -72,7 +79,7 @@ public class LoginActivity extends BaseActivity {
             Intent goHomeIntent = new Intent();
             goHomeIntent.setClass(LoginActivity.this, HomeActivity.class);
             goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                    Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(goHomeIntent);
         }
     }
@@ -144,13 +151,25 @@ public class LoginActivity extends BaseActivity {
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this,
-                            task.getException().getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        openResetPasswordDialogFragment();
+                    } catch (Exception e) {
+                        Toast.makeText(LoginActivity.this,
+                                task.getException().getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+
                 }
             }
         });
 
+    }
+
+    private void openResetPasswordDialogFragment() {
+        ResetPasswordDialogFragment resetPasswordDialogFragment = new ResetPasswordDialogFragment();
+        resetPasswordDialogFragment.show(getSupportFragmentManager(), getString(R.string.reset_pw_dialog));
     }
 
     private String usernameFromEmail(String email) {
@@ -173,5 +192,21 @@ public class LoginActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+    @Override
+    public void sendResetEmail() {
+        firebaseAuth.sendPasswordResetEmail(etEmail.getText().toString())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(LoginActivity.this, R.string.tv_email_sent, Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(LoginActivity.this, getString(R.string.tv_email_send_failed) + e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
