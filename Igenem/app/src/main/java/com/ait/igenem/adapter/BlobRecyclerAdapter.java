@@ -49,8 +49,13 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        //holder.key = dynamicBlobKeys.get(holder.getAdapterPosition());
-        //does this work?
+        setupProListener(holder);
+        holder.editTextListener.updatePosition(holder.getAdapterPosition());
+        setupRadiusListener(holder);
+        setupDeleteListener(holder);
+    }
+
+    private void setupProListener(final ViewHolder holder) {
         holder.cbProCon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,12 +65,14 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
             }
         });
-        holder.editTextListener.updatePosition(holder.getAdapterPosition());
+    }
+
+    private void setupRadiusListener(final ViewHolder holder) {
         holder.sbRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 blobList.get(holder.getAdapterPosition()).setRadius(i);
-                //notifyItemChanged(holder.getAdapterPosition());
+                //notify
 
             }
 
@@ -79,16 +86,13 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
             }
         });
+    }
+
+    private void setupDeleteListener(final ViewHolder holder) {
         holder.btnDeleteblob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideBlob(holder.getAdapterPosition());
-            }
-        });
-        holder.btnSaveBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveBlob(holder.getAdapterPosition(), holder.etBlobName.getText().toString(), holder.sbRadius.getProgress(), holder.cbProCon.isChecked());
             }
         });
     }
@@ -113,11 +117,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         return blobList.size();
     }
 
-    public void saveBlob(int position, String name, int radius, boolean isPro) {
-        blobList.set(position, new Blob(name, isPro, radius));
-        notifyItemChanged(position);
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.etBlobName)
         EditText etBlobName;
@@ -129,10 +128,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         SeekBar sbRadius;
 
         @BindView(R.id.btnDeleteBlob)
-        Button btnDeleteblob;
-
-        @BindView(R.id.btnSaveBlob)
-        Button btnSaveBlob;
+        Button btnDeleteblob;;
 
         public EditTextListener editTextListener;
 
