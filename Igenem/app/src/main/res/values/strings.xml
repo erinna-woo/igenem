@@ -24,7 +24,7 @@
     <string name="emailReq">Email is required.</string>
     <string name="PWReq">Password is required.</string>
     <string name="enterBlobName">Please enter a name for this blob.</string>
-    <string name="enterBlobRadius">Please enter a radius for this blob.</string>
+    <string name="enterBlobRadius">Please enter a valid radius for this blob.</string>
     <string name="enterDecisionName">Please enter a decision name</string>
     <string name="exception_not_implementing">This Activity is not implementing onAddCityAnswerInterface</string>
     <string name="tv_email_sent">Email sent.</string>
