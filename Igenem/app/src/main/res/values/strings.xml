@@ -15,6 +15,9 @@
     <string name="btn_text_next">next</string>
     <string name="btn_text_back">back</string>
     <string name="btn_text_save">save</string>
+    <string name="btn_text_home">home</string>
+    <string name="btn_text_logout">logout</string>
+
     <string name="userCreated">User created</string>
     <string name="errorCreatingUser">"Error creating user: "</string>
     <string name="emailReq">Email is required.</string>

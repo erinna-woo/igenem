@@ -58,7 +58,7 @@ public class LoginActivity extends BaseActivity {
 
     private void setFont() {
         Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
-
+    
         tvLoginTitle.setTypeface(font);
         etEmail.setTypeface(font);
         etPassword.setTypeface(font);

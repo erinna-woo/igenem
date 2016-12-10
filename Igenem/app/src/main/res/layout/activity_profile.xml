@@ -28,24 +28,23 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <Button
             android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout"/>
+            style="@style/RoundedButton"
+            android:text="@string/btn_text_logout"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
         <Button
             android:id="@+id/btnHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Home"/>
-
-    </LinearLayout>
+            style="@style/RoundedButton"
+            android:text="@string/btn_text_home"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+    </RelativeLayout>
 
 </LinearLayout>
