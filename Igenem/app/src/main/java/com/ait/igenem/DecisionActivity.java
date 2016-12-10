@@ -1,11 +1,13 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,7 +15,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.ait.igenem.adapter.DynamicBlobRecyclerAdapter;
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
 import com.google.firebase.database.ChildEventListener;
@@ -22,11 +23,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 //TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
 
 public class DecisionActivity extends AppCompatActivity implements PassDataDynamicBlobInterface {
+
+
 
     @BindView(R.id.linearLayoutDecision)
     LinearLayout linearLayoutDecision;
@@ -69,14 +75,15 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     @BindView(R.id.btnDeleteDecision)
     Button btnDeleteDecision;
 
-    //Setup RecyclerView
-    @BindView(R.id.recyclerDynamicBlob)
-    RecyclerView recyclerDynamicBlob;
-    DynamicBlobRecyclerAdapter dynamicBlobRecyclerAdapter;
+    //cstom view
+    @BindView(R.id.createBlobView)
+    View createBlobView;
 
     private Decision decision;
     private String decisionKey;
     private String previousActivity;
+    private List<Blob> dynamicBlobList;
+    private List<String> dynamicBlobKeys;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +96,51 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
         decisionKey = this.getIntent().getStringExtra(ProfileActivity.KEY_D_KEY);
 
+        dynamicBlobList = new ArrayList<Blob>();
+        dynamicBlobKeys = new ArrayList<String>();
+
         updateBackgroundColor();
 
         setupDecisionUI();
         setupFirebaseListener();
 
+
+
+    }
+
+    public void addBlob(Blob newBlob, String key) {
+        dynamicBlobList.add(0, newBlob);
+        dynamicBlobKeys.add(0, key);
+    }
+
+    public Blob getBlob(int position) {
+        return dynamicBlobList.get(position);
+    }
+
+    public String getBlobKey(int position) {
+        return dynamicBlobKeys.get(position);
+    }
+
+
+    public void updateBlob(Blob updateBlob, String key) {
+        int index = dynamicBlobKeys.indexOf(key);
+        if (index != -1) {
+            dynamicBlobList.set(index, updateBlob);
+        }
+    }
+
+    public void removeBlobByPos(int position) {
+        dynamicBlobList.remove(position);
+        dynamicBlobKeys.remove(position);
+    }
+
+
+    public void removeBlobByKey(String key) {
+        int index = dynamicBlobKeys.indexOf(key);
+        if (index != -1) {
+            dynamicBlobList.remove(index);
+            dynamicBlobKeys.remove(index);
+        }
     }
 
     private void updateBackgroundColor() {
@@ -103,9 +150,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         Color.colorToHSV(decisionColor, hsv);
         hsv[1] = hsv[1] * percentColor;
         linearLayoutDecision.setBackgroundColor(Color.HSVToColor(hsv));
-        recyclerDynamicBlob.setBackgroundColor(Color.HSVToColor(hsv));
+        createBlobView.setBackgroundColor(Color.HSVToColor(hsv));
     }
-
 
     @Override
     public void onBackPressed() {
@@ -131,19 +177,22 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Blob newBlob = dataSnapshot.getValue(Blob.class);
-                        dynamicBlobRecyclerAdapter.addBlob(newBlob, dataSnapshot.getKey());
-                        recyclerDynamicBlob.scrollToPosition(0);
+                        addBlob(newBlob, dataSnapshot.getKey());
+                        setBlobXPos(newBlob);
+                        setBlobYPos(newBlob);
+                        drawAllBlobs();
+                        Log.d("DOWEHAVEIT", "onChildAdded: " + newBlob.getName());
                     }
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                         Blob changedBlob = dataSnapshot.getValue(Blob.class);
-                        dynamicBlobRecyclerAdapter.updateBlob(changedBlob, dataSnapshot.getKey());
+                        updateBlob(changedBlob, dataSnapshot.getKey());
                     }
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        dynamicBlobRecyclerAdapter.removeBlobByKey(dataSnapshot.getKey());
+                        removeBlobByKey(dataSnapshot.getKey());
                     }
 
                     @Override
@@ -158,6 +207,23 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 });
     }
 
+    private void setBlobYPos(Blob newBlob) {
+        newBlob.setPosy((int)(Math.random()* (createBlobView.getHeight()-newBlob.getRadius()))
+                +newBlob.getRadius());
+    }
+
+    private void setBlobXPos(Blob newBlob) {
+        newBlob.setPosx((int)(Math.random()* (createBlobView.getWidth()-newBlob.getRadius()))
+                +newBlob.getRadius());
+    }
+
+    private void drawAllBlobs(){
+        Canvas canvas = new Canvas();
+        createBlobView.setTag(R.string.blob,dynamicBlobList);
+        createBlobView.draw(canvas);
+        createBlobView.invalidate();
+    }
+
     private void setupDecisionUI() {
         tvDecisionName.setText(decision.getName());
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
@@ -165,7 +231,6 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
         setupEditBlobListeners();
-        setupRecyclerView();
     }
 
     private void setupDeleteDecisionButton() {
@@ -185,16 +250,6 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         });
     }
 
-    private void setupRecyclerView() {
-        recyclerDynamicBlob.setHasFixedSize(true);
-        final LinearLayoutManager mLayoutManager =
-                new LinearLayoutManager(this);
-        recyclerDynamicBlob.setLayoutManager(mLayoutManager);
-        dynamicBlobRecyclerAdapter = new DynamicBlobRecyclerAdapter((PassDataDynamicBlobInterface) this);
-
-        //callback, touchhelper?
-        recyclerDynamicBlob.setAdapter(dynamicBlobRecyclerAdapter);
-    }
 
     private void setupEditBlobListeners() {
         btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
@@ -238,7 +293,6 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                     updateBackgroundColor();
 
                     resetCreateBlobLayout();
-                    recyclerDynamicBlob.scrollToPosition(0);
                 }
             }
         });
@@ -291,8 +345,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String key = dynamicBlobRecyclerAdapter.getBlobKey(positionToEdit);
-                Blob blob = dynamicBlobRecyclerAdapter.getBlob(positionToEdit);
+                String key = getBlobKey(positionToEdit);
+                Blob blob = getBlob(positionToEdit);
                 updateBlobFirebase(blob, key);
                 updateScoreFirebase();
                 updateBackgroundColor();
@@ -305,7 +359,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String key = dynamicBlobRecyclerAdapter.getBlobKey(positionToEdit);
+                String key = getBlobKey(positionToEdit);
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).child("blobs").child(key).removeValue();
                 updateDecisionScoreDeleteBlob(positionToEdit);
@@ -316,7 +370,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     }
 
     private void updateDecisionScoreDeleteBlob(int positionToEdit) {
-        Blob delBlob = dynamicBlobRecyclerAdapter.getBlob(positionToEdit);
+        Blob delBlob = getBlob(positionToEdit);
         decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         updateScoreFirebase();
@@ -346,23 +400,23 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     }
 
     public void increaseRadius(int positionToEdit) {
-        String key = dynamicBlobRecyclerAdapter.getBlobKey(positionToEdit);
-        Blob updating = dynamicBlobRecyclerAdapter.getBlob(positionToEdit);
+        String key = getBlobKey(positionToEdit);
+        Blob updating = getBlob(positionToEdit);
         updating.increaseRadius();
         decision.increase(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
-        dynamicBlobRecyclerAdapter.updateBlob(updating, key);
+        updateBlob(updating, key);
     }
 
     public void decreaseRadius(int positionToEdit) {
-        String key = dynamicBlobRecyclerAdapter.getBlobKey(positionToEdit);
-        Blob updating = dynamicBlobRecyclerAdapter.getBlob(positionToEdit);
+        String key = getBlobKey(positionToEdit);
+        Blob updating = getBlob(positionToEdit);
         updating.decreaseRadius();
         decision.decrease(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
-        dynamicBlobRecyclerAdapter.updateBlob(updating, key);
+        updateBlob(updating, key);
     }
 
 }
