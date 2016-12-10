@@ -5,17 +5,23 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.ait.igenem.CreateDecisionActivity;
 import com.ait.igenem.R;
 import com.ait.igenem.model.Blob;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,15 +62,29 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     }
 
     private void setupProListener(final ViewHolder holder) {
-        holder.cbProCon.setOnClickListener(new View.OnClickListener() {
+        holder.swProCon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 currBlob = blobList.get(holder.getAdapterPosition());
-                currBlob.setPro(!(currBlob.isPro()));
-                //notifyItemChanged(holder.getAdapterPosition());
-
+                if (b) {
+                    currBlob.setPro(true);
+                    holder.tvProCon.setText("PRO");
+                }
+                else{
+                    currBlob.setPro(false);
+                    holder.tvProCon.setText("CON");
+                }
             }
         });
+//        holder.swProCon.setOn(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                currBlob = blobList.get(holder.getAdapterPosition());
+//                currBlob.setPro(!(currBlob.isPro()));
+//                //notifyItemChanged(holder.getAdapterPosition());
+//
+//            }
+//        });
     }
 
     private void setupRadiusListener(final ViewHolder holder) {
@@ -121,15 +141,18 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         @BindView(R.id.etBlobName)
         EditText etBlobName;
 
-        @BindView(R.id.cbProCon)
-        CheckBox cbProCon;
+        @BindView(R.id.tvProCon)
+        TextView tvProCon;
+
+        @BindView(R.id.swProCon)
+        Switch swProCon;
 
         @BindView(R.id.sbRadius)
         SeekBar sbRadius;
 
         @BindView(R.id.btnDeleteBlob)
         Button btnDeleteblob;
-        ;
+
 
         public EditTextListener editTextListener;
 
