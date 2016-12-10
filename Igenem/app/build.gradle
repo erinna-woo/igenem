@@ -39,6 +39,8 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:9.6.0'
     compile 'com.github.QuadFlask:colorpicker:0.0.12'
     compile 'com.skyfishjy.ripplebackground:library:1.0.1'
+
+    compile 'com.github.Jawnnypoo:PhysicsLayout:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'
 

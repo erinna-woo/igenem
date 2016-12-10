@@ -23,8 +23,37 @@
         android:layout_marginTop="90dp"
         android:text="@string/tv_home_greeting"/>
 
-    <Space
-        style="@style/PushDownSpace" /> 
+    <Button
+        android:id="@+id/btnAnimate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="animate"/>
+
+    <com.jawnnypoo.physicslayout.PhysicsFrameLayout
+        android:id="@+id/physicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:gravityX="0.0"
+        app:gravityY="0.0"
+        app:bounds="true"
+        app:boundsSize="50dp">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="left"
+            app:layout_density="5"
+            android:src="@drawable/plus_gray" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="right"
+            app:layout_density="5"
+            android:src="@drawable/plus_gray" />
+
+    </com.jawnnypoo.physicslayout.PhysicsFrameLayout>
 
     <Button
         android:id="@+id/btnNewDecision"
