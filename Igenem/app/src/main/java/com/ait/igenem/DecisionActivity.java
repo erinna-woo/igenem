@@ -222,6 +222,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         int diffy;
         int sumr;
 
+        /*
         for(int i = 0; i < dynamicBlobList.size(); i++){
             Blob currblob = dynamicBlobList.get(i);
 
@@ -240,6 +241,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
             }
             //will exit when diffy > sumr
         }
+        */
         newBlob.setPosx(posx);
         newBlob.setPosy(posy);
 
@@ -266,14 +268,26 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     private void setupDecisionUI() {
         tvDecisionName.setText(decision.getName());
 
-        double percentDouble = decision.getPercentPro() * 100;
-        int percentInt = (int) Math.round(percentDouble);
-        tvPercentPro.setText(Integer.toString(percentInt) + "% Pro");
-
+        setUpPecentPro();
         setupNewBlobButton();
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
         setupEditBlobListeners();
+    }
+
+    private void setUpPecentPro() {
+        double percentDouble = decision.getPercentPro() * 100;
+        int percentInt = (int) Math.round(percentDouble);
+        String proOrCon;
+
+        if (percentInt > 49) {
+            proOrCon = getString(R.string.tv_percent_pro);
+        } else {
+            percentInt = 100 - percentInt;
+            proOrCon = getString(R.string.tv_percent_con);
+        }
+
+        tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
     }
 
     private void setupDeleteDecisionButton() {
