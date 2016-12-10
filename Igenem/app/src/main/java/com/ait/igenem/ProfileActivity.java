@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.ait.igenem.adapter.DecisionRecyclerAdapter;
@@ -71,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         super.onBackPressed();
         Intent goHome = new Intent();
         goHome.setClass(ProfileActivity.this, HomeActivity.class);
-        goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(goHome);
     }
 
