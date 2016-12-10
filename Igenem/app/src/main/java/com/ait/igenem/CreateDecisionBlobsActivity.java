@@ -22,8 +22,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 //TODO: is pro does NOT work. needs onclick listener
+//TODO: empty blobs are added null
 
-public class CreateDecisionBlobsActivity extends AppCompatActivity{
+public class CreateDecisionBlobsActivity extends AppCompatActivity {
 
     @BindView(R.id.btnBlobActivityBack)
     Button btnBlobActivityBack;
@@ -33,7 +34,6 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity{
 
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
-
 
 
     //Setup RecyclerView
@@ -75,7 +75,7 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity{
                 new LinearLayoutManager(this);
         recyclerBlob.setLayoutManager(mLayoutManager);
         blobRecyclerAdapter = new BlobRecyclerAdapter(this);
-
+        //recyclerBlob.setItemViewCacheSize(100);
         //callback, touchhelper?
         recyclerBlob.setAdapter(blobRecyclerAdapter);
     }
@@ -95,10 +95,12 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity{
 
                 List<Blob> saveBlobs = blobRecyclerAdapter.getBlobList();
                 String blobKey;
-                for(Blob b : saveBlobs){
-                    blobKey = FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").push().getKey();
-                    FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").child(blobKey).setValue(b);
-                    newDecision.updateScoreNewBlob(b.getRadius(),b.isPro());
+                for (Blob b : saveBlobs) {
+                    if(!b.getName().equals("")) {
+                        blobKey = FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").push().getKey();
+                        FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").child(blobKey).setValue(b);
+                        newDecision.updateScoreNewBlob(b.getRadius(), b.isPro());
+                    }
                 }
 
                 FirebaseDatabase.getInstance().getReference().child("decisions").
@@ -142,6 +144,5 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity{
         super.finish();
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
-
 
 }

@@ -2,6 +2,9 @@ package com.ait.igenem.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
     private List<Blob> blobList;
     private Context context;
+    private Blob currBlob;
 
 
     public BlobRecyclerAdapter(Context context){
@@ -39,16 +43,42 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rowView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.blob_row, parent, false);
-        return new BlobRecyclerAdapter.ViewHolder(rowView);
+
+        return new BlobRecyclerAdapter.ViewHolder(rowView, new EditTextListener());
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         //holder.key = dynamicBlobKeys.get(holder.getAdapterPosition());
-        holder.etBlobName.setText(blobList.get(holder.getAdapterPosition()).getName());
         //does this work?
-        holder.sbRadius.setProgress(blobList.get(holder.getAdapterPosition()).getRadius());
-        holder.cbProCon.isChecked();
+        holder.cbProCon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currBlob = blobList.get(holder.getAdapterPosition());
+                currBlob.setPro(!(currBlob.isPro()));
+                notifyItemChanged(holder.getAdapterPosition());
+
+            }
+        });
+        holder.editTextListener.updatePosition(holder.getAdapterPosition());
+        holder.sbRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                blobList.get(holder.getAdapterPosition()).setRadius(i);
+                //notifyItemChanged(holder.getAdapterPosition());
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         holder.btnDeleteblob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +99,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     }
 
     public List<Blob> getBlobList(){
+
         return blobList;
     }
 
@@ -103,9 +134,39 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         @BindView(R.id.btnSaveBlob)
         Button btnSaveBlob;
 
-        public ViewHolder(View itemView) {
+        public EditTextListener editTextListener;
+
+        public ViewHolder(View itemView, EditTextListener editTextListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            this.editTextListener = editTextListener;
+            etBlobName.addTextChangedListener(editTextListener);
         }
     }
+
+    private class EditTextListener implements TextWatcher {
+        private int position;
+
+        public void updatePosition(int position){
+            this.position = position;
+        }
+
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            blobList.get(position).setName(charSequence.toString());
+            //notifyItemChanged(position);
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    }
+
 }
