@@ -10,15 +10,16 @@ import android.support.v4.app.DialogFragment;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.ait.igenem.R;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Erinna on 12/10/16.
  */
-
 
 public class ResetPasswordDialogFragment extends DialogFragment {
 
@@ -28,6 +29,12 @@ public class ResetPasswordDialogFragment extends DialogFragment {
 
     @BindView(R.id.tvForgotPw)
     TextView tvForgotPw;
+
+    @BindView(R.id.btnNo)
+    Button btnNo;
+
+    @BindView(R.id.btnYes)
+    Button btnYes;
 
     private PassDataResetPasswordDialogInterface passDataResetPasswordDialogInterface;
 
@@ -52,29 +59,32 @@ public class ResetPasswordDialogFragment extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View rootView = inflater.inflate(R.layout.fragment_reset_password, null);
         alertDialogBuilder.setView(rootView);
+        AlertDialog al = alertDialogBuilder.create();
 
-        setupYesButton(alertDialogBuilder);
-        setupNoButton(alertDialogBuilder);
+        ButterKnife.bind(this, rootView);
 
+        setupYesButton(al);
+        setupNoButton(al);
 
         return alertDialogBuilder.create();
     }
 
-    private void setupNoButton(AlertDialog.Builder alertDialogBuilder) {
-        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+    private void setupNoButton(final AlertDialog a) {
+        btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+            public void onClick(View view) {
+
+                a.dismiss();
             }
         });
     }
 
-    private void setupYesButton(AlertDialog.Builder alertDialogBuilder) {
-        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+    private void setupYesButton(final AlertDialog a) {
+        btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(View view) {
                 passDataResetPasswordDialogInterface.sendResetEmail();
-                dialogInterface.dismiss();
+                a.dismiss();
             }
         });
     }
