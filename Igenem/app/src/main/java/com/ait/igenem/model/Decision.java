@@ -97,4 +97,10 @@ public class Decision implements Serializable {
         }
     }
 
+    public void updateDecisionScoreDeleteBlob(int removedValue, boolean isPro) {
+        this.totalScore -= removedValue;
+        if(isPro){
+            this.proScore -= removedValue;
+        }
+    }
 }

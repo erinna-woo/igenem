@@ -38,13 +38,13 @@
         android:visibility="gone">
 
         <EditText
-            android:id="@+id/etBlobName"
+            android:id="@+id/etDBlobName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="NAME" />
 
         <EditText
-            android:id="@+id/etBlobRadius"
+            android:id="@+id/etDBlobRadius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="RADIUS"
@@ -56,13 +56,13 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/cbProCheckBox"
+                android:id="@+id/cbDProCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="IS PRO" />
 
             <Button
-                android:id="@+id/btnOkNewBlob"
+                android:id="@+id/btnDOkNewBlob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OK" />

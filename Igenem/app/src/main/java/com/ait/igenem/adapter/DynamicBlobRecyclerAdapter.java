@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.ait.igenem.PassDataBlobInterface;
+import com.ait.igenem.PassDataDynamicBlobInterface;
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.R;
 
@@ -28,14 +28,14 @@ public class DynamicBlobRecyclerAdapter extends RecyclerView.Adapter<DynamicBlob
     private List<Blob> dyamicBlobList;
     private List<String> dynamicBlobKeys;
     private Blob currBlob;
-    private PassDataBlobInterface passDataBlobInterface;
+    private PassDataDynamicBlobInterface passDataDynamicBlobInterface;
 
-    public DynamicBlobRecyclerAdapter(PassDataBlobInterface passDataBlobInterface) {
+    public DynamicBlobRecyclerAdapter(PassDataDynamicBlobInterface passDataDynamicBlobInterface) {
 
         // EACH BLOB SHOULD HAVE SAME INDEX IN dyamicBlobList and dynamicBlobKeys
         dyamicBlobList = new ArrayList<Blob>();
         dynamicBlobKeys = new ArrayList<String>();
-        this.passDataBlobInterface = passDataBlobInterface;
+        this.passDataDynamicBlobInterface = passDataDynamicBlobInterface;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DynamicBlobRecyclerAdapter extends RecyclerView.Adapter<DynamicBlob
             public void onClick(View view) {
                 int index = dynamicBlobKeys.indexOf(key);
                 if (index != -1) {
-                    passDataBlobInterface.showEdit(dyamicBlobList.get(index), index);
+                    passDataDynamicBlobInterface.showEdit(dyamicBlobList.get(index), index);
                 }
             }
         });
