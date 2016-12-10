@@ -56,6 +56,7 @@
         <item name="android:layout_width">70dp</item>
         <item name="android:layout_height">70dp</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <!-- text -->
@@ -84,6 +85,7 @@
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">25sp</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:layout_centerHorizontal">true</item>
 
     </style>
 

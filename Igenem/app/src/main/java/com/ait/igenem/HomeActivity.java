@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.Space;
 import android.widget.TextView;
 
-import com.jawnnypoo.physicslayout.PhysicsFrameLayout;
+import com.jawnnypoo.physicslayout.PhysicsRelativeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,7 +20,10 @@ import butterknife.ButterKnife;
 public class HomeActivity extends AppCompatActivity {
 
     @BindView(R.id.physicsLayout)
-    PhysicsFrameLayout physicsLayout;
+    PhysicsRelativeLayout physicsLayout;
+
+    @BindView(R.id.space)
+    Space space;
 
     @BindView(R.id.tvHomeGreeting)
     TextView tvHomeGreeting;
@@ -26,9 +33,6 @@ public class HomeActivity extends AppCompatActivity {
 
     @BindView(R.id.btnNewDecision)
     Button btnNewDecision;
-
-    @BindView(R.id.btnAnimate)
-    Button btnAnimate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +62,37 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        btnAnimate.setOnClickListener(new View.OnClickListener() {
+        final Animation out = new AlphaAnimation(1.0f, 0.0f);
+        out.setDuration(3000);
+
+        out.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onClick(View view) {
-                physicsLayout.getPhysics().giveRandomImpulse();
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                physicsLayout.removeView(tvHomeGreeting);
+                physicsLayout.removeView(space);
+                physicsLayout.getPhysics().setGravityY(5);
+                physicsLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        physicsLayout.getPhysics().setGravityY(0);
+                        physicsLayout.getPhysics().giveRandomImpulse();
+                        return false;
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
             }
         });
+
+        tvHomeGreeting.startAnimation(out);
 
     }
 
