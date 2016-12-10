@@ -1,6 +1,7 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,9 @@ import butterknife.ButterKnife;
 //TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
 
 public class DecisionActivity extends AppCompatActivity implements PassDataDynamicBlobInterface {
+
+    @BindView(R.id.linearLayoutDecision)
+    LinearLayout linearLayoutDecision;
 
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
@@ -84,6 +88,16 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 
         decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
         decisionKey = this.getIntent().getStringExtra(ProfileActivity.KEY_D_KEY);
+
+        //String decisionColor = decision.getColor();
+        int decisionColor = decision.getColor();
+        Float percentColor = decision.getPercentPro();
+
+        //int intColor = Integer.parseInt(decisionColor, 16);
+        float[] hsv = new float[3];
+        Color.colorToHSV(decisionColor, hsv);
+        hsv[1] = hsv[1] * percentColor;
+        linearLayoutDecision.setBackgroundColor(Color.HSVToColor(hsv));
 
         setupDecisionUI();
         setupFirebaseListener();
