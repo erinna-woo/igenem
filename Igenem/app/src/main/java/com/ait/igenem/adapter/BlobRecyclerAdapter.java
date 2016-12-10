@@ -71,9 +71,9 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         holder.sbRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                blobList.get(holder.getAdapterPosition()).setRadius(i);
-                //notify
-
+                if(seekBar.isShown() && b) {
+                    blobList.get(holder.getAdapterPosition()).setRadius(i);
+                }
             }
 
             @Override
@@ -83,7 +83,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                notifyItemChanged(holder.getAdapterPosition());
             }
         });
     }
@@ -108,7 +108,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     }
 
     public void showBlob(){
-        blobList.add(0, new Blob());
+        blobList.add(0, new Blob("", false, 0));
         notifyItemInserted(0);
     }
 
