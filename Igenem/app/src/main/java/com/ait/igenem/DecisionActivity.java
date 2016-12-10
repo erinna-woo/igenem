@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 //TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
 
-public class DecisionActivity extends AppCompatActivity implements PassDataBlobInterface {
+public class DecisionActivity extends AppCompatActivity implements PassDataDynamicBlobInterface {
 
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
@@ -174,7 +174,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         final LinearLayoutManager mLayoutManager =
                 new LinearLayoutManager(this);
         recyclerDynamicBlob.setLayoutManager(mLayoutManager);
-        dynamicBlobRecyclerAdapter = new DynamicBlobRecyclerAdapter((PassDataBlobInterface) this);
+        dynamicBlobRecyclerAdapter = new DynamicBlobRecyclerAdapter((PassDataDynamicBlobInterface) this);
 
         //callback, touchhelper?
         recyclerDynamicBlob.setAdapter(dynamicBlobRecyclerAdapter);
@@ -217,7 +217,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
                     FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(decisionKey).child("blobs").child(key).setValue(newBlob);
 
-                    updateDecisionScore();
+                    updateDecisionScoreNewBlob();
 
                     resetCreateBlobLayout();
                     recyclerDynamicBlob.scrollToPosition(0);
@@ -226,7 +226,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
         });
     }
 
-    private void updateDecisionScore() {
+    private void updateDecisionScoreNewBlob() {
         decision.updateScore(Integer.parseInt(etBlobRadius.getText().toString()),cbProCheck.isChecked());
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         updateScoreFirebase();
@@ -289,9 +289,17 @@ public class DecisionActivity extends AppCompatActivity implements PassDataBlobI
                 String key = dynamicBlobRecyclerAdapter.getBlobKey(positionToEdit);
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).child("blobs").child(key).removeValue();
+                updateDecisionScoreDeleteBlob(positionToEdit);
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void updateDecisionScoreDeleteBlob(int positionToEdit) {
+        Blob delBlob = dynamicBlobRecyclerAdapter.getBlob(positionToEdit);
+        decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
+        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        updateScoreFirebase();
     }
 
     private void setupMinusListener(final int positionToEdit) {

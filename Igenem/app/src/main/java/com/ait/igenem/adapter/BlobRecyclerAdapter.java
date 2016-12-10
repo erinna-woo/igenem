@@ -1,6 +1,6 @@
 package com.ait.igenem.adapter;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
-import com.ait.igenem.PassDataBlobInterface;
+import com.ait.igenem.CreateDecisionActivity;
 import com.ait.igenem.R;
 import com.ait.igenem.model.Blob;
 
@@ -29,8 +27,11 @@ import butterknife.ButterKnife;
 public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapter.ViewHolder>{
 
     private List<Blob> blobList;
+    private Context context;
 
-    public BlobRecyclerAdapter(){
+
+    public BlobRecyclerAdapter(Context context){
+        this.context = context;
         blobList = new ArrayList<Blob>();
     }
 
@@ -42,12 +43,25 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         //holder.key = dynamicBlobKeys.get(holder.getAdapterPosition());
         holder.etBlobName.setText(blobList.get(holder.getAdapterPosition()).getName());
         //does this work?
         holder.sbRadius.setProgress(blobList.get(holder.getAdapterPosition()).getRadius());
+        holder.btnDeleteblob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideBlob(holder.getAdapterPosition());
+            }
+        });
     }
+
+    public void hideBlob(int position){
+        blobList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+
 
     public void showBlob(){
         blobList.add(0, new Blob());
@@ -59,6 +73,10 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         return blobList.size();
     }
 
+    public void saveBlob() {
+
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.etBlobName)
         EditText etBlobName;
@@ -68,6 +86,9 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
         @BindView(R.id.sbRadius)
         SeekBar sbRadius;
+
+        @BindView(R.id.btnDeleteBlob)
+        Button btnDeleteblob;
 
         public ViewHolder(View itemView) {
             super(itemView);

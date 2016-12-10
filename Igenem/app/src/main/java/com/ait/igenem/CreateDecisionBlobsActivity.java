@@ -8,16 +8,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.ait.igenem.adapter.BlobRecyclerAdapter;
 import com.ait.igenem.adapter.DynamicBlobRecyclerAdapter;
+import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
 import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CreateDecisionBlobsActivity extends AppCompatActivity {
+public class CreateDecisionBlobsActivity extends AppCompatActivity{
 
     @BindView(R.id.btnBlobActivityBack)
     Button btnBlobActivityBack;
@@ -55,6 +57,7 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
         btnNewBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                blobRecyclerAdapter.saveBlob();
                 blobRecyclerAdapter.showBlob();
                 recyclerBlob.scrollToPosition(0);
             }
@@ -66,7 +69,7 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
         final LinearLayoutManager mLayoutManager =
                 new LinearLayoutManager(this);
         recyclerBlob.setLayoutManager(mLayoutManager);
-        blobRecyclerAdapter = new BlobRecyclerAdapter();
+        blobRecyclerAdapter = new BlobRecyclerAdapter(this);
 
         //callback, touchhelper?
         recyclerBlob.setAdapter(blobRecyclerAdapter);
@@ -121,4 +124,5 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
+
 }

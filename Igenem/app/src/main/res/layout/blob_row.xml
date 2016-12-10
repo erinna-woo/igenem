@@ -8,11 +8,25 @@
 
     <!--THIS IS TEMPORARY. should be deleted later!!-->
 
+    <Button
+        android:id="@+id/btnSaveBlob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/btnDeleteBlob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Delete" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#b2ebf2">
+        android:background="#b2ebf2"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/etBlobName"
@@ -33,6 +47,7 @@
     <SeekBar
         android:id="@+id/sbRadius"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingTop="7dp" />
 
 </LinearLayout>
