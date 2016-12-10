@@ -8,10 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.jawnnypoo.physicslayout.PhysicsFrameLayout;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
+
+    @BindView(R.id.physicsLayout)
+    PhysicsFrameLayout physicsLayout;
 
     @BindView(R.id.tvHomeGreeting)
     TextView tvHomeGreeting;
@@ -21,8 +26,11 @@ public class HomeActivity extends AppCompatActivity {
 
     @BindView(R.id.btnNewDecision)
     Button btnNewDecision;
-    @Override
 
+    @BindView(R.id.btnAnimate)
+    Button btnAnimate;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -47,6 +55,13 @@ public class HomeActivity extends AppCompatActivity {
                 createDecision.setClass(HomeActivity.this, CreateDecisionActivity.class);
                 startActivity(createDecision);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+            }
+        });
+
+        btnAnimate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                physicsLayout.getPhysics().giveRandomImpulse();
             }
         });
 
