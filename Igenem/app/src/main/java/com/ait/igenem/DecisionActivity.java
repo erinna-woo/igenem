@@ -294,6 +294,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 Blob blob = dynamicBlobRecyclerAdapter.getBlob(positionToEdit);
                 updateBlobFirebase(blob, key);
                 updateScoreFirebase();
+                updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
@@ -307,6 +308,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).child("blobs").child(key).removeValue();
                 updateDecisionScoreDeleteBlob(positionToEdit);
+                updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
