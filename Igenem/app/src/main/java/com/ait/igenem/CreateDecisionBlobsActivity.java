@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.ait.igenem.adapter.BlobRecyclerAdapter;
 import com.ait.igenem.adapter.DynamicBlobRecyclerAdapter;

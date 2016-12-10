@@ -1,12 +1,14 @@
 package com.ait.igenem;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.ait.igenem.adapter.DecisionRecyclerAdapter;
 import com.ait.igenem.adapter.DecisionTouchHelperCallback;
@@ -32,12 +34,24 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
     RecyclerView recyclerDecision;
     DecisionRecyclerAdapter decisionRecyclerAdapter;
 
+    @BindView(R.id.tvUsername)
+    TextView tvUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
         setupRecyclerView();
+
+        tvUsername.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        setFont();
+    }
+
+    private void setFont() {
+        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
+
+        tvUsername.setTypeface(font);
     }
 
     @Override
