@@ -11,23 +11,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ait.igenem.DecisionActivity">
 
-    <TextView
-        android:id="@+id/tvDecisionName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MY DECISION NAME" />
-
-    <Button
-        android:id="@+id/btnNewBlob"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Temp: New Blob" />
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:background="@drawable/decision_header">
 
-    <Button
-        android:id="@+id/btnDeleteDecision"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="DELETE DECISION" />
+        <TextView
+            android:id="@+id/tvDecisionName"
+            style="@style/DecisionTitleText"/>
+
+        <TextView
+            android:id="@+id/tvPercentPro"
+            style="@style/DecisionTitleText"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/createBlobLayout"
@@ -127,30 +126,29 @@
     <com.ait.igenem.view.TouchCreateBlobView
         android:id="@+id/createBlobView"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@color/colorCloud">
 
     </com.ait.igenem.view.TouchCreateBlobView>
 
-
-    <!--<ScrollView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_weight="1">-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/layoutBlobs"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical">-->
-
-    <!--</LinearLayout>-->
-    <!--</ScrollView>-->
-
-    <TextView
-        android:id="@+id/tvPercentPro"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"/>
+        android:background="@null">
+
+        <Button
+            android:id="@+id/btnNewBlob"
+            style="@style/RoundedButton"
+            android:text="add"
+            android:layout_marginBottom="2dp"/>
+
+        <Button
+            android:id="@+id/btnDeleteDecision"
+            style="@style/RoundedButton"
+            android:text="@string/btn_text_delete"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="2dp"/>
+    </RelativeLayout>
 
 </LinearLayout>

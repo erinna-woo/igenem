@@ -3,6 +3,7 @@ package com.ait.igenem;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -103,9 +104,16 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 
         setupDecisionUI();
         setupFirebaseListener();
+        setFont();
+    }
 
+    private void setFont() {
+        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
 
-
+        btnNewBlob.setTypeface(font);
+        btnDeleteDecision.setTypeface(font);
+        tvDecisionName.setTypeface(font);
+        tvPercentPro.setTypeface(font);
     }
 
     public void addBlob(Blob newBlob, String key) {
@@ -226,7 +234,11 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 
     private void setupDecisionUI() {
         tvDecisionName.setText(decision.getName());
-        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+
+        double percentDouble = decision.getPercentPro() * 100;
+        int percentInt = (int) Math.round(percentDouble);
+        tvPercentPro.setText(Integer.toString(percentInt) + "% Pro");
+
         setupNewBlobButton();
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();

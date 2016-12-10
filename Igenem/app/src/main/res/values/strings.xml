@@ -20,6 +20,7 @@
     <string name="btn_text_logout">logout</string>
     <string name="btn_text_yes">yes</string>
     <string name="btn_text_no">no</string>
+    <string name="btn_text_delete">delete</string>
 
     <string name="userCreated">User created</string>
     <string name="errorCreatingUser">"Error creating user: "</string>
