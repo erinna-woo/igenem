@@ -118,7 +118,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
             Intent goHomeIntent = new Intent();
             goHomeIntent.setClass(DecisionActivity.this, HomeActivity.class);
             //Clear entire back stack so when you click back from HomeActivity, the app exits.
-            goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(goHomeIntent);
         }
 
