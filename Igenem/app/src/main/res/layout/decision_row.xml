@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/layoutDecision"
-    android:background="#92d6e9"
-    android:padding="15dp">
+    android:background="@drawable/profile_row"
+    android:padding="15dp"
+    android:layout_marginBottom="4dp">
 
     <TextView
         android:id="@+id/tvDecisionName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:background="@color/colorCloud"
+        />
 
 </LinearLayout>

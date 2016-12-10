@@ -242,7 +242,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     }
 
     private void updateDecisionScoreNewBlob() {
-        decision.updateScore(Integer.parseInt(etBlobRadius.getText().toString()),cbProCheck.isChecked());
+        decision.updateScoreNewBlob(Integer.parseInt(etBlobRadius.getText().toString()),cbProCheck.isChecked());
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         updateScoreFirebase();
     }

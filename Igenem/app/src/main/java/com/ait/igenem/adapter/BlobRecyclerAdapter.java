@@ -48,10 +48,17 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         holder.etBlobName.setText(blobList.get(holder.getAdapterPosition()).getName());
         //does this work?
         holder.sbRadius.setProgress(blobList.get(holder.getAdapterPosition()).getRadius());
+        holder.cbProCon.isChecked();
         holder.btnDeleteblob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideBlob(holder.getAdapterPosition());
+            }
+        });
+        holder.btnSaveBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveBlob(holder.getAdapterPosition(), holder.etBlobName.getText().toString(), holder.sbRadius.getProgress(), holder.cbProCon.isChecked());
             }
         });
     }
@@ -61,7 +68,9 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         notifyItemRemoved(position);
     }
 
-
+    public List<Blob> getBlobList(){
+        return blobList;
+    }
 
     public void showBlob(){
         blobList.add(0, new Blob());
@@ -73,8 +82,9 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         return blobList.size();
     }
 
-    public void saveBlob() {
-
+    public void saveBlob(int position, String name, int radius, boolean isPro) {
+        blobList.set(position, new Blob(name, isPro, radius));
+        notifyItemChanged(position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -89,6 +99,9 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
         @BindView(R.id.btnDeleteBlob)
         Button btnDeleteblob;
+
+        @BindView(R.id.btnSaveBlob)
+        Button btnSaveBlob;
 
         public ViewHolder(View itemView) {
             super(itemView);

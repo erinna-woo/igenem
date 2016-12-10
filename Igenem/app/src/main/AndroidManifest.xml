@@ -27,6 +27,7 @@
 
         <activity
             android:name=".ProfileActivity"
+            android:theme="@style/BasicActivityTurq"
             android:screenOrientation="portrait"/>
 
         <activity
@@ -41,6 +42,7 @@
 
         <activity android:name=".CreateDecisionBlobsActivity"
             android:theme="@style/BasicActivityTurq"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
 
     </application>

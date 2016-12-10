@@ -60,7 +60,7 @@ public class Decision implements Serializable {
         this.ownerId = ownerId;
     }
 
-    public void updateScore(int addedValue, boolean isPro){
+    public void updateScoreNewBlob(int addedValue, boolean isPro){
         this.totalScore += addedValue;
         if(isPro){
             this.proScore += addedValue;
