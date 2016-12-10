@@ -221,7 +221,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                     etBlobName.setError(getString(R.string.enterBlobName));
                 }
                 //TODO: delete later. won't be setting a radius.
-                if (etBlobRadius.getText().toString().equals("")) {
+                if (etBlobRadius.getText().toString().equals("") ||
+                        Integer.valueOf(etBlobRadius.getText().toString()) > 100) {
                     etBlobRadius.setError(getString(R.string.enterBlobRadius));
                 } else {
                     // Add newBlob to Firebase, obtain key.
