@@ -16,8 +16,12 @@ import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+//TODO: is pro does NOT work. needs onclick listener
 
 public class CreateDecisionBlobsActivity extends AppCompatActivity{
 
@@ -29,6 +33,8 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity{
 
     @BindView(R.id.btnNewBlob)
     Button btnNewBlob;
+
+
 
     //Setup RecyclerView
     @BindView(R.id.recyclerBlob)
@@ -57,7 +63,6 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity{
         btnNewBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                blobRecyclerAdapter.saveBlob();
                 blobRecyclerAdapter.showBlob();
                 recyclerBlob.scrollToPosition(0);
             }
@@ -79,16 +84,29 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity{
         btnBlobActivitySave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Decision newDecision = (Decision) getIntent().getSerializableExtra(
                         CreateDecisionActivity.KEY_NEW_DECISION);
-
-                String key = FirebaseDatabase.getInstance().getReference().child("decisions").
+                String dKey = FirebaseDatabase.getInstance().getReference().child("decisions").
                         push().getKey();
-                FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(key).setValue(newDecision);
 
-                Toast.makeText(CreateDecisionBlobsActivity.this, "Save Everything on firebase", Toast.LENGTH_SHORT).show();
-                showDecisionActivity(newDecision, key);
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(dKey).setValue(newDecision);
+
+                List<Blob> saveBlobs = blobRecyclerAdapter.getBlobList();
+                String blobKey;
+                for(Blob b : saveBlobs){
+                    blobKey = FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").push().getKey();
+                    FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").child(blobKey).setValue(b);
+                    newDecision.updateScoreNewBlob(b.getRadius(),b.isPro());
+                }
+
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(dKey).child("proScore").setValue(newDecision.getProScore());
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(dKey).child("totalScore").setValue(newDecision.getTotalScore());
+
+                showDecisionActivity(newDecision, dKey);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
             }
         });
@@ -124,5 +142,6 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity{
         super.finish();
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
+
 
 }
