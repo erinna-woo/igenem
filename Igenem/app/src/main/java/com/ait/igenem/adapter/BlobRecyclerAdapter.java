@@ -61,7 +61,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
             public void onClick(View view) {
                 currBlob = blobList.get(holder.getAdapterPosition());
                 currBlob.setPro(!(currBlob.isPro()));
-                notifyItemChanged(holder.getAdapterPosition());
+                //notifyItemChanged(holder.getAdapterPosition());
 
             }
         });
@@ -83,7 +83,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                notifyItemChanged(holder.getAdapterPosition());
+                //notifyItemChanged(holder.getAdapterPosition());
             }
         });
     }
@@ -155,7 +155,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             blobList.get(position).setName(charSequence.toString());
-            //notifyItemChanged(position);
+       //     notifyItemChanged(position);
 
         }
 
