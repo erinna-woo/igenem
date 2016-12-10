@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.ait.igenem.adapter.DecisionRecyclerAdapter;
@@ -37,15 +39,54 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
     @BindView(R.id.tvUsername)
     TextView tvUsername;
 
+    @BindView(R.id.btnHome)
+    Button btnHome;
+
+    @BindView(R.id.btnLogout)
+    Button btnLogout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
-        setupRecyclerView();
+        setupUI();
 
         tvUsername.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         setFont();
+    }
+
+    private void setupUI() {
+        setupRecyclerView();
+        setupHomeListener();
+        setupLogoutListener();
+    }
+
+    private void setupHomeListener() {
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent goHome = new Intent();
+                goHome.setClass(ProfileActivity.this, HomeActivity.class);
+                goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(goHome);
+                finish();
+            }
+        });
+    }
+
+    private void setupLogoutListener() {
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent gotoLogin = new Intent();
+                gotoLogin.setClass(ProfileActivity.this, LoginActivity.class);
+                gotoLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(gotoLogin);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+            }
+        });
     }
 
     private void setFont() {
