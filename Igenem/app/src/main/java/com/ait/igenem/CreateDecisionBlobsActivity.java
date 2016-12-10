@@ -21,9 +21,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-//TODO: is pro does NOT work. needs onclick listener
-//TODO: empty blobs are added null
-
 public class CreateDecisionBlobsActivity extends AppCompatActivity {
 
     @BindView(R.id.btnBlobActivityBack)
@@ -95,7 +92,7 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
                 List<Blob> saveBlobs = blobRecyclerAdapter.getBlobList();
                 String blobKey;
                 for (Blob b : saveBlobs) {
-                    if(b ==null || !b.getName().equals("")) {
+                    if (b == null || !b.getName().equals("")) {
                         blobKey = FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").push().getKey();
                         FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").child(blobKey).setValue(b);
                         newDecision.updateScoreNewBlob(b.getRadius(), b.isPro());

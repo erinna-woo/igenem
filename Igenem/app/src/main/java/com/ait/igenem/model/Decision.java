@@ -15,7 +15,8 @@ public class Decision implements Serializable {
     private int totalScore;
     private int proScore;
 
-    public Decision() {}
+    public Decision() {
+    }
 
     public Decision(String name, int color, String owner, String ownerId) {
         this.name = name;
@@ -58,21 +59,21 @@ public class Decision implements Serializable {
         this.ownerId = ownerId;
     }
 
-    public void updateScoreNewBlob(int addedValue, boolean isPro){
+    public void updateScoreNewBlob(int addedValue, boolean isPro) {
         this.totalScore += addedValue;
-        if(isPro){
+        if (isPro) {
             this.proScore += addedValue;
         }
     }
 
     public float getPercentPro() {
-        if(this.totalScore == 0){
+        if (this.totalScore == 0) {
             return 0;
-        }
-        else {
+        } else {
             return (float) this.proScore / this.totalScore;
         }
     }
+
     public int getTotalScore() {
         return totalScore;
     }
@@ -81,23 +82,23 @@ public class Decision implements Serializable {
         return proScore;
     }
 
-    public void increase(boolean isPro){
+    public void increase(boolean isPro) {
         this.totalScore++;
-        if(isPro){
+        if (isPro) {
             this.proScore++;
         }
     }
 
-    public void decrease(boolean isPro){
+    public void decrease(boolean isPro) {
         this.totalScore--;
-        if(isPro){
+        if (isPro) {
             this.proScore--;
         }
     }
 
     public void updateDecisionScoreDeleteBlob(int removedValue, boolean isPro) {
         this.totalScore -= removedValue;
-        if(isPro){
+        if (isPro) {
             this.proScore -= removedValue;
         }
     }

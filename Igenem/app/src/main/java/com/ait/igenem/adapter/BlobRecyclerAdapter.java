@@ -27,14 +27,14 @@ import butterknife.ButterKnife;
  * Created by Erinna on 12/9/16.
  */
 
-public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapter.ViewHolder>{
+public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapter.ViewHolder> {
 
     private List<Blob> blobList;
     private Context context;
     private Blob currBlob;
 
 
-    public BlobRecyclerAdapter(Context context){
+    public BlobRecyclerAdapter(Context context) {
         this.context = context;
         blobList = new ArrayList<Blob>();
     }
@@ -49,8 +49,8 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        setupProListener(holder);
         holder.editTextListener.updatePosition(holder.getAdapterPosition());
+        setupProListener(holder);
         setupRadiusListener(holder);
         setupDeleteListener(holder);
     }
@@ -71,7 +71,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         holder.sbRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if(seekBar.isShown() && b) {
+                if (seekBar.isShown() && b) {
                     blobList.get(holder.getAdapterPosition()).setRadius(i);
                 }
             }
@@ -97,17 +97,17 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         });
     }
 
-    public void hideBlob(int position){
+    public void hideBlob(int position) {
         blobList.remove(position);
         notifyItemRemoved(position);
     }
 
-    public List<Blob> getBlobList(){
+    public List<Blob> getBlobList() {
 
         return blobList;
     }
 
-    public void showBlob(){
+    public void showBlob() {
         blobList.add(0, new Blob("", false, 0));
         notifyItemInserted(0);
     }
@@ -128,7 +128,8 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         SeekBar sbRadius;
 
         @BindView(R.id.btnDeleteBlob)
-        Button btnDeleteblob;;
+        Button btnDeleteblob;
+        ;
 
         public EditTextListener editTextListener;
 
@@ -143,10 +144,9 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     private class EditTextListener implements TextWatcher {
         private int position;
 
-        public void updatePosition(int position){
+        public void updatePosition(int position) {
             this.position = position;
         }
-
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -155,8 +155,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             blobList.get(position).setName(charSequence.toString());
-       //     notifyItemChanged(position);
-
+            //     notifyItemChanged(position);
         }
 
         @Override
