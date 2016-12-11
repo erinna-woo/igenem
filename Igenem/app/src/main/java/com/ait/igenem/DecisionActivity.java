@@ -130,7 +130,7 @@ public class DecisionActivity extends AppCompatActivity {
         });
     }
 
-    private void addBlobToScreen(final Blob blob) {
+    private void addBlobToScreen(final Blob blob, final String key) {
         final View blobView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.blob_view, null, false);
         final ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
         TextView tvBlobName = (TextView) blobView.findViewById(R.id.tvBlobName);
@@ -178,10 +178,10 @@ public class DecisionActivity extends AppCompatActivity {
                 //if this blob was just added, it should be at index 0 in both blob/key lists
                 editBlobLayout.setVisibility(View.VISIBLE);
 
-                String newKey = dynamicBlobKeys.get(0);
-                Blob newBlob = dynamicBlobList.get(0);
+//                String newKey = dynamicBlobKeys.get(0);
+//                Blob newBlob = dynamicBlobList.get(0);
 
-                setupListeners(newKey, newBlob, blobView);
+                setupListeners(key, blob, blobView);
             }
         });
 
@@ -283,7 +283,7 @@ public class DecisionActivity extends AppCompatActivity {
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Blob newBlob = dataSnapshot.getValue(Blob.class);
                         addBlob(newBlob, dataSnapshot.getKey());
-                        addBlobToScreen(newBlob);
+                        addBlobToScreen(newBlob, dataSnapshot.getKey());
                         Log.d("DOWEHAVEIT", "onChildAdded: " + newBlob.getName());
                     }
 
