@@ -155,7 +155,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/createBlobView"
+        android:id="@+id/blobsLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
