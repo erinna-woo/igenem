@@ -124,9 +124,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
 
     @Override
     public void onItemDismiss(int position) {
-        //what decision am i in?!?!?!?!?!?!?
         deleteBlob(position);
-
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
