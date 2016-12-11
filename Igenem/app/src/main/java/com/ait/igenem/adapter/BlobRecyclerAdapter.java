@@ -4,24 +4,18 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.ait.igenem.CreateDecisionActivity;
 import com.ait.igenem.R;
 import com.ait.igenem.model.Blob;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +27,8 @@ import butterknife.ButterKnife;
  * Created by Erinna on 12/9/16.
  */
 
-public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapter.ViewHolder> {
+public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapter.ViewHolder>
+        implements BlobTouchHelperAdapter {
 
     private List<Blob> blobList;
     private Context context;
@@ -69,8 +64,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
                 if (b) {
                     currBlob.setPro(true);
                     holder.tvProCon.setText("PRO");
-                }
-                else{
+                } else {
                     currBlob.setPro(false);
                     holder.tvProCon.setText("CON");
                 }
@@ -103,12 +97,12 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         holder.btnDeleteblob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideBlob(holder.getAdapterPosition());
+                deleteBlob(holder.getAdapterPosition());
             }
         });
     }
 
-    public void hideBlob(int position) {
+    public void deleteBlob(int position) {
         blobList.remove(position);
         notifyItemRemoved(position);
     }
@@ -126,6 +120,13 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     @Override
     public int getItemCount() {
         return blobList.size();
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        //what decision am i in?!?!?!?!?!?!?
+        deleteBlob(position);
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

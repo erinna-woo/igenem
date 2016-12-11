@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.ait.igenem.adapter.BlobRecyclerAdapter;
+import com.ait.igenem.adapter.BlobTouchHelperCallback;
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
 import com.google.firebase.database.FirebaseDatabase;
@@ -70,7 +71,13 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
         final LinearLayoutManager mLayoutManager =
                 new LinearLayoutManager(this);
         recyclerBlob.setLayoutManager(mLayoutManager);
+
         blobRecyclerAdapter = new BlobRecyclerAdapter(this);
+
+        ItemTouchHelper.Callback callback = new BlobTouchHelperCallback(blobRecyclerAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerBlob);
+
         recyclerBlob.setItemViewCacheSize(100);
         recyclerBlob.setAdapter(blobRecyclerAdapter);
     }
@@ -92,7 +99,7 @@ public class CreateDecisionBlobsActivity extends AppCompatActivity {
                 String blobKey;
                 if(saveBlobs != null) {
                     for (Blob b : saveBlobs) {
-                        if (b == null || !b.getName().equals("")) {
+                        if (b != null && !b.getName().equals("")) {
                             blobKey = FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").push().getKey();
                             FirebaseDatabase.getInstance().getReference().child("decisions").child(dKey).child("blobs").child(blobKey).setValue(b);
                             newDecision.updateScoreNewBlob(b.getRadius(), b.isPro());

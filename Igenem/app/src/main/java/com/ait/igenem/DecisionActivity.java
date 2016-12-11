@@ -176,7 +176,7 @@ public class DecisionActivity extends AppCompatActivity {
                 Toast.makeText(DecisionActivity.this, "CLICKED A BLOB", Toast.LENGTH_LONG).show();
                 //if this blob was just added, it should be at index 0 in both blob/key lists
                 editBlobLayout.setVisibility(View.VISIBLE);
-                setupDeleteListener(0);
+                setupDeleteListener(0, blobView);
                 setupPlusListener(0, blobView);
                 setupMinusListener(0, blobView);
                 setupOkEditListener(0);
@@ -459,32 +459,20 @@ public class DecisionActivity extends AppCompatActivity {
         });
     }
 
-    private void setupDeleteListener(final int positionToEdit) {
+    private void setupDeleteListener(final int positionToEdit, final View blobView) {
         btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String key = getBlobKey(positionToEdit);
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).child("blobs").child(key).removeValue();
+                createBlobView.removeView(blobView);
                 updateDecisionScoreDeleteBlob(positionToEdit);
                 updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
     }
-
-    private void updateBlobOnScreen(int position, View blobView) {
-        String key = getBlobKey(position);
-        Blob blob = getBlob(position);
-        ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
-        ivBlob.setImageResource(R.drawable.circle_aqua);
-        Log.i("LAYOUT_PARAMS", String.valueOf(blob.getRadius() * 5));
-//        ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
-//        layoutParams.width = blob.getRadius()*5;
-//        layoutParams.height = blob.getRadius()*5;
-//        ivBlob.setLayoutParams(layoutParams);
-    }
-
 
     private void updateDecisionScoreDeleteBlob(int positionToEdit) {
         Blob delBlob = getBlob(positionToEdit);
