@@ -34,7 +34,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/login_edit_text"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,50 +107,73 @@
         android:id="@+id/editBlobLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#c1e1e2"
+        android:background="@drawable/login_edit_text"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnPlus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+" />
+            android:weightSum="2"
+            android:orientation="horizontal"
+            android:background="@color/colorCloud"
+            android:layout_marginTop="8dp">
 
             <Button
                 android:id="@+id/btnMinus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-" />
+                style="@style/RoundedButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/btn_text_minus"
+                android:textSize="26dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btnPlus"
+                style="@style/RoundedButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/btn_text_plus"
+                android:textSize="26dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginBottom="12dp"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:weightSum="3"
+            android:orientation="horizontal"
+            android:background="@color/colorCloud">
 
             <Button
                 android:id="@+id/btnDeleteBlob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DELETE" />
+                style="@style/RoundedButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/btn_text_delete"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"/>
 
             <Button
                 android:id="@+id/btnOkEditBlob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OK" />
+                style="@style/RoundedButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/btn_text_ok"
+                android:layout_marginBottom="8dp"/>
 
             <Button
                 android:id="@+id/btnCancelEdit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CANCEL" />
+                style="@style/RoundedButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/btn_text_cancel"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -165,7 +189,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null">
+        android:background="@null"
+        android:layout_marginTop="4dp">
 
         <Button
             android:id="@+id/btnGoHome"

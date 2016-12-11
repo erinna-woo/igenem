@@ -29,6 +29,8 @@
     <string name="btn_text_no">no</string>
     <string name="btn_text_delete">delete</string>
     <string name="btn_text_ok">ok</string>
+    <string name="btn_text_plus">+</string>
+    <string name="btn_text_minus">-</string>
 
     <string name="userCreated">User created</string>
     <string name="errorCreatingUser">"Error creating user: "</string>
