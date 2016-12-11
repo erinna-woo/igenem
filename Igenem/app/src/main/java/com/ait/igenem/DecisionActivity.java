@@ -151,11 +151,24 @@ public class DecisionActivity extends AppCompatActivity {
         layoutParams.height = currBlob.getRadius() * 5;
         ivBlob.setLayoutParams(layoutParams);
 
-        int xPos = (int) (Math.random() * 700);
-        int yPos = (int) (Math.random() * 900);
+        int xPos = 0;
+        int yPos = 0;
+
+        if (mouseX != -99 && mouseY != -99) {
+            xPos = (int) mouseX;
+            yPos = (int) mouseY;
+        }
+        else {
+            // TODO: get values for width and height
+            xPos = (int) (Math.random() * 700);
+            yPos = (int) (Math.random() * 900);
+        }
 
         blobView.setX(xPos);
         blobView.setY(yPos);
+
+        mouseX = -99;
+        mouseY = -99;
 
         blobView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +180,6 @@ public class DecisionActivity extends AppCompatActivity {
                 setupPlusListener(0, blobView);
                 setupMinusListener(0, blobView);
                 setupOkEditListener(0);
-                //updateBlobOnScreen(0, blobView);
             }
         });
 
@@ -512,7 +524,7 @@ public class DecisionActivity extends AppCompatActivity {
         updating.increaseRadius();
         decision.increase(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
-        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        updatePercentPro();
         updateBlob(updating, key);
 
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
@@ -529,7 +541,7 @@ public class DecisionActivity extends AppCompatActivity {
         updating.decreaseRadius();
         decision.decrease(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
-        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        updatePercentPro();
         updateBlob(updating, key);
 
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
