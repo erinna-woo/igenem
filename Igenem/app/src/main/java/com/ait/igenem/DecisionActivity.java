@@ -138,6 +138,9 @@ public class DecisionActivity extends AppCompatActivity {
         final ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
         TextView tvBlobName = (TextView) blobView.findViewById(R.id.tvBlobName);
 
+        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
+        tvBlobName.setTypeface(font);
+
         Blob currBlob = blob;
         if (currBlob.isPro()) {
             ivBlob.setImageResource(R.drawable.circle_white);
@@ -148,6 +151,7 @@ public class DecisionActivity extends AppCompatActivity {
 
         }
         tvBlobName.setText(currBlob.getName());
+
 
 
         // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
@@ -480,7 +484,6 @@ public class DecisionActivity extends AppCompatActivity {
                         child(decisionKey).child("blobs").child(key).removeValue();
                 blobsLayout.removeView(blobView);
                 updateDecisionScoreDeleteBlob(blob);
-                updatePercentPro();
                 updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
@@ -489,7 +492,7 @@ public class DecisionActivity extends AppCompatActivity {
 
     private void updateDecisionScoreDeleteBlob(Blob delBlob) {
         decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
-        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        updatePercentPro();
         updateScoreFirebase();
     }
 
