@@ -74,11 +74,24 @@
             android:layout_height="wrap_content"
             android:paddingTop="7dp" />
 
-        <Button
-            android:id="@+id/btnDOkNewBlob"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OK" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnDOkNewBlob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK" />
+
+            <Button
+                android:id="@+id/btnDCancelNewBlob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/btnDOkNewBlob"
+                android:text="CANCEL" />
+
+        </RelativeLayout>
     </LinearLayout>
 
 
@@ -140,7 +153,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/colorCloud"></RelativeLayout>
-
 
 
     <RelativeLayout

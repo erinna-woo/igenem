@@ -6,8 +6,9 @@
 
     <ImageView
         android:id="@+id/ivBlob"
-        android:layout_width="100dp"
+        android:layout_width="10dp"
         android:layout_height="100dp"
+        android:alpha="0.75"
         android:src="@drawable/circle_black"/>
 
     <TextView
