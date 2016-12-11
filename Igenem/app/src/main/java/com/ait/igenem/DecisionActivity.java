@@ -85,8 +85,8 @@ public class DecisionActivity extends AppCompatActivity {
     Button btnDeleteDecision;
 
     //cstom view
-    @BindView(R.id.createBlobView)
-    RelativeLayout createBlobView;
+    @BindView(R.id.blobsLayout)
+    RelativeLayout blobsLayout;
 
     private Decision decision;
     private String decisionKey;
@@ -96,6 +96,9 @@ public class DecisionActivity extends AppCompatActivity {
 
     private float mouseX;
     private float mouseY;
+
+    private int blobsLayoutWidth;
+    private int blobsLayoutHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +121,7 @@ public class DecisionActivity extends AppCompatActivity {
         setupFirebaseListener();
         setFont();
 
-        createBlobView.setOnTouchListener(new View.OnTouchListener() {
+        blobsLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 createBlobLayout.setVisibility(View.VISIBLE);
@@ -161,9 +164,15 @@ public class DecisionActivity extends AppCompatActivity {
             yPos = (int) mouseY;
         }
         else {
-            // TODO: get values for width and height
-            xPos = (int) (Math.random() * 200);
-            yPos = (int) (Math.random() * 200);
+            Log.i("RELATIVE_WIDTH", String.valueOf(blobsLayout.getWidth()));
+            Log.i("RELATIVE_HEIGHT", String.valueOf(blobsLayout.getHeight()));
+//            xPos = (int) (Math.random() * blobsLayoutWidth);
+//            yPos = (int) (Math.random() * blobsLayoutHeight);
+            xPos = (int) (Math.random() * 600);
+            yPos = (int) (Math.random() * 800);
+
+            // TODO: in onCreate, the relative layout hasn't been created yet so you can't get dimensions
+            // TODO: add blobs to screen after onCreate? in onResume? for loop over blobs in list?
         }
 
         blobView.setX(xPos);
@@ -195,7 +204,7 @@ public class DecisionActivity extends AppCompatActivity {
 //            }
 //        });
 
-        createBlobView.addView(blobView);
+        blobsLayout.addView(blobView);
     }
 
     private void setupListeners(String newKey, Blob newBlob, View blobView) {
@@ -255,7 +264,7 @@ public class DecisionActivity extends AppCompatActivity {
         Color.colorToHSV(decisionColor, hsv);
         hsv[1] = hsv[1] * percentColor;
         linearLayoutDecision.setBackgroundColor(Color.HSVToColor(hsv));
-        createBlobView.setBackgroundColor(Color.HSVToColor(hsv));
+        blobsLayout.setBackgroundColor(Color.HSVToColor(hsv));
     }
 
     @Override
@@ -479,7 +488,7 @@ public class DecisionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).child("blobs").child(key).removeValue();
-                createBlobView.removeView(blobView);
+                blobsLayout.removeView(blobView);
                 updateDecisionScoreDeleteBlob(blob);
                 updatePercentPro();
                 updateBackgroundColor();
@@ -548,6 +557,19 @@ public class DecisionActivity extends AppCompatActivity {
         layoutParams.width = updating.getRadius() * 5;
         layoutParams.height = updating.getRadius() * 5;
         ivBlob.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        getRelativeLayoutInfo();
+    }
+
+    private void getRelativeLayoutInfo(){
+        blobsLayoutWidth = blobsLayout.getWidth();
+        blobsLayoutHeight = blobsLayout.getHeight();
+        Log.i("RELATIVE_WIDTH_OVER", String.valueOf(blobsLayoutWidth));
+        Log.i("RELATIVE_HEIGHT_OVER", String.valueOf(blobsLayoutHeight));
     }
 
 }
