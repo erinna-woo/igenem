@@ -451,7 +451,7 @@ public class DecisionActivity extends AppCompatActivity {
         createBlobLayout.setVisibility(View.GONE);
         etDBlobName.setText("");
         sbDRadius.setProgress(0);
-        swDProCon.setChecked(false);
+        swDProCon.setChecked(true);
     }
 
     private void setupNewBlobButton() {
