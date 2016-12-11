@@ -2,21 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#b2ebf2"
+    android:background="@drawable/login_edit_text"
     android:orientation="vertical"
-    android:padding="20dp">
-
-    <Button
-        android:id="@+id/btnDeleteBlob"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="Delete" />
+    android:padding="20dp"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#b2ebf2"
+        android:background="@color/colorCloud"
         android:orientation="horizontal">
 
         <EditText
@@ -24,22 +18,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:hint="@string/hint_enter_factor"
             android:textSize="22sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/colorCloud"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvProCon"
-                android:text="CON"/>
+                android:background="@color/colorCloud"
+                android:text="@string/tv_con"
+                android:layout_gravity="center_horizontal"/>
+
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/swProCon" />
+                android:id="@+id/swProCon"
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
 

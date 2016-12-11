@@ -6,12 +6,15 @@
     <string name="tv_new_decision">New Decision</string>
     <string name="tv_email_sent">Email sent.</string>
     <string name="tv_email_send_failed">"Email failed to send: "</string>
-    <string name="tv_percent_pro">% For</string>
-    <string name="tv_percent_con">% Against</string>
+    <string name="tv_percent_pro">% for</string>
+    <string name="tv_percent_con">% against</string>
+    <string name="tv_con">con</string>
+    <string name="tv_pro">pro</string>
 
     <string name="hint_enter_title">enter title</string>
     <string name="hint_email">email</string>
     <string name="hint_password">password</string>
+    <string name="hint_enter_factor">enter factor</string>
 
     <string name="btn_text_login">login</string>
     <string name="btn_text_register">register</string>
