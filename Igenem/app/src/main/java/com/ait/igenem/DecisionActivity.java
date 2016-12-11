@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
@@ -35,6 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 //TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
+// not anymore mothafuckaaaaaaaaaa
 
 public class DecisionActivity extends AppCompatActivity {
 
@@ -111,6 +112,7 @@ public class DecisionActivity extends AppCompatActivity {
         dynamicBlobList = new ArrayList<Blob>();
         dynamicBlobKeys = new ArrayList<String>();
 
+        updatePercentPro();
         updateBackgroundColor();
 
         setupDecisionUI();
@@ -120,7 +122,6 @@ public class DecisionActivity extends AppCompatActivity {
         createBlobView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Toast.makeText(DecisionActivity.this, "MAKE A NEW BLOB", Toast.LENGTH_LONG).show();
                 createBlobLayout.setVisibility(View.VISIBLE);
                 mouseX = motionEvent.getX();
                 mouseY = motionEvent.getY();
@@ -142,7 +143,7 @@ public class DecisionActivity extends AppCompatActivity {
             ivBlob.setImageResource(R.drawable.circle_black);
         }
         tvBlobName.setText(currBlob.getName());
-        tvBlobName.setTextColor(Color.BLACK);
+        tvBlobName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimaryDark));
 
 
         // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
@@ -173,13 +174,13 @@ public class DecisionActivity extends AppCompatActivity {
         blobView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(DecisionActivity.this, "CLICKED A BLOB", Toast.LENGTH_LONG).show();
                 //if this blob was just added, it should be at index 0 in both blob/key lists
                 editBlobLayout.setVisibility(View.VISIBLE);
-                setupDeleteListener(0, blobView);
-                setupPlusListener(0, blobView);
-                setupMinusListener(0, blobView);
-                setupOkEditListener(0);
+
+                String newKey = dynamicBlobKeys.get(0);
+                Blob newBlob = dynamicBlobList.get(0);
+
+                setupListeners(newKey, newBlob, blobView);
             }
         });
 
@@ -194,6 +195,12 @@ public class DecisionActivity extends AppCompatActivity {
 //        });
 
         createBlobView.addView(blobView);
+    }
+
+    private void setupListeners(String newKey, Blob newBlob, View blobView) {
+        setupDeleteListener(newKey, newBlob, blobView);
+        setupPlusListener(newKey, newBlob, blobView);
+        setupMinusListener(newKey, newBlob, blobView);
     }
 
     private void setFont() {
@@ -397,6 +404,7 @@ public class DecisionActivity extends AppCompatActivity {
                         child(decisionKey).child("blobs").child(key).setValue(newBlob);
 
                 updateDecisionScoreNewBlob();
+                updatePercentPro();
                 updateBackgroundColor();
 
                 resetCreateBlobLayout();
@@ -453,49 +461,48 @@ public class DecisionActivity extends AppCompatActivity {
                 Blob blob = getBlob(positionToEdit);
                 updateBlobFirebase(blob, key);
                 updateScoreFirebase();
+                updatePercentPro();
                 updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
     }
 
-    private void setupDeleteListener(final int positionToEdit, final View blobView) {
+    private void setupDeleteListener(final String key, final Blob blob, final View blobView) {
         btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String key = getBlobKey(positionToEdit);
                 FirebaseDatabase.getInstance().getReference().child("decisions").
                         child(decisionKey).child("blobs").child(key).removeValue();
                 createBlobView.removeView(blobView);
-                updateDecisionScoreDeleteBlob(positionToEdit);
+                updateDecisionScoreDeleteBlob(blob);
+                updatePercentPro();
                 updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
         });
     }
 
-    private void updateDecisionScoreDeleteBlob(int positionToEdit) {
-        Blob delBlob = getBlob(positionToEdit);
+    private void updateDecisionScoreDeleteBlob(Blob delBlob) {
         decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         updateScoreFirebase();
     }
 
-    private void setupMinusListener(final int positionToEdit, final View blobView) {
+    private void setupMinusListener(final String key, final Blob blob, final View blobView) {
         btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                decreaseRadius(positionToEdit, blobView);
-
+                decreaseRadius(key, blob, blobView);
             }
         });
     }
 
-    private void setupPlusListener(final int positionToEdit, final View blobView) {
+    private void setupPlusListener(final String key, final Blob blob, final View blobView) {
         btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                increaseRadius(positionToEdit, blobView);
+                increaseRadius(key, blob, blobView);
             }
         });
     }
@@ -506,14 +513,13 @@ public class DecisionActivity extends AppCompatActivity {
                 child(decisionKey).child("blobs").child(key).setValue(updating);
     }
 
-    public void increaseRadius(int positionToEdit, View blobView) {
-        String key = getBlobKey(positionToEdit);
-        Blob updating = getBlob(positionToEdit);
+    public void increaseRadius(String key, Blob updating, View blobView) {
         updating.increaseRadius();
         decision.increase(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
         updatePercentPro();
-        updateBlob(updating, key);
+        //updateBlob(updating, key);
+        updateBlobFirebase(updating, key);
 
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
 
@@ -523,14 +529,13 @@ public class DecisionActivity extends AppCompatActivity {
         ivBlob.setLayoutParams(layoutParams);
     }
 
-    public void decreaseRadius(int positionToEdit, View blobView) {
-        String key = getBlobKey(positionToEdit);
-        Blob updating = getBlob(positionToEdit);
+    public void decreaseRadius(String key, Blob updating, View blobView) {
         updating.decreaseRadius();
         decision.decrease(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
         updatePercentPro();
-        updateBlob(updating, key);
+        //updateBlob(updating, key);
+        updateBlobFirebase(updating, key);
 
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
 
