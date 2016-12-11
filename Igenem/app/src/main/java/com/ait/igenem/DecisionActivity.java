@@ -5,15 +5,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
@@ -31,7 +34,6 @@ import butterknife.ButterKnife;
 //TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
 
 public class DecisionActivity extends AppCompatActivity implements PassDataDynamicBlobInterface {
-
 
 
     @BindView(R.id.linearLayoutDecision)
@@ -77,7 +79,9 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 
     //cstom view
     @BindView(R.id.createBlobView)
-    View createBlobView;
+    RelativeLayout createBlobView;
+
+    private LinearLayout.LayoutParams layoutParams;
 
     private Decision decision;
     private String decisionKey;
@@ -99,13 +103,63 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         dynamicBlobList = new ArrayList<Blob>();
         dynamicBlobKeys = new ArrayList<String>();
 
+        layoutParams = (LinearLayout.LayoutParams) createBlobView.getLayoutParams();
+
         updateBackgroundColor();
 
         setupDecisionUI();
         setupFirebaseListener();
 
+        createBlobView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Toast.makeText(DecisionActivity.this, "MAKE A NEW BLOB", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+    }
 
+    private void addBlobToScreen(final Blob blob) {
+        final View blobView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.blob_view, null, false);
+        ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
+        TextView tvBlobName = (TextView) blobView.findViewById(R.id.tvBlobName);
 
+        Blob currBlob = blob;
+        if (currBlob.isPro()) {
+            ivBlob.setImageResource(R.drawable.circle_white);
+            tvBlobName.setTextColor(Color.BLACK);
+        } else {
+            ivBlob.setImageResource(R.drawable.circle_black);
+            tvBlobName.setTextColor(Color.WHITE);
+        }
+        tvBlobName.setText(currBlob.getName());
+
+        ivBlob.setScaleX((float) currBlob.getRadius() / 100);
+        ivBlob.setScaleY((float) currBlob.getRadius() / 100);
+
+        int xPos = (int) (Math.random()*700);
+        int yPos = (int) (Math.random()*900);
+
+        blobView.setX(xPos);
+        blobView.setY(yPos);
+
+        blobView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(DecisionActivity.this, "CLICKED A BLOB", Toast.LENGTH_LONG).show();
+            }
+        });
+
+//        blobView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                Log.i("DRAGGING", "longPress");
+//
+//                return false;
+//            }
+//        });
+
+        createBlobView.addView(blobView);
     }
 
     public void addBlob(Blob newBlob, String key) {
@@ -178,8 +232,9 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Blob newBlob = dataSnapshot.getValue(Blob.class);
                         addBlob(newBlob, dataSnapshot.getKey());
-                        setBlobPos(newBlob);
-                        drawAllBlobs();
+                        //setBlobPos(newBlob);
+                        //drawAllBlobs();
+                        addBlobToScreen(newBlob);
                         Log.d("DOWEHAVEIT", "onChildAdded: " + newBlob.getName());
                     }
 
@@ -214,24 +269,24 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         int diffy;
         int sumr;
 
-        for(int i = 0; i < dynamicBlobList.size(); i++){
-            Blob currblob = dynamicBlobList.get(i);
-
-            diffx = Math.abs(currblob.getPosx() - posx);
-            diffy = Math.abs(currblob.getPosy() - posy);
-            sumr = currblob.getRadius() + newBlob.getRadius();
-
-            while(diffx <= sumr ){
-                posx = getBlobXPos(newBlob.getRadius());
-                diffx = Math.abs(currblob.getPosx() - posx);
-            }
-            //will exit when diffx > sumr
-            while(diffy <= sumr ){
-                posy = getBlobYPos(newBlob.getRadius());
-                diffy= Math.abs(currblob.getPosy() - posy);
-            }
-            //will exit when diffy > sumr
-        }
+//        for(int i = 0; i < dynamicBlobList.size(); i++){
+//            Blob currblob = dynamicBlobList.get(i);
+//
+//            diffx = Math.abs(currblob.getPosx() - posx);
+//            diffy = Math.abs(currblob.getPosy() - posy);
+//            sumr = currblob.getRadius() + newBlob.getRadius();
+//
+//            while(diffx <= sumr ){
+//                posx = getBlobXPos(newBlob.getRadius());
+//                diffx = Math.abs(currblob.getPosx() - posx);
+//            }
+//            //will exit when diffx > sumr
+//            while(diffy <= sumr ){
+//                posy = getBlobYPos(newBlob.getRadius());
+//                diffy= Math.abs(currblob.getPosy() - posy);
+//            }
+//            //will exit when diffy > sumr
+//        }
         newBlob.setPosx(posx);
         newBlob.setPosy(posy);
 
@@ -239,18 +294,18 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     }
 
     private int getBlobYPos(int r) {
-        return (int)(Math.random()* (createBlobView.getHeight()-r))
-                +r;
+        return (int) (Math.random() * (createBlobView.getHeight() - r))
+                + r;
     }
 
     private int getBlobXPos(int r) {
-        return (int)(Math.random()* (createBlobView.getWidth()-r))
-                +r;
+        return (int) (Math.random() * (createBlobView.getWidth() - r))
+                + r;
     }
 
-    private void drawAllBlobs(){
+    private void drawAllBlobs() {
         Canvas canvas = new Canvas();
-        createBlobView.setTag(R.string.blob,dynamicBlobList);
+        createBlobView.setTag(R.string.blob, dynamicBlobList);
         createBlobView.draw(canvas);
         createBlobView.invalidate();
     }
@@ -330,7 +385,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     }
 
     private void updateDecisionScoreNewBlob() {
-        decision.updateScoreNewBlob(Integer.parseInt(etBlobRadius.getText().toString()),cbProCheck.isChecked());
+        decision.updateScoreNewBlob(Integer.parseInt(etBlobRadius.getText().toString()), cbProCheck.isChecked());
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         updateScoreFirebase();
     }
