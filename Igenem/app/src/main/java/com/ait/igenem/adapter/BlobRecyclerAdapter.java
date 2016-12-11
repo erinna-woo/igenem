@@ -107,7 +107,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     }
 
     public void showBlob() {
-        blobList.add(0, new Blob("", false, 0));
+        blobList.add(0, new Blob("", true, 0));
         notifyItemInserted(0);
     }
 
