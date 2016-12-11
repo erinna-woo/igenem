@@ -36,6 +36,8 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     @BindView(R.id.btnYes)
     Button btnYes;
 
+    AlertDialog ad;
+
     private PassDataResetPasswordDialogInterface passDataResetPasswordDialogInterface;
 
     @Override
@@ -52,39 +54,36 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.ResetPasswordDialogFragment));
-        alertDialogBuilder.setTitle(R.string.alert_dialog_title);
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.ResetPasswordDialogFragment)).create();
+        alertDialog.setTitle(R.string.alert_dialog_title);
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View rootView = inflater.inflate(R.layout.fragment_reset_password, null);
-        alertDialogBuilder.setView(rootView);
-        AlertDialog al = alertDialogBuilder.create();
+        alertDialog.setView(rootView);
 
         ButterKnife.bind(this, rootView);
 
-        setupYesButton(al);
-        setupNoButton(al);
+        setupYesButton(alertDialog);
+        setupNoButton(alertDialog);
 
-        return alertDialogBuilder.create();
+        return alertDialog;
     }
 
-    private void setupNoButton(final AlertDialog a) {
+    private void setupNoButton(final AlertDialog ad) {
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                a.dismiss();
+                ad.dismiss();
             }
         });
     }
 
-    private void setupYesButton(final AlertDialog a) {
+    private void setupYesButton(final AlertDialog ad) {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 passDataResetPasswordDialogInterface.sendResetEmail();
-                a.dismiss();
+                ad.dismiss();
             }
         });
     }
