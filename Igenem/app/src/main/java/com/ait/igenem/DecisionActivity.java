@@ -347,18 +347,23 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void updatePercentPro() {
-        double percentDouble = decision.getPercentPro() * 100;
-        int percentInt = (int) Math.round(percentDouble);
-        String proOrCon;
-
-        if (percentInt > 49) {
-            proOrCon = getString(R.string.tv_percent_pro);
-        } else {
-            percentInt = 100 - percentInt;
-            proOrCon = getString(R.string.tv_percent_con);
+        if (decision.getTotalScore() == 0) {
+            tvPercentPro.setText("");
         }
+        else {
+            double percentDouble = decision.getPercentPro() * 100;
+            int percentInt = (int) Math.round(percentDouble);
+            String proOrCon;
 
-        tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
+            if (percentInt > 49) {
+                proOrCon = getString(R.string.tv_percent_pro);
+            } else {
+                percentInt = 100 - percentInt;
+                proOrCon = getString(R.string.tv_percent_con);
+            }
+
+            tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
+        }
     }
 
     private void setupDeleteDecisionButton() {
@@ -463,21 +468,6 @@ public class DecisionActivity extends AppCompatActivity {
                 goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(goHome);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-            }
-        });
-    }
-
-    private void setupOkEditListener(final int positionToEdit) {
-        btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String key = getBlobKey(positionToEdit);
-                Blob blob = getBlob(positionToEdit);
-                updateBlobFirebase(blob, key);
-                updateScoreFirebase();
-                updatePercentPro();
-                updateBackgroundColor();
-                editBlobLayout.setVisibility(View.GONE);
             }
         });
     }

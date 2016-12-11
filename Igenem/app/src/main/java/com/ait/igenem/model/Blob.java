@@ -62,10 +62,12 @@ public class Blob {
     }
 
     public void increaseRadius() {
-        this.radius++;
+        if (this.radius < 100)
+            this.radius++;
     }
 
     public void decreaseRadius() {
-        this.radius--;
+        if (this.radius > 1)
+            this.radius--;
     }
 }
