@@ -160,8 +160,8 @@ public class DecisionActivity extends AppCompatActivity {
         }
         else {
             // TODO: get values for width and height
-            xPos = (int) (Math.random() * 700);
-            yPos = (int) (Math.random() * 900);
+            xPos = (int) (Math.random() * 200);
+            yPos = (int) (Math.random() * 200);
         }
 
         blobView.setX(xPos);
@@ -320,10 +320,10 @@ public class DecisionActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     //tv.setPro(true);
-                    tvDProCon.setText("PRO");
+                    tvDProCon.setText(R.string.tv_pro);
                 } else {
                     /// currBlob.setPro(false);
-                    tvDProCon.setText("CON");
+                    tvDProCon.setText(getString(R.string.tv_con));
                 }
             }
         });

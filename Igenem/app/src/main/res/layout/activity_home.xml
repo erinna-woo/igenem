@@ -19,7 +19,8 @@
         style="@style/CircleButton"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/profile"
-        app:layout_density="10"/>
+        app:layout_density="10"
+        app:layout_bodyType="statik"/>
 
     <Space
         android:id="@+id/space"
@@ -101,7 +102,6 @@
         style="@style/CircleButton"
         android:background="@drawable/plus"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        app:layout_bodyType="statik"/>
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
 </com.jawnnypoo.physicslayout.PhysicsRelativeLayout>

@@ -12,7 +12,13 @@ import android.widget.Button;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.jawnnypoo.physicslayout.Physics;
+import com.jawnnypoo.physicslayout.PhysicsConfig;
 import com.jawnnypoo.physicslayout.PhysicsRelativeLayout;
+
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,6 +79,12 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                PhysicsConfig config = PhysicsConfig.create();
+                BodyDef bodyDef = new BodyDef();
+                bodyDef.type = BodyType.DYNAMIC;
+                config.bodyDef = bodyDef;
+                Physics.setPhysicsConfig(btnProfile, config);
+
                 physicsLayout.removeView(tvHomeGreeting);
                 physicsLayout.removeView(space);
                 physicsLayout.getPhysics().setGravityY(5);
