@@ -61,14 +61,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/colorCloud"
-                    android:text="@string/tv_con"
+                    android:text="@string/tv_pro"
                     android:layout_gravity="center_horizontal"/>
 
                 <Switch
                     android:id="@+id/swDProCon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    android:checked="true"/>
 
             </LinearLayout>
         </LinearLayout>
