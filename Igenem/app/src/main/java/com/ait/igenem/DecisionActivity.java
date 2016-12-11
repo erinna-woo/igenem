@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -70,6 +71,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     Switch swDProCon;
     @BindView(R.id.sbDRadius)
     SeekBar sbDRadius;
+    @BindView(R.id.tvDProCon)
+    TextView tvDProCon;
 
     //deleting decision
     @BindView(R.id.btnDeleteDecision)
@@ -84,6 +87,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     private String previousActivity;
     private List<Blob> dynamicBlobList;
     private List<String> dynamicBlobKeys;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,14 +271,31 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     private void setupDecisionUI() {
         tvDecisionName.setText(decision.getName());
 
-        setUpPecentPro();
+        updatePercentPro();
         setupNewBlobButton();
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
         setupEditBlobListeners();
+        setupProConListener();
     }
 
-    private void setUpPecentPro() {
+    private void setupProConListener() {
+        swDProCon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    //tv.setPro(true);
+                    tvDProCon.setText("PRO");
+                }
+                else{
+                   /// currBlob.setPro(false);
+                    tvDProCon.setText("CON");
+                }
+            }
+        });
+    }
+
+    private void updatePercentPro() {
         double percentDouble = decision.getPercentPro() * 100;
         int percentInt = (int) Math.round(percentDouble);
         String proOrCon;
@@ -336,7 +358,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                             child(decisionKey).child("blobs").push().getKey();
 
                     Blob newBlob = new Blob(etDBlobName.getText().toString(),
-                            (!swDProCon.isChecked()), sbDRadius.getProgress());
+                            swDProCon.isChecked(), sbDRadius.getProgress());
                     FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(decisionKey).child("blobs").child(key).setValue(newBlob);
 
@@ -350,8 +372,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     }
 
     private void updateDecisionScoreNewBlob() {
-        decision.updateScoreNewBlob(sbDRadius.getProgress(),(!swDProCon.isChecked()));
-        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        decision.updateScoreNewBlob(sbDRadius.getProgress(),swDProCon.isChecked());
+        updatePercentPro();
         updateScoreFirebase();
     }
 
