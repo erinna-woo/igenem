@@ -58,13 +58,12 @@
                     android:id="@+id/tvDProCon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tv_pro" />
+                    android:text="CON" />
 
                 <Switch
                     android:id="@+id/swDProCon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"/>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
         </LinearLayout>
