@@ -32,13 +32,14 @@
         android:id="@+id/createBlobLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#b2ebf2"
+        android:background="@drawable/login_edit_text"
         android:orientation="vertical"
         android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorCloud"
             android:orientation="horizontal">
 
             <EditText
@@ -46,24 +47,28 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="NAME"
+                android:hint="@string/hint_enter_factor"
                 android:textSize="22sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/colorCloud"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvDProCon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CON" />
+                    android:background="@color/colorCloud"
+                    android:text="@string/tv_con"
+                    android:layout_gravity="center_horizontal"/>
 
                 <Switch
                     android:id="@+id/swDProCon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -76,20 +81,21 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorCloud">
 
             <Button
                 android:id="@+id/btnDOkNewBlob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OK" />
+                style="@style/RoundedButton"
+                android:text="@string/btn_text_ok"
+                android:layout_marginBottom="4dp"/>
 
             <Button
                 android:id="@+id/btnDCancelNewBlob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/btnDOkNewBlob"
-                android:text="CANCEL" />
+                style="@style/RoundedButton"
+                android:text="@string/btn_text_cancel"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="4dp"/>
 
         </RelativeLayout>
     </LinearLayout>
@@ -161,10 +167,10 @@
         android:background="@null">
 
         <Button
-            android:id="@+id/btnNewBlob"
+            android:id="@+id/btnGoHome"
             style="@style/RoundedButton"
             android:layout_marginBottom="2dp"
-            android:text="add" />
+            android:text="@string/btn_text_home" />
 
         <Button
             android:id="@+id/btnDeleteDecision"
