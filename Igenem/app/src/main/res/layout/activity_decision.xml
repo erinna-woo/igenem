@@ -87,16 +87,16 @@
             android:background="@color/colorCloud">
 
             <Button
-                android:id="@+id/btnDOkNewBlob"
-                style="@style/RoundedButton"
-                android:text="@string/btn_text_ok"
-                android:layout_marginBottom="4dp"/>
-
-            <Button
                 android:id="@+id/btnDCancelNewBlob"
                 style="@style/RoundedButton"
                 android:text="@string/btn_text_cancel"
                 android:layout_alignParentEnd="true"
+                android:layout_marginBottom="4dp"/>
+
+            <Button
+                android:id="@+id/btnDOkNewBlob"
+                style="@style/RoundedButton"
+                android:text="@string/btn_text_ok"
                 android:layout_marginBottom="4dp"/>
 
         </RelativeLayout>
