@@ -42,8 +42,8 @@ public class DecisionActivity extends AppCompatActivity {
     @BindView(R.id.linearLayoutDecision)
     LinearLayout linearLayoutDecision;
 
-    @BindView(R.id.btnNewBlob)
-    Button btnNewBlob;
+    @BindView(R.id.btnGoHome)
+    Button btnGoHome;
     @BindView(R.id.tvDecisionName)
     TextView tvDecisionName;
     @BindView(R.id.tvPercentPro)
@@ -207,7 +207,7 @@ public class DecisionActivity extends AppCompatActivity {
     private void setFont() {
         Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
 
-        btnNewBlob.setTypeface(font);
+        btnGoHome.setTypeface(font);
         btnDeleteDecision.setTypeface(font);
         tvDecisionName.setTypeface(font);
         tvPercentPro.setTypeface(font);
@@ -446,11 +446,14 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void setupNewBlobButton() {
-        btnNewBlob.setOnClickListener(new View.OnClickListener() {
+        btnGoHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editBlobLayout.setVisibility(View.GONE);
-                createBlobLayout.setVisibility(View.VISIBLE);
+                Intent goHome = new Intent();
+                goHome.setClass(DecisionActivity.this, HomeActivity.class);
+                goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(goHome);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
             }
         });
     }
