@@ -1,6 +1,7 @@
 package com.ait.igenem.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +24,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.ait.igenem.R.id.btnNewBlob;
+
 /**
  * Created by Erinna on 12/9/16.
  */
@@ -38,6 +41,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     public BlobRecyclerAdapter(Context context) {
         this.context = context;
         blobList = new ArrayList<Blob>();
+
     }
 
     @Override
@@ -53,7 +57,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         holder.editTextListener.updatePosition(holder.getAdapterPosition());
         setupProListener(holder);
         setupRadiusListener(holder);
-        setupDeleteListener(holder);
     }
 
     private void setupProListener(final ViewHolder holder) {
@@ -63,10 +66,10 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
                 currBlob = blobList.get(holder.getAdapterPosition());
                 if (b) {
                     currBlob.setPro(true);
-                    holder.tvProCon.setText("PRO");
+                    holder.tvProCon.setText(R.string.tv_pro);
                 } else {
                     currBlob.setPro(false);
-                    holder.tvProCon.setText("CON");
+                    holder.tvProCon.setText(R.string.tv_con);
                 }
             }
         });
@@ -89,15 +92,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //notifyItemChanged(holder.getAdapterPosition());
-            }
-        });
-    }
-
-    private void setupDeleteListener(final ViewHolder holder) {
-        holder.btnDeleteblob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteBlob(holder.getAdapterPosition());
             }
         });
     }
@@ -140,10 +134,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         @BindView(R.id.sbRadius)
         SeekBar sbRadius;
 
-        @BindView(R.id.btnDeleteBlob)
-        Button btnDeleteblob;
-
-
         public EditTextListener editTextListener;
 
         public ViewHolder(View itemView, EditTextListener editTextListener) {
@@ -151,6 +141,7 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
             ButterKnife.bind(this, itemView);
             this.editTextListener = editTextListener;
             etBlobName.addTextChangedListener(editTextListener);
+
         }
     }
 
