@@ -3,6 +3,7 @@ package com.ait.igenem;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 //TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
 
-public class DecisionActivity extends AppCompatActivity implements PassDataDynamicBlobInterface {
+public class DecisionActivity extends AppCompatActivity{
 
 
     @BindView(R.id.linearLayoutDecision)
@@ -65,13 +68,15 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     @BindView(R.id.createBlobLayout)
     LinearLayout createBlobLayout;
     @BindView(R.id.btnDOkNewBlob)
-    Button btnOkNewBlob;
+    Button btnDOkNewBlob;
     @BindView(R.id.etDBlobName)
-    EditText etBlobName;
-    @BindView(R.id.etDBlobRadius)
-    EditText etBlobRadius;
-    @BindView(R.id.cbDProCheckBox)
-    CheckBox cbProCheck;
+    EditText etDBlobName;
+    @BindView(R.id.swDProCon)
+    Switch swDProCon;
+    @BindView(R.id.sbDRadius)
+    SeekBar sbDRadius;
+    @BindView(R.id.tvDProCon)
+    TextView tvDProCon;
 
     //deleting decision
     @BindView(R.id.btnDeleteDecision)
@@ -88,6 +93,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     private String previousActivity;
     private List<Blob> dynamicBlobList;
     private List<String> dynamicBlobKeys;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +116,7 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 
         setupDecisionUI();
         setupFirebaseListener();
+        setFont();
 
         createBlobView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -137,8 +145,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
         ivBlob.setScaleX((float) currBlob.getRadius() / 100);
         ivBlob.setScaleY((float) currBlob.getRadius() / 100);
 
-        int xPos = (int) (Math.random()*700);
-        int yPos = (int) (Math.random()*900);
+        int xPos = (int) (Math.random() * 700);
+        int yPos = (int) (Math.random() * 900);
 
         blobView.setX(xPos);
         blobView.setY(yPos);
@@ -150,6 +158,8 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
             }
         });
 
+
+
 //        blobView.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
 //            public boolean onLongClick(View view) {
@@ -160,6 +170,15 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 //        });
 
         createBlobView.addView(blobView);
+    }
+
+    private void setFont() {
+        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
+
+        btnNewBlob.setTypeface(font);
+        btnDeleteDecision.setTypeface(font);
+        tvDecisionName.setTypeface(font);
+        tvPercentPro.setTypeface(font);
     }
 
     public void addBlob(Blob newBlob, String key) {
@@ -261,37 +280,6 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 });
     }
 
-    private void setBlobPos(Blob newBlob) {
-        int posx = getBlobXPos(newBlob.getRadius());
-        int posy = getBlobYPos(newBlob.getRadius());
-
-        int diffx;
-        int diffy;
-        int sumr;
-
-//        for(int i = 0; i < dynamicBlobList.size(); i++){
-//            Blob currblob = dynamicBlobList.get(i);
-//
-//            diffx = Math.abs(currblob.getPosx() - posx);
-//            diffy = Math.abs(currblob.getPosy() - posy);
-//            sumr = currblob.getRadius() + newBlob.getRadius();
-//
-//            while(diffx <= sumr ){
-//                posx = getBlobXPos(newBlob.getRadius());
-//                diffx = Math.abs(currblob.getPosx() - posx);
-//            }
-//            //will exit when diffx > sumr
-//            while(diffy <= sumr ){
-//                posy = getBlobYPos(newBlob.getRadius());
-//                diffy= Math.abs(currblob.getPosy() - posy);
-//            }
-//            //will exit when diffy > sumr
-//        }
-        newBlob.setPosx(posx);
-        newBlob.setPosy(posy);
-
-
-    }
 
     private int getBlobYPos(int r) {
         return (int) (Math.random() * (createBlobView.getHeight() - r))
@@ -312,11 +300,44 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 
     private void setupDecisionUI() {
         tvDecisionName.setText(decision.getName());
-        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+
+        updatePercentPro();
         setupNewBlobButton();
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
         setupEditBlobListeners();
+        setupProConListener();
+    }
+
+    private void setupProConListener() {
+        swDProCon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    //tv.setPro(true);
+                    tvDProCon.setText("PRO");
+                }
+                else{
+                   /// currBlob.setPro(false);
+                    tvDProCon.setText("CON");
+                }
+            }
+        });
+    }
+
+    private void updatePercentPro() {
+        double percentDouble = decision.getPercentPro() * 100;
+        int percentInt = (int) Math.round(percentDouble);
+        String proOrCon;
+
+        if (percentInt > 49) {
+            proOrCon = getString(R.string.tv_percent_pro);
+        } else {
+            percentInt = 100 - percentInt;
+            proOrCon = getString(R.string.tv_percent_con);
+        }
+
+        tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
     }
 
     private void setupDeleteDecisionButton() {
@@ -354,24 +375,20 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
     }
 
     private void setupOkayCreateBlobButton() {
-        btnOkNewBlob.setOnClickListener(new View.OnClickListener() {
+        btnDOkNewBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (etBlobName.getText().toString().equals("")) {
-                    etBlobName.setError(getString(R.string.enterBlobName));
+                if (etDBlobName.getText().toString().equals("")) {
+                    etDBlobName.setError(getString(R.string.enterBlobName));
                 }
-                //TODO: delete later. won't be setting a radius.
-                if (etBlobRadius.getText().toString().equals("") ||
-                        Integer.valueOf(etBlobRadius.getText().toString()) > 100) {
-                    etBlobRadius.setError(getString(R.string.enterBlobRadius));
-                } else {
+
                     // Add newBlob to Firebase, obtain key.
                     String key = FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(decisionKey).child("blobs").push().getKey();
 
-                    Blob newBlob = new Blob(etBlobName.getText().toString(),
-                            cbProCheck.isChecked(), Integer.parseInt(etBlobRadius.getText().toString()));
+                    Blob newBlob = new Blob(etDBlobName.getText().toString(),
+                            swDProCon.isChecked(), sbDRadius.getProgress());
                     FirebaseDatabase.getInstance().getReference().child("decisions").
                             child(decisionKey).child("blobs").child(key).setValue(newBlob);
 
@@ -379,14 +396,15 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                     updateBackgroundColor();
 
                     resetCreateBlobLayout();
-                }
+
             }
         });
     }
 
     private void updateDecisionScoreNewBlob() {
-        decision.updateScoreNewBlob(Integer.parseInt(etBlobRadius.getText().toString()), cbProCheck.isChecked());
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        decision.updateScoreNewBlob(sbDRadius.getProgress(),swDProCon.isChecked());
+        updatePercentPro();
         updateScoreFirebase();
     }
 
@@ -399,9 +417,9 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
 
     private void resetCreateBlobLayout() {
         createBlobLayout.setVisibility(View.GONE);
-        etBlobName.setText("");
-        etBlobRadius.setText("");
-        cbProCheck.setChecked(false);
+        etDBlobName.setText("");
+        sbDRadius.setProgress(0);
+        swDProCon.setChecked(false);
     }
 
     private void setupNewBlobButton() {
@@ -412,19 +430,6 @@ public class DecisionActivity extends AppCompatActivity implements PassDataDynam
                 createBlobLayout.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    @Override
-    public void showEdit(Blob blobToEdit, int position) {
-        createBlobLayout.setVisibility(View.GONE);
-        editBlobLayout.setVisibility(View.VISIBLE);
-        //TODO: not sure if we need the blob and position
-
-        final int positionToEdit = position;
-        setupPlusListener(positionToEdit);
-        setupMinusListener(positionToEdit);
-        setupDeleteListener(positionToEdit);
-        setupOkEditListener(positionToEdit);
     }
 
     private void setupOkEditListener(final int positionToEdit) {

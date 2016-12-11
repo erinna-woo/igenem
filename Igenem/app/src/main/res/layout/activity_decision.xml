@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayoutDecision"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/linearLayoutDecision"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -11,65 +11,76 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ait.igenem.DecisionActivity">
 
-    <TextView
-        android:id="@+id/tvDecisionName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MY DECISION NAME" />
-
-    <Button
-        android:id="@+id/btnNewBlob"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Temp: New Blob" />
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@drawable/decision_header"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnDeleteDecision"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="DELETE DECISION" />
+        <TextView
+            android:id="@+id/tvDecisionName"
+            style="@style/DecisionTitleText" />
+
+        <TextView
+            android:id="@+id/tvPercentPro"
+            style="@style/DecisionTitleText" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/createBlobLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#dce2e0"
+        android:background="#b2ebf2"
         android:orientation="vertical"
         android:visibility="gone">
-
-        <EditText
-            android:id="@+id/etDBlobName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="NAME" />
-
-        <EditText
-            android:id="@+id/etDBlobRadius"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="RADIUS"
-            android:inputType="number" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/cbDProCheckBox"
+            <EditText
+                android:id="@+id/etDBlobName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="NAME"
+                android:textSize="22sp" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="IS PRO" />
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnDOkNewBlob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OK" />
+                <TextView
+                    android:id="@+id/tvDProCon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CON" />
 
+                <Switch
+                    android:id="@+id/swDProCon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
         </LinearLayout>
 
+        <SeekBar
+            android:id="@+id/sbDRadius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="7dp" />
+
+        <Button
+            android:id="@+id/btnDOkNewBlob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK" />
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/editBlobLayout"
@@ -130,10 +141,25 @@
         android:layout_weight="1"
         android:background="@color/colorCloud"></RelativeLayout>
 
-    <TextView
-        android:id="@+id/tvPercentPro"
-        android:layout_width="match_parent"
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"/>
+        android:background="@null">
+
+        <Button
+            android:id="@+id/btnNewBlob"
+            style="@style/RoundedButton"
+            android:layout_marginBottom="2dp"
+            android:text="add" />
+
+        <Button
+            android:id="@+id/btnDeleteDecision"
+            style="@style/RoundedButton"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="2dp"
+            android:text="@string/btn_text_delete" />
+    </RelativeLayout>
 
 </LinearLayout>
