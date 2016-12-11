@@ -32,15 +32,14 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tvProCon"
                 android:background="@color/colorCloud"
-                android:text="@string/tv_pro"
+                android:text="@string/tv_con"
                 android:layout_gravity="center_horizontal"/>
 
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/swProCon"
-                android:layout_gravity="center_horizontal"
-                android:checked="true"/>
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
 
