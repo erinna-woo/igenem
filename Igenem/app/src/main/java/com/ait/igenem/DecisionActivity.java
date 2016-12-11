@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -139,11 +138,13 @@ public class DecisionActivity extends AppCompatActivity {
         Blob currBlob = blob;
         if (currBlob.isPro()) {
             ivBlob.setImageResource(R.drawable.circle_white);
+            tvBlobName.setTextColor(Color.BLACK);
         } else {
             ivBlob.setImageResource(R.drawable.circle_black);
+            tvBlobName.setTextColor(Color.WHITE);
+
         }
         tvBlobName.setText(currBlob.getName());
-        tvBlobName.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimaryDark));
 
 
         // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
@@ -392,22 +393,23 @@ public class DecisionActivity extends AppCompatActivity {
 
                 if (etDBlobName.getText().toString().equals("")) {
                     etDBlobName.setError(getString(R.string.enterBlobName));
+                } else {
+
+                    // Add newBlob to Firebase, obtain key.
+                    String key = FirebaseDatabase.getInstance().getReference().child("decisions").
+                            child(decisionKey).child("blobs").push().getKey();
+
+                    Blob newBlob = new Blob(etDBlobName.getText().toString(),
+                            swDProCon.isChecked(), sbDRadius.getProgress());
+                    FirebaseDatabase.getInstance().getReference().child("decisions").
+                            child(decisionKey).child("blobs").child(key).setValue(newBlob);
+
+                    updateDecisionScoreNewBlob();
+                    updatePercentPro();
+                    updateBackgroundColor();
+
+                    resetCreateBlobLayout();
                 }
-
-                // Add newBlob to Firebase, obtain key.
-                String key = FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(decisionKey).child("blobs").push().getKey();
-
-                Blob newBlob = new Blob(etDBlobName.getText().toString(),
-                        swDProCon.isChecked(), sbDRadius.getProgress());
-                FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(decisionKey).child("blobs").child(key).setValue(newBlob);
-
-                updateDecisionScoreNewBlob();
-                updatePercentPro();
-                updateBackgroundColor();
-
-                resetCreateBlobLayout();
 
             }
         });
