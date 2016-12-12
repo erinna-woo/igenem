@@ -2,10 +2,10 @@
 <com.jawnnypoo.physicslayout.PhysicsRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/physicsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/physicsLayout"
     android:padding="0dp"
     app:bounds="true"
     app:boundsSize="100dp"
@@ -19,30 +19,30 @@
         style="@style/CircleButton"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/profile"
-        app:layout_density="10"
-        app:layout_bodyType="statik"/>
+        app:layout_bodyType="statik"
+        app:layout_density="10" />
 
     <Space
         android:id="@+id/space"
         android:layout_width="5dp"
         android:layout_height="10dp"
         android:layout_below="@id/btnProfile"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/tvHomeGreeting"
         style="@style/CenterText"
-        android:layout_marginTop="90dp"
         android:layout_below="@id/space"
+        android:layout_marginTop="90dp"
         android:text="@string/tv_home_greeting"
-        app:layout_bodyType="statik"/>
+        app:layout_bodyType="statik" />
 
     <ImageView
         android:layout_width="65dp"
         android:layout_height="65dp"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="left"
         android:layout_margin="0dp"
-        android:layout_centerHorizontal="true"
         android:alpha="0.25"
         android:src="@drawable/circle_aqua"
         app:layout_density="10" />
@@ -50,9 +50,9 @@
     <ImageView
         android:layout_width="65dp"
         android:layout_height="65dp"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_margin="0dp"
-        android:layout_centerHorizontal="true"
         android:alpha="0.25"
         android:src="@drawable/circle_blue"
         app:layout_density="10" />
@@ -60,8 +60,8 @@
     <ImageView
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_gravity="right"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="right"
         android:layout_margin="0dp"
         android:alpha="0.25"
         android:src="@drawable/circle_brown"
@@ -70,8 +70,8 @@
     <ImageView
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_gravity="center"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_margin="0dp"
         android:alpha="0.25"
         android:src="@drawable/circle_green"
@@ -80,8 +80,8 @@
     <ImageView
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_gravity="left"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="left"
         android:layout_margin="0dp"
         android:alpha="0.25"
         android:src="@drawable/circle_orange"
@@ -90,8 +90,8 @@
     <ImageView
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:layout_gravity="center"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_margin="0dp"
         android:alpha="0.25"
         android:src="@drawable/circle_red"
@@ -100,8 +100,8 @@
     <Button
         android:id="@+id/btnNewDecision"
         style="@style/CircleButton"
-        android:background="@drawable/plus"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@drawable/plus" />
 
 </com.jawnnypoo.physicslayout.PhysicsRelativeLayout>

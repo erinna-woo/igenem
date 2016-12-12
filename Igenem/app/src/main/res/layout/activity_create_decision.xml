@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.ait.igenem.CreateDecisionActivity">
 
     <TextView
         android:id="@+id/tvCreateDecisionTitle"
         style="@style/CenterText"
+        android:layout_marginBottom="16dp"
         android:text="@string/tv_new_decision"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="@color/colorPrimaryDark" />
 
     <EditText
         android:id="@+id/etNewDecisionName"
@@ -31,13 +31,9 @@
         app:alphaSlider="false"
         app:density="12"
         app:lightnessSlider="false"
-        app:wheelType="CIRCLE"
-        />
+        app:wheelType="CIRCLE" />
 
-    <!--something to pick color-->
-
-    <Space
-        style="@style/PushDownSpace"/>
+    <Space style="@style/PushDownSpace" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -47,15 +43,15 @@
         <Button
             android:id="@+id/btnCancel"
             style="@style/RoundedButton"
-            android:text="@string/btn_text_cancel"
-            android:layout_marginBottom="2dp"/>
+            android:layout_marginBottom="2dp"
+            android:text="@string/btn_text_cancel" />
 
         <Button
             android:id="@+id/btnNext"
             style="@style/RoundedButton"
-            android:text="@string/btn_text_next"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="2dp"/>
+            android:layout_marginBottom="2dp"
+            android:text="@string/btn_text_next" />
     </RelativeLayout>
 
 </LinearLayout>

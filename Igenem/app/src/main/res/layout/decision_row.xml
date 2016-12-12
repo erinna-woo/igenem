@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/layoutDecision"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/layoutDecision"
+    android:layout_marginBottom="4dp"
     android:background="@drawable/profile_row"
-    android:padding="15dp"
-    android:layout_marginBottom="4dp">
+    android:orientation="vertical"
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/tvDecisionName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:background="@color/colorCloud"
-        />
+        android:textSize="20sp" />
 
 </LinearLayout>

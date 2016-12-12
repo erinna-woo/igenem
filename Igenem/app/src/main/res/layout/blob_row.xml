@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
     android:background="@drawable/login_edit_text"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:layout_marginBottom="@dimen/activity_vertical_margin">
+    android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,19 +31,18 @@
                 android:id="@+id/tvProCon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:background="@color/colorCloud"
-                android:text="@string/tv_pro"
-                android:layout_gravity="center_horizontal"/>
+                android:text="@string/tv_pro" />
 
             <Switch
                 android:id="@+id/swProCon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:checked="true"/>
+                android:checked="true" />
 
         </LinearLayout>
-
 
 
     </LinearLayout>

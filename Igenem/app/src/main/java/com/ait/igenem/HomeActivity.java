@@ -45,29 +45,17 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+        setupUI();
+    }
 
+    private void setupUI() {
         setFont();
+        setupProfileButtonListener();
+        setupNewDecisionButtonListener();
+        setupAnimation();
+    }
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent openProfile = new Intent();
-                openProfile.setClass(HomeActivity.this, ProfileActivity.class);
-                startActivity(openProfile);
-                overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
-            }
-        });
-
-        btnNewDecision.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent createDecision = new Intent();
-                createDecision.setClass(HomeActivity.this, CreateDecisionActivity.class);
-                startActivity(createDecision);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
-            }
-        });
-
+    private void setupAnimation() {
         final Animation out = new AlphaAnimation(1.0f, 0.0f);
         out.setDuration(3000);
 
@@ -79,23 +67,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                PhysicsConfig config = PhysicsConfig.create();
-                BodyDef bodyDef = new BodyDef();
-                bodyDef.type = BodyType.DYNAMIC;
-                config.bodyDef = bodyDef;
-                Physics.setPhysicsConfig(btnProfile, config);
-
-                physicsLayout.removeView(tvHomeGreeting);
-                physicsLayout.removeView(space);
-                physicsLayout.getPhysics().setGravityY(5);
-                physicsLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        physicsLayout.getPhysics().setGravityY(0);
-                        physicsLayout.getPhysics().giveRandomImpulse();
-                        return false;
-                    }
-                });
+                setupPhysics();
             }
 
             @Override
@@ -105,7 +77,50 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         tvHomeGreeting.startAnimation(out);
+    }
 
+    private void setupPhysics() {
+        PhysicsConfig config = PhysicsConfig.create();
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyType.DYNAMIC;
+        config.bodyDef = bodyDef;
+        Physics.setPhysicsConfig(btnProfile, config);
+
+        physicsLayout.removeView(tvHomeGreeting);
+        physicsLayout.removeView(space);
+        physicsLayout.getPhysics().setGravityY(5);
+        physicsLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                physicsLayout.getPhysics().setGravityY(0);
+                physicsLayout.getPhysics().giveRandomImpulse();
+                return false;
+            }
+        });
+    }
+
+    private void setupNewDecisionButtonListener() {
+        btnNewDecision.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent createDecision = new Intent();
+                createDecision.setClass(HomeActivity.this, CreateDecisionActivity.class);
+                startActivity(createDecision);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+            }
+        });
+    }
+
+    private void setupProfileButtonListener() {
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openProfile = new Intent();
+                openProfile.setClass(HomeActivity.this, ProfileActivity.class);
+                startActivity(openProfile);
+                overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+            }
+        });
     }
 
     @Override

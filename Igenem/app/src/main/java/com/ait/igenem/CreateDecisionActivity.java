@@ -71,7 +71,6 @@ public class CreateDecisionActivity extends AppCompatActivity {
                     String name = etNewDecisionName.getText().toString();
                     int colorInt = colorPickerView.getSelectedColor();
 
-                    //TODO: error if they don't select a color? White is default tho.
                     Decision newDecision =
                             new Decision(name, colorInt, getUserName(), getUserId());
 

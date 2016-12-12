@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/layoutDBlobRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/layoutDBlobRow">
-
-    <!--THIS IS TEMPORARY. should be deleted later!!-->
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvDBlobName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NAME"/>
+        android:text="NAME" />
 
     <TextView
         android:id="@+id/tvDBlobScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SCORE"/>
+        android:text="SCORE" />
 
     <TextView
         android:id="@+id/tvDProCon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PRO/CON"/>
+        android:text="PRO/CON" />
 
     <Button
         android:id="@+id/btnDEditBlob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="EDIT"/>
+        android:text="EDIT" />
 
 </LinearLayout>

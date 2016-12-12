@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,7 +18,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -84,8 +82,8 @@ public class LoginActivity extends BaseActivity
         if (firebaseAuth.getCurrentUser() != null) {
             Intent goHomeIntent = new Intent();
             goHomeIntent.setClass(LoginActivity.this, HomeActivity.class);
-            goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(goHomeIntent);
         }
     }
@@ -106,7 +104,8 @@ public class LoginActivity extends BaseActivity
 
         showProgressDialog();
 
-        firebaseAuth.createUserWithEmailAndPassword(etEmail.getText().toString(), etPassword.getText().toString())
+        firebaseAuth.createUserWithEmailAndPassword(etEmail.getText().toString(),
+                etPassword.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -122,7 +121,6 @@ public class LoginActivity extends BaseActivity
                         }
                     }
                 });
-
     }
 
     private void loginUser(@NonNull Task<AuthResult> task) {
@@ -150,13 +148,7 @@ public class LoginActivity extends BaseActivity
             public void onComplete(@NonNull Task<AuthResult> task) {
                 hideProgressDialog();
                 if (task.isSuccessful()) {
-
-                    // Go to home activity
-                    Intent openHome = new Intent();
-                    openHome.setClass(LoginActivity.this, HomeActivity.class);
-                    startActivity(openHome);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
-                    finish();
+                    openHomeActivity();
                 } else {
                     try {
                         throw task.getException();
@@ -172,6 +164,14 @@ public class LoginActivity extends BaseActivity
             }
         });
 
+    }
+
+    private void openHomeActivity() {
+        Intent openHome = new Intent();
+        openHome.setClass(LoginActivity.this, HomeActivity.class);
+        startActivity(openHome);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+        finish();
     }
 
     private void openResetPasswordDialogFragment() {
@@ -207,12 +207,14 @@ public class LoginActivity extends BaseActivity
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(LoginActivity.this, R.string.tv_email_sent, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, R.string.tv_email_sent,
+                                Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(LoginActivity.this, getString(R.string.tv_email_send_failed) + e.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.tv_email_send_failed)
+                        + e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

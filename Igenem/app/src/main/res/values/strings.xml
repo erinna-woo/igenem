@@ -54,6 +54,10 @@
     <string name="profileactivity">ProfileActivity</string>
     <string name="firstTime">firstTime</string>
     <string name="users">users</string>
+    <string name="tv_send_reset_email">Send an email to reset?</string>
+    <string name="proscore">proScore</string>
+    <string name="totalscore">totalScore</string>
+    <string name="create_decision_activity">CreateDecision</string>
 
     <integer name="anim_length">500</integer>
 </resources>
