@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
@@ -30,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,6 +103,10 @@ public class DecisionActivity extends AppCompatActivity {
     private int blobsLayoutWidth;
     private int blobsLayoutHeight;
 
+    private boolean minusPressed = false;
+
+    private MinusThread mt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +128,7 @@ public class DecisionActivity extends AppCompatActivity {
         setupFirebaseListener();
         setFont();
 
-        blobsLayout.setOnTouchListener(new View.OnTouchListener() {
+        blobsLayout.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 createBlobLayout.setVisibility(View.VISIBLE);
@@ -166,8 +173,7 @@ public class DecisionActivity extends AppCompatActivity {
         if (mouseX != -99 && mouseY != -99) {
             xPos = (int) mouseX;
             yPos = (int) mouseY;
-        }
-        else {
+        } else {
             Log.i("RELATIVE_WIDTH", String.valueOf(blobsLayout.getWidth()));
             Log.i("RELATIVE_HEIGHT", String.valueOf(blobsLayout.getHeight()));
 //            xPos = (int) (Math.random() * blobsLayoutWidth);
@@ -497,13 +503,38 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void setupMinusListener(final String key, final Blob blob, final View blobView) {
-        btnMinus.setOnClickListener(new View.OnClickListener() {
+//        btnMinus.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                decreaseRadius(key, blob, blobView);
+//            }
+//        });
+
+
+
+
+        btnMinus.setOnTouchListener(new OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                decreaseRadius(key, blob, blobView);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        minusPressed = true;
+                        mt = new MinusThread(key, blob, blobView);
+                        mt.start();
+                        Log.d("SDF", "START! ");
+                        break;
+                    case MotionEvent.ACTION_UP:
+                       mt.interrupt();
+                        minusPressed = false;
+                        Log.d("SDF", "==CANCEL! ");
+
+                }
+                return false;
             }
         });
+
     }
+
 
     private void setupPlusListener(final String key, final Blob blob, final View blobView) {
         btnPlus.setOnClickListener(new View.OnClickListener() {
@@ -558,11 +589,49 @@ public class DecisionActivity extends AppCompatActivity {
         getRelativeLayoutInfo();
     }
 
-    private void getRelativeLayoutInfo(){
+    private void getRelativeLayoutInfo() {
         blobsLayoutWidth = blobsLayout.getWidth();
         blobsLayoutHeight = blobsLayout.getHeight();
         Log.i("RELATIVE_WIDTH_OVER", String.valueOf(blobsLayoutWidth));
         Log.i("RELATIVE_HEIGHT_OVER", String.valueOf(blobsLayoutHeight));
+    }
+//
+//    protected void minusStop(){
+//        minusThread.interrupt();
+//        minusPressed = false;
+//        Log.d("SDF", "======STOP! ");
+//
+//    }
+
+    private class MinusThread extends Thread{
+
+        private String k;
+        private Blob b;
+
+        private View bv;
+
+        public MinusThread(String k, Blob b, View bv){
+            this.k = k;
+            this.b = b;
+            this.bv = bv;
+        }
+
+        public void run(){
+            while(minusPressed){
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        Log.d("DOWNDOWN", "DOWN");
+                        decreaseRadius(k, b, bv);
+                    }
+                });
+                try{
+                    sleep(500);
+                }catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }
