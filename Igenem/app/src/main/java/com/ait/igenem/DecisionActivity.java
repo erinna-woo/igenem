@@ -39,7 +39,6 @@ import butterknife.ButterKnife;
 
 public class DecisionActivity extends AppCompatActivity {
 
-
     @BindView(R.id.linearLayoutDecision)
     LinearLayout linearLayoutDecision;
 
@@ -421,9 +420,8 @@ public class DecisionActivity extends AppCompatActivity {
         btnDeleteDecision.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //delete from firebase
-
-                //Go back to profile page
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(decisionKey).removeValue();
                 goToProfile();
                 finish();
             }
@@ -447,18 +445,7 @@ public class DecisionActivity extends AppCompatActivity {
                 return false;
             }
         });
-<<<<<<< HEAD
-        btnCancelEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editBlobLayout.setVisibility(View.GONE);
-               // FirebaseDatabase.getInstance().getReference().getDatabase().sna
-               // int previousProScore = FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                       // child(decisionKey).child("proScore").;
-                //updateBlobViewSize(updating, blobView);
-=======
     }
->>>>>>> decision-activity-clean
 
     private void setupMinusListener(final Blob blob, final View blobView) {
         btnMinus.setOnTouchListener(new OnTouchListener() {
@@ -484,42 +471,17 @@ public class DecisionActivity extends AppCompatActivity {
         btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-<<<<<<< HEAD
-
-                if (etDBlobName.getText().toString().equals("")) {
-                    etDBlobName.setError(getString(R.string.enterBlobName));
-                } else {
-
-                    // Add newBlob to Firebase, obtain key.
-                    String key = FirebaseDatabase.getInstance().getReference().child(
-                            getString(R.string.decisions)).
-                            child(decisionKey).child(getString(R.string.blobs)).push().getKey();
-
-                    Blob newBlob = new Blob(etDBlobName.getText().toString(),
-                            swDProCon.isChecked(), sbDRadius.getProgress());
-                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                            child(decisionKey).child(getString(R.string.blobs)).child(key).setValue(newBlob);
-
-                    updateDecisionScoreNewBlob();
-                    updatePercentPro();
-                    updateBackgroundColor();
-
-                    resetCreateBlobLayout();
-                    clicked = false;
-                }
-
-=======
                 editBlobLayout.setVisibility(View.GONE);
                 updateBlobFirebase(updating, key);
                 updateScoreFirebase();
                 clicked = false;
->>>>>>> decision-activity-clean
             }
         });
         btnCancelEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
+                updateDecisionScoreEditedBlob(updating.getRadius(), uneditedRadius, updating.isPro());
                 updating.setRadius(uneditedRadius);
                 updateBlob(updating, key);
                 updateBlobViewSize(updating, blobView);
@@ -540,108 +502,17 @@ public class DecisionActivity extends AppCompatActivity {
                 child(decisionKey).child("totalScore").setValue(decision.getTotalScore());
     }
 
-<<<<<<< HEAD
-    private void resetCreateBlobLayout() {
-        createBlobLayout.setVisibility(View.GONE);
-        etDBlobName.setText("");
-        sbDRadius.setProgress(0);
-        swDProCon.setChecked(true);
-    }
-
-    private void setupNewBlobButton() {
-        btnGoHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent goHome = new Intent();
-                goHome.setClass(DecisionActivity.this, HomeActivity.class);
-                goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(goHome);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-            }
-        });
-    }
-
-//    private void setupOkEditListener(final int positionToEdit) {
-//        btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String key = getBlobKey(positionToEdit);
-//                Blob blob = getBlob(positionToEdit);
-//                updateBlobFirebase(blob, key);
-//                updateScoreFirebase();
-//                updatePercentPro();
-//                updateBackgroundColor();
-//                editBlobLayout.setVisibility(View.GONE);
-//            }
-//        });
-//    }
-
-    private void setupDeleteListener(final String key, final Blob blob, final View blobView) {
-        btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                        child(decisionKey).child(getString(R.string.blobs)).child(key).removeValue();
-                blobsLayout.removeView(blobView);
-                updateDecisionScoreDeleteBlob(blob);
-                updatePercentPro();
-                updateBackgroundColor();
-                editBlobLayout.setVisibility(View.GONE);
-                clicked = false;
-            }
-        });
-    }
-
-    private void updateDecisionScoreDeleteBlob(Blob delBlob) {
-        decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
+    private void updateDecisionScoreEditedBlob(int oldRadius, int newRadius, boolean isPro) {
+        decision.updateDecisionScoreEditBlob(oldRadius, newRadius, isPro);
         updatePercentPro();
-        updateBackgroundColor();
-        updateScoreFirebase();
+        //don't need to update in Firebase because OK never clicked, Firebase never updated
     }
 
-    private void setupMinusListener(final String key, final Blob blob, final View blobView) {
-//        btnMinus.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                decreaseRadius(key, blob, blobView);
-//            }
-//        });
-
-
-        btnMinus.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                if (blob.getRadius() > 1) {
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            minusPressed = true;
-                            mt = new MinusThread(key, blob, blobView);
-                            mt.start();
-                            Log.d("SDF", "START! ");
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            mt.interrupt();
-                            minusPressed = false;
-                            Log.d("SDF", "==CANCEL! ");
-
-                    }
-                //}
-//                else{
-//                    mt.interrupt();
-//                    minusPressed = false;
-//                    Log.d("SDF", "==@#$^$#%@$# MAX CANCEL! ");
-//                }
-                return false;
-            }
-
-        });
-=======
     public void updateBlob(Blob updateBlob, String key) {
         int index = dynamicBlobKeys.indexOf(key);
         if (index != -1) {
             dynamicBlobList.set(index, updateBlob);
         }
->>>>>>> decision-activity-clean
     }
 
     public void removeBlobByKey(String key) {
@@ -654,17 +525,10 @@ public class DecisionActivity extends AppCompatActivity {
 
     private void setFont() {
         Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
-
-<<<<<<< HEAD
-    private void updateBlobFirebase(Blob updating, String key) {
-        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                child(decisionKey).child(getString(R.string.blobs)).child(key).setValue(updating);
-=======
         btnGoHome.setTypeface(font);
         btnDeleteDecision.setTypeface(font);
         tvDecisionName.setTypeface(font);
         tvPercentPro.setTypeface(font);
->>>>>>> decision-activity-clean
     }
 
     @Override
@@ -675,7 +539,6 @@ public class DecisionActivity extends AppCompatActivity {
         } else if (previousActivity.equals("CreateDecision")) {
             goToHome();
         }
-
     }
 
     private void goToProfile() {

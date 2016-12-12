@@ -102,4 +102,13 @@ public class Decision implements Serializable {
             this.proScore -= removedValue;
         }
     }
+
+    public void updateDecisionScoreEditBlob(int oldRadius, int newRadius, boolean isPro) {
+        this.totalScore -= oldRadius;
+        this.totalScore += newRadius;
+        if (isPro) {
+            this.proScore -= oldRadius;
+            this.proScore += newRadius;
+        }
+    }
 }
