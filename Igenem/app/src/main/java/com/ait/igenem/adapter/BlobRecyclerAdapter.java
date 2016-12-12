@@ -82,14 +82,10 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                //notifyItemChanged(holder.getAdapterPosition());
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 
@@ -99,7 +95,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
     }
 
     public List<Blob> getBlobList() {
-
         return blobList;
     }
 
@@ -138,7 +133,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
             ButterKnife.bind(this, itemView);
             this.editTextListener = editTextListener;
             etBlobName.addTextChangedListener(editTextListener);
-
             setFont(itemView);
 
         }
@@ -165,7 +159,6 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             blobList.get(position).setName(charSequence.toString());
-            //     notifyItemChanged(position);
         }
 
         @Override

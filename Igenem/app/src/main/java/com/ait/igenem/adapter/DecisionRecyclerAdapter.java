@@ -22,7 +22,6 @@ import butterknife.ButterKnife;
  * Created by Erinna on 12/1/16.
  */
 
-//TODO: add X delete button, dialogfragment that asks: are you sure?
 public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecyclerAdapter.ViewHolder>
         implements DecisionTouchHelperAdapter {
 
@@ -107,5 +106,4 @@ public class DecisionRecyclerAdapter extends RecyclerView.Adapter<DecisionRecycl
             ButterKnife.bind(this, itemView);
         }
     }
-
 }

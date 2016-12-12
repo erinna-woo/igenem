@@ -3,8 +3,6 @@ package com.ait.igenem.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,8 +36,6 @@ public class ResetPasswordDialogFragment extends DialogFragment {
     @BindView(R.id.btnYes)
     Button btnYes;
 
-    AlertDialog ad;
-
     private PassDataResetPasswordDialogInterface passDataResetPasswordDialogInterface;
 
     @Override
@@ -64,21 +60,18 @@ public class ResetPasswordDialogFragment extends DialogFragment {
         alertDialog.setView(rootView);
 
         ButterKnife.bind(this, rootView);
-        setFont();
-
-        setupYesButton(alertDialog);
-        setupNoButton(alertDialog);
+        setupUI(alertDialog);
 
         return alertDialog;
     }
 
-    private void setFont() {
-        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "VarelaRound-Regular.ttf");
-
-        tvForgotPw.setTypeface(font);
-        btnNo.setTypeface(font);
-        btnYes.setTypeface(font);
+    private void setupUI(AlertDialog alertDialog) {
+        setFont();
+        setupYesButton(alertDialog);
+        setupNoButton(alertDialog);
     }
+
+
 
     private void setupNoButton(final AlertDialog ad) {
         btnNo.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +90,13 @@ public class ResetPasswordDialogFragment extends DialogFragment {
                 ad.dismiss();
             }
         });
+    }
+
+    private void setFont() {
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "VarelaRound-Regular.ttf");
+        tvForgotPw.setTypeface(font);
+        btnNo.setTypeface(font);
+        btnYes.setTypeface(font);
     }
 }
 
