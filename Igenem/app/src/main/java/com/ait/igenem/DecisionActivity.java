@@ -87,7 +87,7 @@ public class DecisionActivity extends AppCompatActivity {
     @BindView(R.id.btnDeleteDecision)
     Button btnDeleteDecision;
 
-    //cstom view
+    //custom view
     @BindView(R.id.blobsLayout)
     RelativeLayout blobsLayout;
 
@@ -103,6 +103,7 @@ public class DecisionActivity extends AppCompatActivity {
     private int blobsLayoutWidth;
     private int blobsLayoutHeight;
 
+    private boolean clicked;
     private boolean minusPressed = false;
     private boolean plusPressed = false;
 
@@ -123,8 +124,7 @@ public class DecisionActivity extends AppCompatActivity {
         dynamicBlobList = new ArrayList<Blob>();
         dynamicBlobKeys = new ArrayList<String>();
 
-        updatePercentPro();
-        updateBackgroundColor();
+        clicked = false;
 
         setupDecisionUI();
         setupFirebaseListener();
@@ -133,9 +133,12 @@ public class DecisionActivity extends AppCompatActivity {
         blobsLayout.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                createBlobLayout.setVisibility(View.VISIBLE);
-                mouseX = motionEvent.getX();
-                mouseY = motionEvent.getY();
+                if (!clicked) {
+                    clicked = true;
+                    createBlobLayout.setVisibility(View.VISIBLE);
+                    mouseX = motionEvent.getX();
+                    mouseY = motionEvent.getY();
+                }
 
                 return false;
             }
@@ -157,7 +160,19 @@ public class DecisionActivity extends AppCompatActivity {
 
         }
         tvBlobName.setText(currBlob.getName());
+        updateBlobViewSize(currBlob, blobView);
+        placeBlobRandomly(blobView);
 
+        blobView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!clicked) {
+                    clicked = true;
+                    editBlobLayout.setVisibility(View.VISIBLE);
+                    setupListeners(key, blob, blobView);
+                }
+            }
+        });
 
         // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
         ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
@@ -165,6 +180,19 @@ public class DecisionActivity extends AppCompatActivity {
         layoutParams.height = currBlob.getRadius() * 5;
         ivBlob.setLayoutParams(layoutParams);
 
+//        blobView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                Log.i("DRAGGING", "longPress");
+//
+//                return false;
+//            }
+//        });
+
+        blobsLayout.addView(blobView);
+    }
+
+    private void placeBlobRandomly(View blobView) {
         int xPos = 0;
         int yPos = 0;
 
@@ -188,31 +216,6 @@ public class DecisionActivity extends AppCompatActivity {
 
         mouseX = -99;
         mouseY = -99;
-
-        blobView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //if this blob was just added, it should be at index 0 in both blob/key lists
-                editBlobLayout.setVisibility(View.VISIBLE);
-
-//                String newKey = dynamicBlobKeys.get(0);
-//                Blob newBlob = dynamicBlobList.get(0);
-
-                setupListeners(key, blob, blobView);
-            }
-        });
-
-
-//        blobView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                Log.i("DRAGGING", "longPress");
-//
-//                return false;
-//            }
-//        });
-
-        blobsLayout.addView(blobView);
     }
 
     private void setupListeners(String newKey, Blob newBlob, View blobView) {
@@ -333,6 +336,7 @@ public class DecisionActivity extends AppCompatActivity {
         tvDecisionName.setText(decision.getName());
 
         updatePercentPro();
+        updateBackgroundColor();
         setupNewBlobButton();
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
@@ -356,18 +360,24 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void updatePercentPro() {
-        double percentDouble = decision.getPercentPro() * 100;
-        int percentInt = (int) Math.round(percentDouble);
-        String proOrCon;
 
-        if (percentInt > 49) {
-            proOrCon = getString(R.string.tv_percent_pro);
+        if (decision.getTotalScore() == 0) {
+            tvPercentPro.setText("");
         } else {
-            percentInt = 100 - percentInt;
-            proOrCon = getString(R.string.tv_percent_con);
+            double percentDouble = decision.getPercentPro() * 100;
+            int percentInt = (int) Math.round(percentDouble);
+            String proOrCon;
+
+            if (percentInt > 49) {
+                proOrCon = getString(R.string.tv_percent_pro);
+            } else {
+                percentInt = 100 - percentInt;
+                proOrCon = getString(R.string.tv_percent_con);
+            }
+            tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
+
         }
 
-        tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
     }
 
     private void setupDeleteDecisionButton() {
@@ -394,12 +404,15 @@ public class DecisionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
                 updateBlobFirebase(updating, key);
+                updateScoreFirebase();
+                clicked = false;
             }
         });
         btnCancelEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
+                clicked = false;
             }
         });
 
@@ -428,6 +441,7 @@ public class DecisionActivity extends AppCompatActivity {
                     updateBackgroundColor();
 
                     resetCreateBlobLayout();
+                    clicked = false;
                 }
 
             }
@@ -439,6 +453,7 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 createBlobLayout.setVisibility(View.GONE);
+                clicked = false;
             }
         });
     }
@@ -447,6 +462,7 @@ public class DecisionActivity extends AppCompatActivity {
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         decision.updateScoreNewBlob(sbDRadius.getProgress(), swDProCon.isChecked());
         updatePercentPro();
+        updateBackgroundColor();
         updateScoreFirebase();
     }
 
@@ -503,13 +519,15 @@ public class DecisionActivity extends AppCompatActivity {
                 updatePercentPro();
                 updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
+                clicked = false;
             }
         });
     }
 
     private void updateDecisionScoreDeleteBlob(Blob delBlob) {
         decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
-        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        updatePercentPro();
+        updateBackgroundColor();
         updateScoreFirebase();
     }
 
@@ -521,29 +539,35 @@ public class DecisionActivity extends AppCompatActivity {
 //            }
 //        });
 
+
         btnMinus.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        minusPressed = true;
-                        mt = new MinusThread(key, blob, blobView);
-                        mt.start();
-                        Log.d("SDF", "START! ");
-                        break;
-                    case MotionEvent.ACTION_UP:
-                       mt.interrupt();
-                        minusPressed = false;
-                        Log.d("SDF", "==CANCEL! ");
+//                if (blob.getRadius() > 1) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            minusPressed = true;
+                            mt = new MinusThread(key, blob, blobView);
+                            mt.start();
+                            Log.d("SDF", "START! ");
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            mt.interrupt();
+                            minusPressed = false;
+                            Log.d("SDF", "==CANCEL! ");
 
-                }
+                    }
+                //}
+//                else{
+//                    mt.interrupt();
+//                    minusPressed = false;
+//                    Log.d("SDF", "==@#$^$#%@$# MAX CANCEL! ");
+//                }
                 return false;
             }
+
         });
-
     }
-
-
 
 
     private void setupPlusListener(final String key, final Blob blob, final View blobView) {
@@ -557,24 +581,31 @@ public class DecisionActivity extends AppCompatActivity {
         btnPlus.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        plusPressed = true;
-                        pt = new PlusThread(key, blob, blobView);
-                        pt.start();
-                        Log.d("SDF", "START! ");
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        pt.interrupt();
-                        plusPressed = false;
-                        Log.d("SDF", "==CANCEL! ");
+                if (blob.getRadius() < 100) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            plusPressed = true;
+                            pt = new PlusThread(key, blob, blobView);
+                            pt.start();
+                            Log.d("SDF", "START! ");
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            pt.interrupt();
+                            plusPressed = false;
+                            Log.d("SDF", "==UP CANCEL! ");
 
+                    }
+                }
+                else{
+                    pt.interrupt();
+                    plusPressed = false;
+                    Log.d("SDF", "==@#$^$#%@$# MAX CANCEL! ");
                 }
                 return false;
+
             }
         });
     }
-
 
 
     private void updateBlobFirebase(Blob updating, String key) {
@@ -588,14 +619,7 @@ public class DecisionActivity extends AppCompatActivity {
         //this could be excessive and maybe combined into a field cry ugh
         updatePercentPro();
         updateBackgroundColor();
-
-        //updateBlob(updating, key);
-        ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
-
-        ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
-        layoutParams.width = updating.getRadius() * 5;
-        layoutParams.height = updating.getRadius() * 5;
-        ivBlob.setLayoutParams(layoutParams);
+        updateBlobViewSize(updating, blobView);
     }
 
     public void decreaseRadius(String key, Blob updating, View blobView) {
@@ -604,11 +628,12 @@ public class DecisionActivity extends AppCompatActivity {
         //this could be excessive and maybe combined into a field cry ugh
         updatePercentPro();
         updateBackgroundColor();
+        updateBlobViewSize(updating, blobView);
+    }
 
-        //updateBlob(updating, key);
-
+    private void updateBlobViewSize(Blob updating, View blobView) {
+        // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
-
         ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
         layoutParams.width = updating.getRadius() * 5;
         layoutParams.height = updating.getRadius() * 5;
@@ -635,61 +660,64 @@ public class DecisionActivity extends AppCompatActivity {
 //
 //    }
 
-    private class MinusThread extends Thread{
+    private class MinusThread extends Thread {
 
         private String k;
         private Blob b;
 
         private View bv;
 
-        public MinusThread(String k, Blob b, View bv){
+        public MinusThread(String k, Blob b, View bv) {
             this.k = k;
             this.b = b;
             this.bv = bv;
         }
 
-        public void run(){
-            while(minusPressed){
-                runOnUiThread(new Runnable(){
+        public void run() {
+            while (minusPressed) {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("DOWNDOWN", "DOWN");
-                        decreaseRadius(k, b, bv);
+                        if(b.getRadius() > 1) {
+                            decreaseRadius(k, b, bv);
+                        }
                     }
                 });
-                try{
-                    sleep(500);
-                }catch(InterruptedException e){
+                try {
+                    sleep(150);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
 
-    private class PlusThread extends Thread{
+    private class PlusThread extends Thread {
 
         private String k;
         private Blob b;
 
         private View bv;
 
-        public PlusThread(String k, Blob b, View bv){
+        public PlusThread(String k, Blob b, View bv) {
             this.k = k;
             this.b = b;
             this.bv = bv;
         }
 
-        public void run(){
-            while(plusPressed){
-                runOnUiThread(new Runnable(){
+        public void run() {
+            while (plusPressed) {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        increaseRadius(k, b, bv);
+                        if(b.getRadius() < 100) {
+                            increaseRadius(k, b, bv);
+                        }
                     }
                 });
-                try{
-                    sleep(500);
-                }catch(InterruptedException e){
+                try {
+                    sleep(150);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
