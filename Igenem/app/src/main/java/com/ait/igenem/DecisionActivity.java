@@ -110,6 +110,8 @@ public class DecisionActivity extends AppCompatActivity {
     private MinusThread mt;
     private PlusThread pt;
 
+    private Blob savedBlob;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +171,7 @@ public class DecisionActivity extends AppCompatActivity {
                 if (!clicked) {
                     clicked = true;
                     editBlobLayout.setVisibility(View.VISIBLE);
+                    savedBlob = blob;
                     setupListeners(key, blob, blobView);
                 }
             }
@@ -191,6 +194,7 @@ public class DecisionActivity extends AppCompatActivity {
 
         blobsLayout.addView(blobView);
     }
+
 
     private void placeBlobRandomly(View blobView) {
         int xPos = 0;
@@ -385,8 +389,6 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //delete from firebase
-                FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(decisionKey).removeValue();
 
                 //Go back to profile page
                 Intent showProfileIntent = new Intent();
@@ -412,6 +414,11 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
+               // FirebaseDatabase.getInstance().getReference().getDatabase().sna
+               // int previousProScore = FirebaseDatabase.getInstance().getReference().child("decisions").
+                       // child(decisionKey).child("proScore").;
+                //updateBlobViewSize(updating, blobView);
+
                 clicked = false;
             }
         });
@@ -493,20 +500,20 @@ public class DecisionActivity extends AppCompatActivity {
         });
     }
 
-    private void setupOkEditListener(final int positionToEdit) {
-        btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String key = getBlobKey(positionToEdit);
-                Blob blob = getBlob(positionToEdit);
-                updateBlobFirebase(blob, key);
-                updateScoreFirebase();
-                updatePercentPro();
-                updateBackgroundColor();
-                editBlobLayout.setVisibility(View.GONE);
-            }
-        });
-    }
+//    private void setupOkEditListener(final int positionToEdit) {
+//        btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String key = getBlobKey(positionToEdit);
+//                Blob blob = getBlob(positionToEdit);
+//                updateBlobFirebase(blob, key);
+//                updateScoreFirebase();
+//                updatePercentPro();
+//                updateBackgroundColor();
+//                editBlobLayout.setVisibility(View.GONE);
+//            }
+//        });
+//    }
 
     private void setupDeleteListener(final String key, final Blob blob, final View blobView) {
         btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
