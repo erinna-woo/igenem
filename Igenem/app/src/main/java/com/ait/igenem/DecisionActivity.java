@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ait.igenem.model.Blob;
 import com.ait.igenem.model.Decision;
@@ -32,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +38,6 @@ import butterknife.ButterKnife;
 // not anymore mothafuckaaaaaaaaaa
 
 public class DecisionActivity extends AppCompatActivity {
-
 
     @BindView(R.id.linearLayoutDecision)
     LinearLayout linearLayoutDecision;
@@ -110,7 +107,8 @@ public class DecisionActivity extends AppCompatActivity {
     private MinusThread mt;
     private PlusThread pt;
 
-    private Blob savedBlob;
+    private Blob uneditedBlob;
+    private int uneditedRadius;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,14 +116,10 @@ public class DecisionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_decision);
         ButterKnife.bind(this);
 
-        previousActivity = getIntent().getStringExtra(ProfileActivity.KEY_PREVIOUS);
-
-        decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
-        decisionKey = this.getIntent().getStringExtra(ProfileActivity.KEY_D_KEY);
+        getExtras();
 
         dynamicBlobList = new ArrayList<Blob>();
         dynamicBlobKeys = new ArrayList<String>();
-
         clicked = false;
 
         setupDecisionUI();
@@ -141,164 +135,157 @@ public class DecisionActivity extends AppCompatActivity {
                     mouseX = motionEvent.getX();
                     mouseY = motionEvent.getY();
                 }
-
                 return false;
             }
         });
     }
 
-    private void addBlobToScreen(final Blob blob, final String key) {
-        final View blobView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.blob_view, null, false);
-        final ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
-        TextView tvBlobName = (TextView) blobView.findViewById(R.id.tvBlobName);
+    private void getExtras() {
+        previousActivity = getIntent().getStringExtra(ProfileActivity.KEY_PREVIOUS);
+        decision = (Decision) this.getIntent().getSerializableExtra(ProfileActivity.KEY_D);
+        decisionKey = this.getIntent().getStringExtra(ProfileActivity.KEY_D_KEY);
+    }
 
-        Blob currBlob = blob;
-        if (currBlob.isPro()) {
-            ivBlob.setImageResource(R.drawable.circle_white);
-            tvBlobName.setTextColor(Color.BLACK);
+    private void setupDecisionUI() {
+        tvDecisionName.setText(decision.getName());
+
+        updatePercentPro();
+        setupHomeButton();
+        setupDeleteDecisionButton();
+        setupOkayCreateBlobButton();
+        setupCancelCreateBlobButton();
+        setupProConListener();
+    }
+
+    private void updatePercentPro() {
+        if (decision.getTotalScore() == 0) {
+            tvPercentPro.setText("");
         } else {
-            ivBlob.setImageResource(R.drawable.circle_black);
-            tvBlobName.setTextColor(Color.WHITE);
+            double percentDouble = decision.getPercentPro() * 100;
+            int percentInt = (int) Math.round(percentDouble);
+            String proOrCon;
 
-        }
-        tvBlobName.setText(currBlob.getName());
-        updateBlobViewSize(currBlob, blobView);
-        placeBlobRandomly(blobView);
-
-        blobView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!clicked) {
-                    clicked = true;
-                    editBlobLayout.setVisibility(View.VISIBLE);
-                    savedBlob = blob;
-                    setupListeners(key, blob, blobView);
-                }
+            if (percentInt > 49) {
+                proOrCon = getString(R.string.tv_percent_pro);
+            } else {
+                percentInt = 100 - percentInt;
+                proOrCon = getString(R.string.tv_percent_con);
             }
-        });
-
-        // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
-        ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
-        layoutParams.width = currBlob.getRadius() * 5;
-        layoutParams.height = currBlob.getRadius() * 5;
-        ivBlob.setLayoutParams(layoutParams);
-
-//        blobView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                Log.i("DRAGGING", "longPress");
-//
-//                return false;
-//            }
-//        });
-
-        blobsLayout.addView(blobView);
-    }
-
-
-    private void placeBlobRandomly(View blobView) {
-        int xPos = 0;
-        int yPos = 0;
-
-        if (mouseX != -99 && mouseY != -99) {
-            xPos = (int) mouseX;
-            yPos = (int) mouseY;
-        } else {
-            Log.i("RELATIVE_WIDTH", String.valueOf(blobsLayout.getWidth()));
-            Log.i("RELATIVE_HEIGHT", String.valueOf(blobsLayout.getHeight()));
-//            xPos = (int) (Math.random() * blobsLayoutWidth);
-//            yPos = (int) (Math.random() * blobsLayoutHeight);
-            xPos = (int) (Math.random() * 600);
-            yPos = (int) (Math.random() * 800);
-
-            // TODO: in onCreate, the relative layout hasn't been created yet so you can't get dimensions
-            // TODO: add blobs to screen after onCreate? in onResume? for loop over blobs in list?
+            tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
         }
-
-        blobView.setX(xPos);
-        blobView.setY(yPos);
-
-        mouseX = -99;
-        mouseY = -99;
-    }
-
-    private void setupListeners(String newKey, Blob newBlob, View blobView) {
-        setupDeleteListener(newKey, newBlob, blobView);
-        setupPlusListener(newKey, newBlob, blobView);
-        setupMinusListener(newKey, newBlob, blobView);
-        setupEditBlobListeners(newKey, newBlob);
-
-    }
-
-    private void setFont() {
-        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
-
-        btnGoHome.setTypeface(font);
-        btnDeleteDecision.setTypeface(font);
-        tvDecisionName.setTypeface(font);
-        tvPercentPro.setTypeface(font);
-    }
-
-    public void addBlob(Blob newBlob, String key) {
-        dynamicBlobList.add(0, newBlob);
-        dynamicBlobKeys.add(0, key);
-    }
-
-    public Blob getBlob(int position) {
-        return dynamicBlobList.get(position);
-    }
-
-    public String getBlobKey(int position) {
-        return dynamicBlobKeys.get(position);
-    }
-
-
-    public void updateBlob(Blob updateBlob, String key) {
-        int index = dynamicBlobKeys.indexOf(key);
-        if (index != -1) {
-            dynamicBlobList.set(index, updateBlob);
-        }
-    }
-
-    public void removeBlobByPos(int position) {
-        dynamicBlobList.remove(position);
-        dynamicBlobKeys.remove(position);
-    }
-
-
-    public void removeBlobByKey(String key) {
-        int index = dynamicBlobKeys.indexOf(key);
-        if (index != -1) {
-            dynamicBlobList.remove(index);
-            dynamicBlobKeys.remove(index);
-        }
+        updateBackgroundColor();
     }
 
     private void updateBackgroundColor() {
-        int decisionColor = decision.getColor();
-        Float percentColor = decision.getPercentPro();
         float[] hsv = new float[3];
-        Color.colorToHSV(decisionColor, hsv);
-        hsv[1] = hsv[1] * percentColor;
+        Color.colorToHSV(decision.getColor(), hsv);
+        hsv[1] = hsv[1] * decision.getPercentPro();
         linearLayoutDecision.setBackgroundColor(Color.HSVToColor(hsv));
         blobsLayout.setBackgroundColor(Color.HSVToColor(hsv));
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (previousActivity.equals("ProfileActivity")) {
-            Intent goProfileIntent = new Intent();
-            goProfileIntent.setClass(DecisionActivity.this, ProfileActivity.class);
-            startActivity(goProfileIntent);
-        } else if (previousActivity.equals("CreateDecision")) {
-            Intent goHomeIntent = new Intent();
-            goHomeIntent.setClass(DecisionActivity.this, HomeActivity.class);
-            //Clear entire back stack so when you click back from HomeActivity, the app exits.
-            goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(goHomeIntent);
-        }
+    private void setupHomeButton() {
+        btnGoHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToHome();
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+            }
+        });
+    }
 
+    private void goToHome() {
+        Intent goHomeIntent = new Intent();
+        goHomeIntent.setClass(DecisionActivity.this, HomeActivity.class);
+        goHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(goHomeIntent);
+    }
+
+
+    private void setupDeleteListener(final String key, final Blob blob, final View blobView) {
+        btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(decisionKey).child("blobs").child(key).removeValue();
+                blobsLayout.removeView(blobView);
+                updateDecisionScoreDeleteBlob(blob);
+                updatePercentPro();
+                editBlobLayout.setVisibility(View.GONE);
+                clicked = false;
+            }
+        });
+    }
+
+    private void updateDecisionScoreDeleteBlob(Blob delBlob) {
+        decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
+        updatePercentPro();
+        updateScoreFirebase();
+    }
+
+    private void setupOkayCreateBlobButton() {
+        btnDOkNewBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (etDBlobName.getText().toString().equals("")) {
+                    etDBlobName.setError(getString(R.string.enterBlobName));
+                } else {
+                    addBlobFirebase();
+                    updateDecisionScoreNewBlob();
+                    updatePercentPro();
+                    resetCreateBlobLayout();
+                    clicked = false;
+                }
+
+            }
+        });
+    }
+
+    private void addBlobFirebase() {
+        String key = FirebaseDatabase.getInstance().getReference().child("decisions").
+                child(decisionKey).child("blobs").push().getKey();
+        Blob newBlob = new Blob(etDBlobName.getText().toString(),
+                swDProCon.isChecked(), sbDRadius.getProgress());
+        FirebaseDatabase.getInstance().getReference().child("decisions").
+                child(decisionKey).child("blobs").child(key).setValue(newBlob);
+    }
+
+    private void updateDecisionScoreNewBlob() {
+        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
+        decision.updateScoreNewBlob(sbDRadius.getProgress(), swDProCon.isChecked());
+        updatePercentPro();
+        updateScoreFirebase();
+    }
+
+    private void resetCreateBlobLayout() {
+        createBlobLayout.setVisibility(View.GONE);
+        etDBlobName.setText("");
+        sbDRadius.setProgress(0);
+        swDProCon.setChecked(true);
+    }
+
+    private void setupCancelCreateBlobButton() {
+        btnDCancelNewBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createBlobLayout.setVisibility(View.GONE);
+                clicked = false;
+            }
+        });
+    }
+
+    private void setupProConListener() {
+        swDProCon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    tvDProCon.setText(R.string.tv_pro);
+                } else {
+                    tvDProCon.setText(getString(R.string.tv_con));
+                }
+            }
+        });
     }
 
     private void setupFirebaseListener() {
@@ -310,7 +297,6 @@ public class DecisionActivity extends AppCompatActivity {
                         Blob newBlob = dataSnapshot.getValue(Blob.class);
                         addBlob(newBlob, dataSnapshot.getKey());
                         addBlobToScreen(newBlob, dataSnapshot.getKey());
-                        Log.d("DOWEHAVEIT", "onChildAdded: " + newBlob.getName());
                     }
 
                     @Override
@@ -336,71 +322,152 @@ public class DecisionActivity extends AppCompatActivity {
                 });
     }
 
-    private void setupDecisionUI() {
-        tvDecisionName.setText(decision.getName());
-
-        updatePercentPro();
-        updateBackgroundColor();
-        setupNewBlobButton();
-        setupDeleteDecisionButton();
-        setupOkayCreateBlobButton();
-        setupCancelCreateBlobButton();
-        setupProConListener();
+    public void addBlob(Blob newBlob, String key) {
+        dynamicBlobList.add(0, newBlob);
+        dynamicBlobKeys.add(0, key);
     }
 
-    private void setupProConListener() {
-        swDProCon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    private void addBlobToScreen(final Blob blob, final String key) {
+        final View blobView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.blob_view, null, false);
+        final ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
+        TextView tvBlobName = (TextView) blobView.findViewById(R.id.tvBlobName);
+
+        setupBlobView(ivBlob, tvBlobName, blob);
+        updateBlobViewSize(blob, blobView);
+        placeBlobRandomly(blobView);
+
+        blobView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    //tv.setPro(true);
-                    tvDProCon.setText(R.string.tv_pro);
-                } else {
-                    /// currBlob.setPro(false);
-                    tvDProCon.setText(getString(R.string.tv_con));
+            public void onClick(View view) {
+                if (!clicked) {
+                    clicked = true;
+                    editBlobLayout.setVisibility(View.VISIBLE);
+                    uneditedBlob = blob;
+                    uneditedRadius = blob.getRadius();
+                    setupListeners(key, blob, blobView);
                 }
             }
         });
+
+        // TODO: DRAGGING
+//        blobView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                Log.i("DRAGGING", "longPress");
+//
+//                return false;
+//            }
+//        });
+
+        blobsLayout.addView(blobView);
     }
 
-    private void updatePercentPro() {
-
-        if (decision.getTotalScore() == 0) {
-            tvPercentPro.setText("");
+    private void setupBlobView(ImageView ivBlob, TextView tvBlobName, Blob currBlob) {
+        if (currBlob.isPro()) {
+            ivBlob.setImageResource(R.drawable.circle_white);
+            tvBlobName.setTextColor(Color.BLACK);
         } else {
-            double percentDouble = decision.getPercentPro() * 100;
-            int percentInt = (int) Math.round(percentDouble);
-            String proOrCon;
+            ivBlob.setImageResource(R.drawable.circle_black);
+            tvBlobName.setTextColor(Color.WHITE);
+        }
+        tvBlobName.setText(currBlob.getName());
+    }
 
-            if (percentInt > 49) {
-                proOrCon = getString(R.string.tv_percent_pro);
-            } else {
-                percentInt = 100 - percentInt;
-                proOrCon = getString(R.string.tv_percent_con);
-            }
-            tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
 
+    private void updateBlobViewSize(Blob updating, View blobView) {
+        // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
+        ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
+        ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
+        layoutParams.width = updating.getRadius() * 5;
+        layoutParams.height = updating.getRadius() * 5;
+        ivBlob.setLayoutParams(layoutParams);
+    }
+
+    private void placeBlobRandomly(View blobView) {
+        int xPos = 0;
+        int yPos = 0;
+
+        if (mouseX != -99 && mouseY != -99) {
+            xPos = (int) mouseX;
+            yPos = (int) mouseY;
+        } else {
+            // TODO: in onCreate, the relative layout hasn't been created yet so you can't get dimensions
+            // TODO: add blobs to screen after onCreate? in onResume? for loop over blobs in list?
+
+            Log.i("RELATIVE_WIDTH", String.valueOf(blobsLayout.getWidth()));
+            Log.i("RELATIVE_HEIGHT", String.valueOf(blobsLayout.getHeight()));
+//            xPos = (int) (Math.random() * blobsLayoutWidth);
+//            yPos = (int) (Math.random() * blobsLayoutHeight);
+            xPos = (int) (Math.random() * 600);
+            yPos = (int) (Math.random() * 800);
         }
 
+        blobView.setX(xPos);
+        blobView.setY(yPos);
+
+        mouseX = -99;
+        mouseY = -99;
+    }
+
+    private void setupListeners(String newKey, Blob newBlob, View blobView) {
+        setupDeleteListener(newKey, newBlob, blobView);
+        setupPlusListener(newBlob, blobView);
+        setupMinusListener(newBlob, blobView);
+        setupEditBlobListeners(newKey, newBlob, blobView);
     }
 
     private void setupDeleteDecisionButton() {
         btnDeleteDecision.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //delete from firebase
-
-                //Go back to profile page
-                Intent showProfileIntent = new Intent();
-                showProfileIntent.setClass(DecisionActivity.this, ProfileActivity.class);
-                startActivity(showProfileIntent);
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(decisionKey).removeValue();
+                goToProfile();
                 finish();
             }
         });
     }
 
+    private void setupPlusListener(final Blob blob, final View blobView) {
+        btnPlus.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        plusPressed = true;
+                        pt = new PlusThread(blob, blobView);
+                        pt.start();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        pt.interrupt();
+                        plusPressed = false;
+                }
+                return false;
+            }
+        });
+    }
 
-    private void setupEditBlobListeners(final String key, final Blob updating) {
+    private void setupMinusListener(final Blob blob, final View blobView) {
+        btnMinus.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        minusPressed = true;
+                        mt = new MinusThread(blob, blobView);
+                        mt.start();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mt.interrupt();
+                        minusPressed = false;
+                }
+                return false;
+            }
+
+        });
+    }
+
+    private void setupEditBlobListeners(final String key, final Blob updating, final View blobView) {
         btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -414,64 +481,18 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
-               // FirebaseDatabase.getInstance().getReference().getDatabase().sna
-               // int previousProScore = FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                       // child(decisionKey).child("proScore").;
-                //updateBlobViewSize(updating, blobView);
-
-                clicked = false;
-            }
-        });
-
-    }
-
-    private void setupOkayCreateBlobButton() {
-        btnDOkNewBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (etDBlobName.getText().toString().equals("")) {
-                    etDBlobName.setError(getString(R.string.enterBlobName));
-                } else {
-
-                    // Add newBlob to Firebase, obtain key.
-                    String key = FirebaseDatabase.getInstance().getReference().child(
-                            getString(R.string.decisions)).
-                            child(decisionKey).child(getString(R.string.blobs)).push().getKey();
-
-                    Blob newBlob = new Blob(etDBlobName.getText().toString(),
-                            swDProCon.isChecked(), sbDRadius.getProgress());
-                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                            child(decisionKey).child(getString(R.string.blobs)).child(key).setValue(newBlob);
-
-                    updateDecisionScoreNewBlob();
-                    updatePercentPro();
-                    updateBackgroundColor();
-
-                    resetCreateBlobLayout();
-                    clicked = false;
-                }
-
-            }
-        });
-    }
-
-    private void setupCancelCreateBlobButton() {
-        btnDCancelNewBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createBlobLayout.setVisibility(View.GONE);
+                updateDecisionScoreEditedBlob(updating.getRadius(), uneditedRadius, updating.isPro());
+                updating.setRadius(uneditedRadius);
+                updateBlob(updating, key);
+                updateBlobViewSize(updating, blobView);
                 clicked = false;
             }
         });
     }
 
-    private void updateDecisionScoreNewBlob() {
-        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
-        decision.updateScoreNewBlob(sbDRadius.getProgress(), swDProCon.isChecked());
-        updatePercentPro();
-        updateBackgroundColor();
-        updateScoreFirebase();
+    private void updateBlobFirebase(Blob updating, String key) {
+        FirebaseDatabase.getInstance().getReference().child("decisions").
+                child(decisionKey).child("blobs").child(key).setValue(updating);
     }
 
     private void updateScoreFirebase() {
@@ -481,171 +502,49 @@ public class DecisionActivity extends AppCompatActivity {
                 child(decisionKey).child("totalScore").setValue(decision.getTotalScore());
     }
 
-    private void resetCreateBlobLayout() {
-        createBlobLayout.setVisibility(View.GONE);
-        etDBlobName.setText("");
-        sbDRadius.setProgress(0);
-        swDProCon.setChecked(true);
-    }
-
-    private void setupNewBlobButton() {
-        btnGoHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent goHome = new Intent();
-                goHome.setClass(DecisionActivity.this, HomeActivity.class);
-                goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(goHome);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-            }
-        });
-    }
-
-//    private void setupOkEditListener(final int positionToEdit) {
-//        btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String key = getBlobKey(positionToEdit);
-//                Blob blob = getBlob(positionToEdit);
-//                updateBlobFirebase(blob, key);
-//                updateScoreFirebase();
-//                updatePercentPro();
-//                updateBackgroundColor();
-//                editBlobLayout.setVisibility(View.GONE);
-//            }
-//        });
-//    }
-
-    private void setupDeleteListener(final String key, final Blob blob, final View blobView) {
-        btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                        child(decisionKey).child(getString(R.string.blobs)).child(key).removeValue();
-                blobsLayout.removeView(blobView);
-                updateDecisionScoreDeleteBlob(blob);
-                updatePercentPro();
-                updateBackgroundColor();
-                editBlobLayout.setVisibility(View.GONE);
-                clicked = false;
-            }
-        });
-    }
-
-    private void updateDecisionScoreDeleteBlob(Blob delBlob) {
-        decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
+    private void updateDecisionScoreEditedBlob(int oldRadius, int newRadius, boolean isPro) {
+        decision.updateDecisionScoreEditBlob(oldRadius, newRadius, isPro);
         updatePercentPro();
-        updateBackgroundColor();
-        updateScoreFirebase();
+        //don't need to update in Firebase because OK never clicked, Firebase never updated
     }
 
-    private void setupMinusListener(final String key, final Blob blob, final View blobView) {
-//        btnMinus.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                decreaseRadius(key, blob, blobView);
-//            }
-//        });
-
-
-        btnMinus.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                if (blob.getRadius() > 1) {
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            minusPressed = true;
-                            mt = new MinusThread(key, blob, blobView);
-                            mt.start();
-                            Log.d("SDF", "START! ");
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            mt.interrupt();
-                            minusPressed = false;
-                            Log.d("SDF", "==CANCEL! ");
-
-                    }
-                //}
-//                else{
-//                    mt.interrupt();
-//                    minusPressed = false;
-//                    Log.d("SDF", "==@#$^$#%@$# MAX CANCEL! ");
-//                }
-                return false;
-            }
-
-        });
+    public void updateBlob(Blob updateBlob, String key) {
+        int index = dynamicBlobKeys.indexOf(key);
+        if (index != -1) {
+            dynamicBlobList.set(index, updateBlob);
+        }
     }
 
-
-    private void setupPlusListener(final String key, final Blob blob, final View blobView) {
-//        btnPlus.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                increaseRadius(key, blob, blobView);
-//            }
-//        });
-
-        btnPlus.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (blob.getRadius() < 100) {
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            plusPressed = true;
-                            pt = new PlusThread(key, blob, blobView);
-                            pt.start();
-                            Log.d("SDF", "START! ");
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            pt.interrupt();
-                            plusPressed = false;
-                            Log.d("SDF", "==UP CANCEL! ");
-
-                    }
-                }
-                else{
-                    pt.interrupt();
-                    plusPressed = false;
-                    Log.d("SDF", "==@#$^$#%@$# MAX CANCEL! ");
-                }
-                return false;
-
-            }
-        });
+    public void removeBlobByKey(String key) {
+        int index = dynamicBlobKeys.indexOf(key);
+        if (index != -1) {
+            dynamicBlobList.remove(index);
+            dynamicBlobKeys.remove(index);
+        }
     }
 
-
-    private void updateBlobFirebase(Blob updating, String key) {
-        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                child(decisionKey).child(getString(R.string.blobs)).child(key).setValue(updating);
+    private void setFont() {
+        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
+        btnGoHome.setTypeface(font);
+        btnDeleteDecision.setTypeface(font);
+        tvDecisionName.setTypeface(font);
+        tvPercentPro.setTypeface(font);
     }
 
-    public void increaseRadius(String key, Blob updating, View blobView) {
-        updating.increaseRadius();
-        decision.increase(updating.isPro());
-        //this could be excessive and maybe combined into a field cry ugh
-        updatePercentPro();
-        updateBackgroundColor();
-        updateBlobViewSize(updating, blobView);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (previousActivity.equals("ProfileActivity")) {
+            goToProfile();
+        } else if (previousActivity.equals("CreateDecision")) {
+            goToHome();
+        }
     }
 
-    public void decreaseRadius(String key, Blob updating, View blobView) {
-        updating.decreaseRadius();
-        decision.decrease(updating.isPro());
-        //this could be excessive and maybe combined into a field cry ugh
-        updatePercentPro();
-        updateBackgroundColor();
-        updateBlobViewSize(updating, blobView);
-    }
-
-    private void updateBlobViewSize(Blob updating, View blobView) {
-        // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
-        ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
-        ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
-        layoutParams.width = updating.getRadius() * 5;
-        layoutParams.height = updating.getRadius() * 5;
-        ivBlob.setLayoutParams(layoutParams);
+    private void goToProfile() {
+        Intent goProfileIntent = new Intent();
+        goProfileIntent.setClass(DecisionActivity.this, ProfileActivity.class);
+        startActivity(goProfileIntent);
     }
 
     @Override
@@ -660,23 +559,13 @@ public class DecisionActivity extends AppCompatActivity {
         Log.i("RELATIVE_WIDTH_OVER", String.valueOf(blobsLayoutWidth));
         Log.i("RELATIVE_HEIGHT_OVER", String.valueOf(blobsLayoutHeight));
     }
-//
-//    protected void minusStop(){
-//        minusThread.interrupt();
-//        minusPressed = false;
-//        Log.d("SDF", "======STOP! ");
-//
-//    }
 
     private class MinusThread extends Thread {
 
-        private String k;
         private Blob b;
-
         private View bv;
 
-        public MinusThread(String k, Blob b, View bv) {
-            this.k = k;
+        public MinusThread(Blob b, View bv) {
             this.b = b;
             this.bv = bv;
         }
@@ -686,8 +575,8 @@ public class DecisionActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(b.getRadius() > 1) {
-                            decreaseRadius(k, b, bv);
+                        if (b.getRadius() > 1) {
+                            decreaseRadius(b, bv);
                         }
                     }
                 });
@@ -702,13 +591,10 @@ public class DecisionActivity extends AppCompatActivity {
 
     private class PlusThread extends Thread {
 
-        private String k;
         private Blob b;
-
         private View bv;
 
-        public PlusThread(String k, Blob b, View bv) {
-            this.k = k;
+        public PlusThread(Blob b, View bv) {
             this.b = b;
             this.bv = bv;
         }
@@ -718,8 +604,8 @@ public class DecisionActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(b.getRadius() < 100) {
-                            increaseRadius(k, b, bv);
+                        if (b.getRadius() < 100) {
+                            increaseRadius(b, bv);
                         }
                     }
                 });
@@ -731,4 +617,19 @@ public class DecisionActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void increaseRadius(Blob updating, View blobView) {
+        updating.increaseRadius();
+        decision.increase(updating.isPro());
+        updatePercentPro();
+        updateBlobViewSize(updating, blobView);
+    }
+
+    public void decreaseRadius(Blob updating, View blobView) {
+        updating.decreaseRadius();
+        decision.decrease(updating.isPro());
+        updatePercentPro();
+        updateBlobViewSize(updating, blobView);
+    }
+
 }
