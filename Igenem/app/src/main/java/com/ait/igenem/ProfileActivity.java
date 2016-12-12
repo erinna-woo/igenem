@@ -27,14 +27,12 @@ import butterknife.ButterKnife;
 
 public class ProfileActivity extends AppCompatActivity implements PassDataDecisionInterface{
 
-    // User profile
     public static final String KEY_D = "KEY_D";
     public static final String KEY_D_KEY = "KEY_D_KEY";
     public static final String KEY_PREVIOUS = "KEY_PREVIOUS";
 
     @BindView(R.id.recyclerDecision)
     RecyclerView recyclerDecision;
-    DecisionRecyclerAdapter decisionRecyclerAdapter;
 
     @BindView(R.id.tvUsername)
     TextView tvUsername;
@@ -45,21 +43,22 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
     @BindView(R.id.btnLogout)
     Button btnLogout;
 
+    DecisionRecyclerAdapter decisionRecyclerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
         setupUI();
-
-        tvUsername.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        setFont();
     }
 
     private void setupUI() {
+        tvUsername.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         setupRecyclerView();
         setupHomeListener();
         setupLogoutListener();
+        setFont();
     }
 
     private void setupHomeListener() {
@@ -82,7 +81,8 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
                 FirebaseAuth.getInstance().signOut();
                 Intent gotoLogin = new Intent();
                 gotoLogin.setClass(ProfileActivity.this, LoginActivity.class);
-                gotoLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_NEW_TASK);
+                gotoLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(gotoLogin);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
             }
@@ -91,7 +91,6 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
 
     private void setFont() {
         Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
-
         tvUsername.setTypeface(font);
     }
 
@@ -119,7 +118,7 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
     private void getDecisions() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        ref.child("decisions").orderByChild("ownerId").equalTo(userId).
+        ref.child(getString(R.string.decisions)).orderByChild(getString(R.string.ownerId)).equalTo(userId).
                 addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -156,7 +155,7 @@ public class ProfileActivity extends AppCompatActivity implements PassDataDecisi
         openDecisionActivity.setClass(ProfileActivity.this, DecisionActivity.class);
         openDecisionActivity.putExtra(KEY_D, decision);
         openDecisionActivity.putExtra(KEY_D_KEY, key);
-        openDecisionActivity.putExtra(KEY_PREVIOUS, "ProfileActivity");
+        openDecisionActivity.putExtra(KEY_PREVIOUS, getString(R.string.profileactivity));
         startActivity(openDecisionActivity);
     }
 

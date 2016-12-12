@@ -303,7 +303,7 @@ public class DecisionActivity extends AppCompatActivity {
 
     private void setupFirebaseListener() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.child("decisions").child(decisionKey).child("blobs").orderByKey().
+        ref.child(getString(R.string.decisions)).child(decisionKey).child(getString(R.string.blobs)).orderByKey().
                 addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -415,7 +415,7 @@ public class DecisionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
                // FirebaseDatabase.getInstance().getReference().getDatabase().sna
-               // int previousProScore = FirebaseDatabase.getInstance().getReference().child("decisions").
+               // int previousProScore = FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
                        // child(decisionKey).child("proScore").;
                 //updateBlobViewSize(updating, blobView);
 
@@ -435,13 +435,14 @@ public class DecisionActivity extends AppCompatActivity {
                 } else {
 
                     // Add newBlob to Firebase, obtain key.
-                    String key = FirebaseDatabase.getInstance().getReference().child("decisions").
-                            child(decisionKey).child("blobs").push().getKey();
+                    String key = FirebaseDatabase.getInstance().getReference().child(
+                            getString(R.string.decisions)).
+                            child(decisionKey).child(getString(R.string.blobs)).push().getKey();
 
                     Blob newBlob = new Blob(etDBlobName.getText().toString(),
                             swDProCon.isChecked(), sbDRadius.getProgress());
-                    FirebaseDatabase.getInstance().getReference().child("decisions").
-                            child(decisionKey).child("blobs").child(key).setValue(newBlob);
+                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
+                            child(decisionKey).child(getString(R.string.blobs)).child(key).setValue(newBlob);
 
                     updateDecisionScoreNewBlob();
                     updatePercentPro();
@@ -474,9 +475,9 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void updateScoreFirebase() {
-        FirebaseDatabase.getInstance().getReference().child("decisions").
+        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
                 child(decisionKey).child("proScore").setValue(decision.getProScore());
-        FirebaseDatabase.getInstance().getReference().child("decisions").
+        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
                 child(decisionKey).child("totalScore").setValue(decision.getTotalScore());
     }
 
@@ -519,8 +520,8 @@ public class DecisionActivity extends AppCompatActivity {
         btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(decisionKey).child("blobs").child(key).removeValue();
+                FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
+                        child(decisionKey).child(getString(R.string.blobs)).child(key).removeValue();
                 blobsLayout.removeView(blobView);
                 updateDecisionScoreDeleteBlob(blob);
                 updatePercentPro();
@@ -616,8 +617,8 @@ public class DecisionActivity extends AppCompatActivity {
 
 
     private void updateBlobFirebase(Blob updating, String key) {
-        FirebaseDatabase.getInstance().getReference().child("decisions").
-                child(decisionKey).child("blobs").child(key).setValue(updating);
+        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
+                child(decisionKey).child(getString(R.string.blobs)).child(key).setValue(updating);
     }
 
     public void increaseRadius(String key, Blob updating, View blobView) {

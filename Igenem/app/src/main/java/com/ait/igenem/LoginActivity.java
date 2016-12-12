@@ -58,23 +58,29 @@ public class LoginActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
         setFont();
+        setupPersistenceStorage();
+        setupFirebase();
+        checkLoggedIn();
+    }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getBoolean("firstTime", false)) {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("firstTime", true);
-            editor.commit();
-        }
-
+    private void setupFirebase() {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.keepSynced(true);
         firebaseAuth = FirebaseAuth.getInstance();
+    }
 
-        //if user already logged in, go directly to home
+    private void setupPersistenceStorage() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.getBoolean(getString(R.string.firstTime), false)) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(getString(R.string.firstTime), true);
+            editor.commit();
+        }
+    }
+
+    private void checkLoggedIn() {
         if (firebaseAuth.getCurrentUser() != null) {
             Intent goHomeIntent = new Intent();
             goHomeIntent.setClass(LoginActivity.this, HomeActivity.class);
@@ -86,7 +92,6 @@ public class LoginActivity extends BaseActivity
 
     private void setFont() {
         Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
-    
         tvLoginTitle.setTypeface(font);
         etEmail.setTypeface(font);
         etPassword.setTypeface(font);
@@ -106,15 +111,8 @@ public class LoginActivity extends BaseActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         hideProgressDialog();
-
                         if (task.isSuccessful()) {
-                            FirebaseUser fbUser = task.getResult().getUser();
-                            fbUser.updateProfile(new UserProfileChangeRequest.Builder().
-                                    setDisplayName(usernameFromEmail(fbUser.getEmail())).build());
-
-                            User user = new User(usernameFromEmail(fbUser.getEmail()), fbUser.getEmail());
-                            databaseReference.child("users").child(fbUser.getUid()).setValue(user);
-
+                            loginUser(task);
                             Toast.makeText(LoginActivity.this, R.string.userCreated,
                                     Toast.LENGTH_SHORT).show();
                         } else {
@@ -125,6 +123,15 @@ public class LoginActivity extends BaseActivity
                     }
                 });
 
+    }
+
+    private void loginUser(@NonNull Task<AuthResult> task) {
+        FirebaseUser fbUser = task.getResult().getUser();
+        fbUser.updateProfile(new UserProfileChangeRequest.Builder().
+                setDisplayName(usernameFromEmail(fbUser.getEmail())).build());
+
+        User user = new User(usernameFromEmail(fbUser.getEmail()), fbUser.getEmail());
+        databaseReference.child(getString(R.string.users)).child(fbUser.getUid()).setValue(user);
     }
 
     @OnClick(R.id.btnLogin)
