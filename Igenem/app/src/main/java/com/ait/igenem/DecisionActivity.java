@@ -84,7 +84,7 @@ public class DecisionActivity extends AppCompatActivity {
     @BindView(R.id.btnDeleteDecision)
     Button btnDeleteDecision;
 
-    //cstom view
+    //custom view
     @BindView(R.id.blobsLayout)
     RelativeLayout blobsLayout;
 
@@ -100,6 +100,8 @@ public class DecisionActivity extends AppCompatActivity {
     private int blobsLayoutWidth;
     private int blobsLayoutHeight;
 
+    private boolean clicked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,8 +116,7 @@ public class DecisionActivity extends AppCompatActivity {
         dynamicBlobList = new ArrayList<Blob>();
         dynamicBlobKeys = new ArrayList<String>();
 
-        updatePercentPro();
-        updateBackgroundColor();
+        clicked = false;
 
         setupDecisionUI();
         setupFirebaseListener();
@@ -124,9 +125,12 @@ public class DecisionActivity extends AppCompatActivity {
         blobsLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                createBlobLayout.setVisibility(View.VISIBLE);
-                mouseX = motionEvent.getX();
-                mouseY = motionEvent.getY();
+                if (!clicked) {
+                    clicked = true;
+                    createBlobLayout.setVisibility(View.VISIBLE);
+                    mouseX = motionEvent.getX();
+                    mouseY = motionEvent.getY();
+                }
 
                 return false;
             }
@@ -151,23 +155,41 @@ public class DecisionActivity extends AppCompatActivity {
 
         }
         tvBlobName.setText(currBlob.getName());
+        updateBlobViewSize(currBlob, blobView);
+        placeBlobRandomly(blobView);
+
+        blobView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!clicked) {
+                    clicked = true;
+                    editBlobLayout.setVisibility(View.VISIBLE);
+                    setupListeners(key, blob, blobView);
+                }
+            }
+        });
 
 
+//        blobView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                Log.i("DRAGGING", "longPress");
+//
+//                return false;
+//            }
+//        });
 
-        // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
-        ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
-        layoutParams.width = currBlob.getRadius() * 5;
-        layoutParams.height = currBlob.getRadius() * 5;
-        ivBlob.setLayoutParams(layoutParams);
+        blobsLayout.addView(blobView);
+    }
 
+    private void placeBlobRandomly(View blobView) {
         int xPos = 0;
         int yPos = 0;
 
         if (mouseX != -99 && mouseY != -99) {
             xPos = (int) mouseX;
             yPos = (int) mouseY;
-        }
-        else {
+        } else {
             Log.i("RELATIVE_WIDTH", String.valueOf(blobsLayout.getWidth()));
             Log.i("RELATIVE_HEIGHT", String.valueOf(blobsLayout.getHeight()));
 //            xPos = (int) (Math.random() * blobsLayoutWidth);
@@ -184,31 +206,6 @@ public class DecisionActivity extends AppCompatActivity {
 
         mouseX = -99;
         mouseY = -99;
-
-        blobView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //if this blob was just added, it should be at index 0 in both blob/key lists
-                editBlobLayout.setVisibility(View.VISIBLE);
-
-//                String newKey = dynamicBlobKeys.get(0);
-//                Blob newBlob = dynamicBlobList.get(0);
-
-                setupListeners(key, blob, blobView);
-            }
-        });
-
-
-//        blobView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                Log.i("DRAGGING", "longPress");
-//
-//                return false;
-//            }
-//        });
-
-        blobsLayout.addView(blobView);
     }
 
     private void setupListeners(String newKey, Blob newBlob, View blobView) {
@@ -327,6 +324,7 @@ public class DecisionActivity extends AppCompatActivity {
         tvDecisionName.setText(decision.getName());
 
         updatePercentPro();
+        updateBackgroundColor();
         setupNewBlobButton();
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
@@ -353,8 +351,7 @@ public class DecisionActivity extends AppCompatActivity {
     private void updatePercentPro() {
         if (decision.getTotalScore() == 0) {
             tvPercentPro.setText("");
-        }
-        else {
+        } else {
             double percentDouble = decision.getPercentPro() * 100;
             int percentInt = (int) Math.round(percentDouble);
             String proOrCon;
@@ -393,12 +390,14 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
+                clicked = false;
             }
         });
         btnCancelEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
+                clicked = false;
             }
         });
 
@@ -427,6 +426,7 @@ public class DecisionActivity extends AppCompatActivity {
                     updateBackgroundColor();
 
                     resetCreateBlobLayout();
+                    clicked = false;
                 }
 
             }
@@ -438,6 +438,7 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 createBlobLayout.setVisibility(View.GONE);
+                clicked = false;
             }
         });
     }
@@ -446,6 +447,7 @@ public class DecisionActivity extends AppCompatActivity {
         tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         decision.updateScoreNewBlob(sbDRadius.getProgress(), swDProCon.isChecked());
         updatePercentPro();
+        updateBackgroundColor();
         updateScoreFirebase();
     }
 
@@ -486,6 +488,7 @@ public class DecisionActivity extends AppCompatActivity {
                 updateDecisionScoreDeleteBlob(blob);
                 updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
+                clicked = false;
             }
         });
     }
@@ -493,6 +496,7 @@ public class DecisionActivity extends AppCompatActivity {
     private void updateDecisionScoreDeleteBlob(Blob delBlob) {
         decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
         updatePercentPro();
+        updateBackgroundColor();
         updateScoreFirebase();
     }
 
@@ -500,7 +504,9 @@ public class DecisionActivity extends AppCompatActivity {
         btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                decreaseRadius(key, blob, blobView);
+                if (blob.getRadius() > 1) {
+                    decreaseRadius(key, blob, blobView);
+                }
             }
         });
     }
@@ -509,7 +515,9 @@ public class DecisionActivity extends AppCompatActivity {
         btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                increaseRadius(key, blob, blobView);
+                if (blob.getRadius() < 100) {
+                    increaseRadius(key, blob, blobView);
+                }
             }
         });
     }
@@ -525,15 +533,9 @@ public class DecisionActivity extends AppCompatActivity {
         decision.increase(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
         updatePercentPro();
-        //updateBlob(updating, key);
+        updateBackgroundColor();
         updateBlobFirebase(updating, key);
-
-        ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
-
-        ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
-        layoutParams.width = updating.getRadius() * 5;
-        layoutParams.height = updating.getRadius() * 5;
-        ivBlob.setLayoutParams(layoutParams);
+        updateBlobViewSize(updating, blobView);
     }
 
     public void decreaseRadius(String key, Blob updating, View blobView) {
@@ -541,11 +543,14 @@ public class DecisionActivity extends AppCompatActivity {
         decision.decrease(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
         updatePercentPro();
-        //updateBlob(updating, key);
+        updateBackgroundColor();
         updateBlobFirebase(updating, key);
+        updateBlobViewSize(updating, blobView);
+    }
 
+    private void updateBlobViewSize(Blob updating, View blobView) {
+        // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
-
         ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
         layoutParams.width = updating.getRadius() * 5;
         layoutParams.height = updating.getRadius() * 5;
@@ -558,7 +563,7 @@ public class DecisionActivity extends AppCompatActivity {
         getRelativeLayoutInfo();
     }
 
-    private void getRelativeLayoutInfo(){
+    private void getRelativeLayoutInfo() {
         blobsLayoutWidth = blobsLayout.getWidth();
         blobsLayoutHeight = blobsLayout.getHeight();
         Log.i("RELATIVE_WIDTH_OVER", String.valueOf(blobsLayoutWidth));
