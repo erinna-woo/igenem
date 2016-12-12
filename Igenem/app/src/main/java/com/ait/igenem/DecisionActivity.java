@@ -34,8 +34,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-//TODO: if you don't hit OK and just click "edit" for another blob. will only be saved locally, not in firebase
-// not anymore mothafuckaaaaaaaaaa
 
 public class DecisionActivity extends AppCompatActivity {
 
@@ -148,7 +146,6 @@ public class DecisionActivity extends AppCompatActivity {
 
     private void setupDecisionUI() {
         tvDecisionName.setText(decision.getName());
-
         updatePercentPro();
         setupHomeButton();
         setupDeleteDecisionButton();
@@ -206,8 +203,8 @@ public class DecisionActivity extends AppCompatActivity {
         btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseDatabase.getInstance().getReference().child("decisions").
-                        child(decisionKey).child("blobs").child(key).removeValue();
+                FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
+                        child(decisionKey).child(getString(R.string.blobs)).child(key).removeValue();
                 blobsLayout.removeView(blobView);
                 updateDecisionScoreDeleteBlob(blob);
                 updatePercentPro();
@@ -237,18 +234,17 @@ public class DecisionActivity extends AppCompatActivity {
                     resetCreateBlobLayout();
                     clicked = false;
                 }
-
             }
         });
     }
 
     private void addBlobFirebase() {
-        String key = FirebaseDatabase.getInstance().getReference().child("decisions").
-                child(decisionKey).child("blobs").push().getKey();
+        String key = FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
+                child(decisionKey).child(getString(R.string.blobs)).push().getKey();
         Blob newBlob = new Blob(etDBlobName.getText().toString(),
                 swDProCon.isChecked(), sbDRadius.getProgress());
-        FirebaseDatabase.getInstance().getReference().child("decisions").
-                child(decisionKey).child("blobs").child(key).setValue(newBlob);
+        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
+                child(decisionKey).child(getString(R.string.blobs)).child(key).setValue(newBlob);
     }
 
     private void updateDecisionScoreNewBlob() {
@@ -348,17 +344,7 @@ public class DecisionActivity extends AppCompatActivity {
                 }
             }
         });
-
         // TODO: DRAGGING
-//        blobView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                Log.i("DRAGGING", "longPress");
-//
-//                return false;
-//            }
-//        });
-
         blobsLayout.addView(blobView);
     }
 
@@ -375,7 +361,6 @@ public class DecisionActivity extends AppCompatActivity {
 
 
     private void updateBlobViewSize(Blob updating, View blobView) {
-        // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
         ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
         layoutParams.width = updating.getRadius() * 5;
@@ -391,20 +376,11 @@ public class DecisionActivity extends AppCompatActivity {
             xPos = (int) mouseX;
             yPos = (int) mouseY;
         } else {
-            // TODO: in onCreate, the relative layout hasn't been created yet so you can't get dimensions
-            // TODO: add blobs to screen after onCreate? in onResume? for loop over blobs in list?
-
-            Log.i("RELATIVE_WIDTH", String.valueOf(blobsLayout.getWidth()));
-            Log.i("RELATIVE_HEIGHT", String.valueOf(blobsLayout.getHeight()));
-//            xPos = (int) (Math.random() * blobsLayoutWidth);
-//            yPos = (int) (Math.random() * blobsLayoutHeight);
             xPos = (int) (Math.random() * 600);
             yPos = (int) (Math.random() * 800);
         }
-
         blobView.setX(xPos);
         blobView.setY(yPos);
-
         mouseX = -99;
         mouseY = -99;
     }
@@ -420,7 +396,7 @@ public class DecisionActivity extends AppCompatActivity {
         btnDeleteDecision.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseDatabase.getInstance().getReference().child("decisions").
+                FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
                         child(decisionKey).removeValue();
                 goToProfile();
                 finish();
@@ -491,21 +467,22 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void updateBlobFirebase(Blob updating, String key) {
-        FirebaseDatabase.getInstance().getReference().child("decisions").
-                child(decisionKey).child("blobs").child(key).setValue(updating);
+        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
+                child(decisionKey).child(getString(R.string.blobs)).child(key).setValue(updating);
     }
 
     private void updateScoreFirebase() {
         FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                child(decisionKey).child("proScore").setValue(decision.getProScore());
+                child(decisionKey).child(getString(R.string.proscore)).
+                setValue(decision.getProScore());
         FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
-                child(decisionKey).child("totalScore").setValue(decision.getTotalScore());
+                child(decisionKey).child(getString(R.string.totalscore)).
+                setValue(decision.getTotalScore());
     }
 
     private void updateDecisionScoreEditedBlob(int oldRadius, int newRadius, boolean isPro) {
         decision.updateDecisionScoreEditBlob(oldRadius, newRadius, isPro);
         updatePercentPro();
-        //don't need to update in Firebase because OK never clicked, Firebase never updated
     }
 
     public void updateBlob(Blob updateBlob, String key) {
@@ -534,9 +511,9 @@ public class DecisionActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (previousActivity.equals("ProfileActivity")) {
+        if (previousActivity.equals(getString(R.string.profileactivity))) {
             goToProfile();
-        } else if (previousActivity.equals("CreateDecision")) {
+        } else if (previousActivity.equals(getString(R.string.create_decision_activity))) {
             goToHome();
         }
     }
@@ -556,8 +533,20 @@ public class DecisionActivity extends AppCompatActivity {
     private void getRelativeLayoutInfo() {
         blobsLayoutWidth = blobsLayout.getWidth();
         blobsLayoutHeight = blobsLayout.getHeight();
-        Log.i("RELATIVE_WIDTH_OVER", String.valueOf(blobsLayoutWidth));
-        Log.i("RELATIVE_HEIGHT_OVER", String.valueOf(blobsLayoutHeight));
+    }
+
+    public void increaseRadius(Blob updating, View blobView) {
+        updating.increaseRadius();
+        decision.increase(updating.isPro());
+        updatePercentPro();
+        updateBlobViewSize(updating, blobView);
+    }
+
+    public void decreaseRadius(Blob updating, View blobView) {
+        updating.decreaseRadius();
+        decision.decrease(updating.isPro());
+        updatePercentPro();
+        updateBlobViewSize(updating, blobView);
     }
 
     private class MinusThread extends Thread {
@@ -618,18 +607,5 @@ public class DecisionActivity extends AppCompatActivity {
         }
     }
 
-    public void increaseRadius(Blob updating, View blobView) {
-        updating.increaseRadius();
-        decision.increase(updating.isPro());
-        updatePercentPro();
-        updateBlobViewSize(updating, blobView);
-    }
-
-    public void decreaseRadius(Blob updating, View blobView) {
-        updating.decreaseRadius();
-        decision.decrease(updating.isPro());
-        updatePercentPro();
-        updateBlobViewSize(updating, blobView);
-    }
 
 }
