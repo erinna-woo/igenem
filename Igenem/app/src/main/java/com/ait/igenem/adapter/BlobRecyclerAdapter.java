@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -23,8 +22,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.ait.igenem.R.id.btnNewBlob;
 
 /**
  * Created by Erinna on 12/9/16.
@@ -142,6 +139,15 @@ public class BlobRecyclerAdapter extends RecyclerView.Adapter<BlobRecyclerAdapte
             this.editTextListener = editTextListener;
             etBlobName.addTextChangedListener(editTextListener);
 
+            setFont(itemView);
+
+        }
+
+        private void setFont(View itemView) {
+            Typeface font = Typeface.createFromAsset(itemView.getContext().getAssets(),
+                    "VarelaRound-Regular.ttf");
+            tvProCon.setTypeface(font);
+            swProCon.setTypeface(font);
         }
     }
 
