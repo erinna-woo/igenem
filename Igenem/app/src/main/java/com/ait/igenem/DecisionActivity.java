@@ -39,7 +39,6 @@ import butterknife.ButterKnife;
 
 public class DecisionActivity extends AppCompatActivity {
 
-
     @BindView(R.id.linearLayoutDecision)
     LinearLayout linearLayoutDecision;
 
@@ -291,7 +290,7 @@ public class DecisionActivity extends AppCompatActivity {
 
     private void setupFirebaseListener() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.child("decisions").child(decisionKey).child("blobs").orderByKey().
+        ref.child(getString(R.string.decisions)).child(decisionKey).child(getString(R.string.blobs)).orderByKey().
                 addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -421,9 +420,8 @@ public class DecisionActivity extends AppCompatActivity {
         btnDeleteDecision.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //delete from firebase
-
-                //Go back to profile page
+                FirebaseDatabase.getInstance().getReference().child("decisions").
+                        child(decisionKey).removeValue();
                 goToProfile();
                 finish();
             }
@@ -483,6 +481,7 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
+                updateDecisionScoreEditedBlob(updating.getRadius(), uneditedRadius, updating.isPro());
                 updating.setRadius(uneditedRadius);
                 updateBlob(updating, key);
                 updateBlobViewSize(updating, blobView);
@@ -497,10 +496,16 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void updateScoreFirebase() {
-        FirebaseDatabase.getInstance().getReference().child("decisions").
+        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
                 child(decisionKey).child("proScore").setValue(decision.getProScore());
-        FirebaseDatabase.getInstance().getReference().child("decisions").
+        FirebaseDatabase.getInstance().getReference().child(getString(R.string.decisions)).
                 child(decisionKey).child("totalScore").setValue(decision.getTotalScore());
+    }
+
+    private void updateDecisionScoreEditedBlob(int oldRadius, int newRadius, boolean isPro) {
+        decision.updateDecisionScoreEditBlob(oldRadius, newRadius, isPro);
+        updatePercentPro();
+        //don't need to update in Firebase because OK never clicked, Firebase never updated
     }
 
     public void updateBlob(Blob updateBlob, String key) {
@@ -520,7 +525,6 @@ public class DecisionActivity extends AppCompatActivity {
 
     private void setFont() {
         Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
-
         btnGoHome.setTypeface(font);
         btnDeleteDecision.setTypeface(font);
         tvDecisionName.setTypeface(font);
@@ -535,7 +539,6 @@ public class DecisionActivity extends AppCompatActivity {
         } else if (previousActivity.equals("CreateDecision")) {
             goToHome();
         }
-
     }
 
     private void goToProfile() {

@@ -48,6 +48,12 @@
     <string name="pos_x">posX</string>
     <string name="pos_y">posY</string>
     <string name="loading">Loading...</string>
+    <string name="decisions">decisions</string>
+    <string name="blobs">blobs</string>
+    <string name="ownerId">ownerId</string>
+    <string name="profileactivity">ProfileActivity</string>
+    <string name="firstTime">firstTime</string>
+    <string name="users">users</string>
 
     <integer name="anim_length">500</integer>
 </resources>
