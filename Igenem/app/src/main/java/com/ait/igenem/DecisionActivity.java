@@ -104,8 +104,10 @@ public class DecisionActivity extends AppCompatActivity {
     private int blobsLayoutHeight;
 
     private boolean minusPressed = false;
+    private boolean plusPressed = false;
 
     private MinusThread mt;
+    private PlusThread pt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,9 +147,6 @@ public class DecisionActivity extends AppCompatActivity {
         final ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
         TextView tvBlobName = (TextView) blobView.findViewById(R.id.tvBlobName);
 
-        Typeface font = Typeface.createFromAsset(getAssets(), "VarelaRound-Regular.ttf");
-        tvBlobName.setTypeface(font);
-
         Blob currBlob = blob;
         if (currBlob.isPro()) {
             ivBlob.setImageResource(R.drawable.circle_white);
@@ -158,7 +157,6 @@ public class DecisionActivity extends AppCompatActivity {
 
         }
         tvBlobName.setText(currBlob.getName());
-
 
 
         // TODO: how terrible is this going to look on the phone because i'm not sure it's dp?
@@ -221,6 +219,8 @@ public class DecisionActivity extends AppCompatActivity {
         setupDeleteListener(newKey, newBlob, blobView);
         setupPlusListener(newKey, newBlob, blobView);
         setupMinusListener(newKey, newBlob, blobView);
+        setupEditBlobListeners(newKey, newBlob);
+
     }
 
     private void setFont() {
@@ -337,7 +337,6 @@ public class DecisionActivity extends AppCompatActivity {
         setupDeleteDecisionButton();
         setupOkayCreateBlobButton();
         setupCancelCreateBlobButton();
-        setupEditBlobListeners();
         setupProConListener();
     }
 
@@ -357,23 +356,18 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void updatePercentPro() {
-        if (decision.getTotalScore() == 0) {
-            tvPercentPro.setText("");
-        }
-        else {
-            double percentDouble = decision.getPercentPro() * 100;
-            int percentInt = (int) Math.round(percentDouble);
-            String proOrCon;
+        double percentDouble = decision.getPercentPro() * 100;
+        int percentInt = (int) Math.round(percentDouble);
+        String proOrCon;
 
-            if (percentInt > 49) {
-                proOrCon = getString(R.string.tv_percent_pro);
-            } else {
-                percentInt = 100 - percentInt;
-                proOrCon = getString(R.string.tv_percent_con);
-            }
-
-            tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
+        if (percentInt > 49) {
+            proOrCon = getString(R.string.tv_percent_pro);
+        } else {
+            percentInt = 100 - percentInt;
+            proOrCon = getString(R.string.tv_percent_con);
         }
+
+        tvPercentPro.setText(Integer.toString(percentInt) + proOrCon);
     }
 
     private void setupDeleteDecisionButton() {
@@ -394,11 +388,12 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
 
-    private void setupEditBlobListeners() {
+    private void setupEditBlobListeners(final String key, final Blob updating) {
         btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editBlobLayout.setVisibility(View.GONE);
+                updateBlobFirebase(updating, key);
             }
         });
         btnCancelEdit.setOnClickListener(new View.OnClickListener() {
@@ -482,6 +477,21 @@ public class DecisionActivity extends AppCompatActivity {
         });
     }
 
+    private void setupOkEditListener(final int positionToEdit) {
+        btnOkEditBlob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String key = getBlobKey(positionToEdit);
+                Blob blob = getBlob(positionToEdit);
+                updateBlobFirebase(blob, key);
+                updateScoreFirebase();
+                updatePercentPro();
+                updateBackgroundColor();
+                editBlobLayout.setVisibility(View.GONE);
+            }
+        });
+    }
+
     private void setupDeleteListener(final String key, final Blob blob, final View blobView) {
         btnDeleteBlob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -490,6 +500,7 @@ public class DecisionActivity extends AppCompatActivity {
                         child(decisionKey).child("blobs").child(key).removeValue();
                 blobsLayout.removeView(blobView);
                 updateDecisionScoreDeleteBlob(blob);
+                updatePercentPro();
                 updateBackgroundColor();
                 editBlobLayout.setVisibility(View.GONE);
             }
@@ -498,7 +509,7 @@ public class DecisionActivity extends AppCompatActivity {
 
     private void updateDecisionScoreDeleteBlob(Blob delBlob) {
         decision.updateDecisionScoreDeleteBlob(delBlob.getRadius(), delBlob.isPro());
-        updatePercentPro();
+        tvPercentPro.setText(String.valueOf(decision.getPercentPro()));
         updateScoreFirebase();
     }
 
@@ -509,9 +520,6 @@ public class DecisionActivity extends AppCompatActivity {
 //                decreaseRadius(key, blob, blobView);
 //            }
 //        });
-
-
-
 
         btnMinus.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -536,14 +544,37 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
 
+
+
     private void setupPlusListener(final String key, final Blob blob, final View blobView) {
-        btnPlus.setOnClickListener(new View.OnClickListener() {
+//        btnPlus.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                increaseRadius(key, blob, blobView);
+//            }
+//        });
+
+        btnPlus.setOnTouchListener(new OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                increaseRadius(key, blob, blobView);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        plusPressed = true;
+                        pt = new PlusThread(key, blob, blobView);
+                        pt.start();
+                        Log.d("SDF", "START! ");
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        pt.interrupt();
+                        plusPressed = false;
+                        Log.d("SDF", "==CANCEL! ");
+
+                }
+                return false;
             }
         });
     }
+
 
 
     private void updateBlobFirebase(Blob updating, String key) {
@@ -556,9 +587,9 @@ public class DecisionActivity extends AppCompatActivity {
         decision.increase(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
         updatePercentPro();
-        //updateBlob(updating, key);
-        updateBlobFirebase(updating, key);
+        updateBackgroundColor();
 
+        //updateBlob(updating, key);
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
 
         ViewGroup.LayoutParams layoutParams = ivBlob.getLayoutParams();
@@ -572,8 +603,9 @@ public class DecisionActivity extends AppCompatActivity {
         decision.decrease(updating.isPro());
         //this could be excessive and maybe combined into a field cry ugh
         updatePercentPro();
+        updateBackgroundColor();
+
         //updateBlob(updating, key);
-        updateBlobFirebase(updating, key);
 
         ImageView ivBlob = (ImageView) blobView.findViewById(R.id.ivBlob);
 
@@ -634,4 +666,33 @@ public class DecisionActivity extends AppCompatActivity {
         }
     }
 
+    private class PlusThread extends Thread{
+
+        private String k;
+        private Blob b;
+
+        private View bv;
+
+        public PlusThread(String k, Blob b, View bv){
+            this.k = k;
+            this.b = b;
+            this.bv = bv;
+        }
+
+        public void run(){
+            while(plusPressed){
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        increaseRadius(k, b, bv);
+                    }
+                });
+                try{
+                    sleep(500);
+                }catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
