@@ -1,2 +1,2 @@
 # igenem 
-![Alt text](Screenshots/making_new_Decision.png?raw=true "Making a New Decision")
+![alt tag](https://raw.githubusercontent.com/erinna-woo/igenem/Screenshots/making_new_decision.png)
