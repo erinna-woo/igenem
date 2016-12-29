@@ -1,2 +1,2 @@
 # igenem 
-![alt tag](https://raw.githubusercontent.com/erinna-woo/igenem/blob/master/Screenshots/making_new_decision.png)
+![alt tag](https://github.com/erinna-woo/igenem/blob/master/Screenshots/making_new_decision.png)
